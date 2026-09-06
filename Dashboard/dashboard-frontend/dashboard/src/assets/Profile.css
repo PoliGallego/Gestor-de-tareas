@@ -1,0 +1,203 @@
+:root {
+    --bg: #f8f9fa;
+    --text: #020202;
+    --text-light: #555;
+    --code-bg: #828282;
+    --code-bg-sec: #888;
+    --border: #585858;
+    --button-bg: #afa7a7;
+    --button-bg-hover: #a09898;
+    --bg-container: rgb(235, 235, 235);
+    --input-border: #979797;
+}
+
+body {
+    background-image: url('../cuboisometrico.png');
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: 300px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+}
+
+img {
+    max-width: 6rem;
+    max-height: 6rem;
+    border-radius: 50%;
+    height: auto;
+}
+
+input[type="button"],
+.body .btn {
+    width: auto;
+    min-width: 7rem;
+    padding: 14px;
+    background: var(--button-bg);
+    color: var(--bg);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+input[type="button"]:hover,
+.body .btn:hover {
+    background: var(--button-bg-hover);
+    transform: scale(1.03, 1.03);
+    transition: all 0.3s ease
+}
+
+input[type="button"]:active,
+.body .btn:active {
+    transform: translateY(0);
+}
+
+.body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: clamp(1rem, 3vw, 2rem);
+    margin: 0;
+}
+
+.bts {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    overflow: visible;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    min-height: 1rem;
+    min-width: 0;
+    background-color: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    gap: 30px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+}
+
+.title {
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.grup {
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 10px;
+}
+
+.basic-info {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 10px;
+    min-width: 0;
+}
+
+.bts {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+@media (max-width: 680px) {
+    .grup, .dashboard {
+        padding: 0;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .container img {
+        align-self: center;
+    }
+
+    .basic-info h2,
+    .basic-info h3 {
+        overflow-wrap: anywhere;
+    }
+
+    .bts {
+        flex-direction: row;
+        width: 100%;
+        padding: 0;
+    }
+
+    input[type="button"],
+    .body .btn {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tasks {
+        gap: 0;
+    }
+
+    h1 {
+        font-size: clamp(1.5rem, 8vw, 2rem);
+    }
+}
+
+@media (max-width: 1300px) {
+    .container {
+        width: 100%;
+    }
+}
