@@ -1,0 +1,6 @@
+rmi\shared\Panel.class
+rmi\shared\PanelRemoteService.class
+rmi\Main.class
+rmi\shared\RmiLoginRequest.class
+rmi\shared\EstadoPanel.class
+rmi\shared\AuthRmiPort.class
