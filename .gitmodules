@@ -1,0 +1,11 @@
+[submodule "Panel/gestor-tareas-registro-usuario"]
+	path = Panel/gestor-tareas-registro-usuario
+	url = https://github.com/brandonCarmonaV/gestor-tareas-registro-usuario.git
+
+[submodule "Login/login-backend"]
+	path = Login/login-backend
+	url = https://github.com/brandonCarmonaV/gestor-tareas-login-usuario.git
+
+[submodule "Login/login-frontend"]
+	path = Login/login-frontend
+	url = https://github.com/PoliGallego/gestor-tareas-login-frontend.git
