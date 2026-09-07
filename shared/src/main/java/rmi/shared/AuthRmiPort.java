@@ -8,7 +8,7 @@ public interface AuthRmiPort extends Remote {
 
         Map<String, String> auth(RmiLoginRequest request) throws RemoteException;
 
-        String extractSubject(String token) throws RemoteException;
+        Map<String, String> extractSubject(String token) throws RemoteException;
 
         String generateRefreshToken(String userId) throws RemoteException;
 
