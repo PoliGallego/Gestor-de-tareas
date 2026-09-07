@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Dashboard from './Dashboard';
 
 function Profile() {
@@ -14,6 +14,38 @@ function Profile() {
         tp: 0
     });
 
+    async function auth() {
+        try {
+            const token = localStorage.getItem("AT");
+
+            const response = await fetch(
+                `http://localhost:8082/api/dash/profile?token=${encodeURIComponent(token ?? "")}`
+            );
+
+            const data = await response.json();
+            if (response && data && response.status === 302) {
+                // setMessage(msg);
+                console.log(data);
+            } else {
+                localStorage.removeItem("AT");
+                localStorage.removeItem("RT");
+                localStorage.removeItem("TT");
+                window.location.href = "http://localhost:3000/";
+            }
+        } catch (error) {
+            console.error(error);
+            // setMessage("Error");
+            localStorage.removeItem("AT");
+            localStorage.removeItem("RT");
+            localStorage.removeItem("TT");
+            window.location.href = "http://localhost:3000/";
+        }
+    }
+
+    useEffect(() => {
+        auth();
+    }, []);
+
     return (<div className='body'>
         <div className='profile'>
             <div className='title'>
@@ -24,8 +56,8 @@ function Profile() {
                 <div className='container'>
                     <img draggable={false} src={user.picture ? user.picture : "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png"} alt="profile picture" />
                     <div className='basic-info'>
-                        <h2><b>User name: </b>{user.name}PPPPPPPPPPPP</h2>
-                        <h3><b>E-mail: </b>{user.email}juan_gallego822231@elpoli.edu.co</h3>
+                        <h2><b>User name: </b>{user.name}</h2>
+                        <h3><b>E-mail: </b>{user.email}</h3>
                     </div>
                     <div className='bts'>
                         <input type="button" className="btn" value="Update" />
@@ -34,7 +66,7 @@ function Profile() {
                 </div>
 
                 <div className='container'>
-                    <div className='tasks'> 
+                    <div className='tasks'>
                         <p><b>Total tasks: </b>{tasks.tt}</p>
                         <p><b>Tasks completed: </b>{tasks.tc}</p>
                     </div>

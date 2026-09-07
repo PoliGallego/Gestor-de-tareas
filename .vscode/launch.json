@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "LoginUsuarioApplication",
+            "request": "launch",
+            "mainClass": "co.com.politecnico.gestorcontratos.loginusuario.LoginUsuarioApplication"
+        },
+        {
+            "type": "java",
+            "name": "DashboardApplication",
+            "request": "launch",
+            "mainClass": "dashboard.app.DashboardApplication",
+            "projectName": "app"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AppApplication<app>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "dashboard.app.DashboardApplication",
+            "projectName": "app",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

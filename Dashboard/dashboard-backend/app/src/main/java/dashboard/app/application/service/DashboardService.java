@@ -22,19 +22,19 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public Map<String, String> getProfileInfo(String userId) {
+    public Map<String, String> getProfileInfo(String token) {
         try {
-            System.out.println(authRmiPort.extractSubject(userId));
+            System.out.println(authRmiPort.extractSubject(token));
         } catch (Exception e) {
-            e.printStackTrace();
+            // TODO: handle exception
         }
         return null;
     }
 
     @Override
-    public Map<String, Integer> getTasksInfo(String userId) {
+    public Map<String, Integer> getTasksInfo(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
+            List<Panel> panels = panelService.listarPaneles(getUserId(token));
             Integer tt = 0, tc = 0, tp = 0, pt = 0;
 
             for (Panel panel : panels) {
@@ -60,9 +60,9 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getInProgressTasks(String userId) {
+    public List<Panel> getInProgressTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
+            List<Panel> panels = panelService.listarPaneles(getUserId(token));
             List<Panel> inProgress = new ArrayList<>();
             for (Panel panel : panels) {
                 if (panel.getEstado() == EstadoPanel.EN_PROGRESO) {
@@ -77,9 +77,9 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getPendingTasks(String userId) {
+    public List<Panel> getPendingTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
+            List<Panel> panels = panelService.listarPaneles(getUserId(token));
             List<Panel> pending = new ArrayList<>();
             for (Panel panel : panels) {
                 if (panel.getEstado() == EstadoPanel.PENDIENTE) {
@@ -93,4 +93,11 @@ public class DashboardService implements DashboardServicePort {
         return null;
     }
 
+    private String getUserId(String token) throws Exception {
+        try {
+            return authRmiPort.extractSubject(token);
+        } catch (Exception e) {
+            throw new Exception("Error en la obtencion del perfil");
+        }
+    }
 }

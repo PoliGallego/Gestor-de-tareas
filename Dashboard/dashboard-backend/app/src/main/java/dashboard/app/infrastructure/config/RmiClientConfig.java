@@ -35,14 +35,13 @@ public class RmiClientConfig {
             throws RemoteException, NotBoundException {
 
         Registry registry = LocateRegistry.getRegistry(panelHost, panelPort);
-        System.out.println("registro panel: " + registry.toString());
+        
         return (PanelRemoteService) registry.lookup("PanelService");
     }
 
     @Bean
     public AuthRmiPort authRmiPort() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(authHost, authPort);
-        System.out.println("registro auth: " + Arrays.toString(registry.list()));
 
         AuthRmiPort service = (AuthRmiPort) registry.lookup("AuthService");
         return service;
