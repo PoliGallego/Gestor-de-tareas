@@ -13,37 +13,51 @@ function Profile() {
         pt: 0,
         tp: 0
     });
+    const [isTasks, setIsTasks] = useState(false);
+    const [isRender, setIsRender] = useState(false);
 
     async function auth() {
         try {
-            const token = localStorage.getItem("AT");
-
             const response = await fetch(
-                `http://localhost:8082/api/dash/profile?token=${encodeURIComponent(token ?? "")}`
+                'http://localhost:8082/api/dash/profile', { credentials: 'include' }
             );
 
             const data = await response.json();
-            if (response && data && response.status === 302) {
+            if (response && data && response.status === 200) {
                 // setMessage(msg);
-                console.log(data);
+                setUser(data);
             } else {
-                localStorage.removeItem("AT");
-                localStorage.removeItem("RT");
-                localStorage.removeItem("TT");
                 window.location.href = "http://localhost:3000/";
             }
         } catch (error) {
             console.error(error);
             // setMessage("Error");
-            localStorage.removeItem("AT");
-            localStorage.removeItem("RT");
-            localStorage.removeItem("TT");
             window.location.href = "http://localhost:3000/";
         }
     }
 
+    async function taks() {
+        try {
+            const response = await fetch(
+                'http://localhost:8082/api/dash/tasks', { credentials: 'include' }
+            );
+
+            const data = await response.json();
+            if (response && data && response.status === 302) {
+                setTasks(data);
+                setIsTasks(true);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
-        auth();
+        if (!isRender) {
+            auth();
+            taks();
+            setIsRender(true);
+        }
     }, []);
 
     return (<div className='body'>
@@ -65,7 +79,7 @@ function Profile() {
                     </div>
                 </div>
 
-                <div className='container'>
+                {isTasks && <div className='container'>
                     <div className='tasks'>
                         <p><b>Total tasks: </b>{tasks.tt}</p>
                         <p><b>Tasks completed: </b>{tasks.tc}</p>
@@ -75,7 +89,7 @@ function Profile() {
                         <p><b>Tasks in progress: </b>{tasks.tp}</p>
                         <p><b>Pending tasks: </b>{tasks.pt}</p>
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
 

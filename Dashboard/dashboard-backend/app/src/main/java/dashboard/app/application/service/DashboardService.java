@@ -24,9 +24,9 @@ public class DashboardService implements DashboardServicePort {
     @Override
     public Map<String, String> getProfileInfo(String token) {
         try {
-            System.out.println(authRmiPort.extractSubject(token));
+            return authRmiPort.extractSubject(token);
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return null;
     }
@@ -95,7 +95,7 @@ public class DashboardService implements DashboardServicePort {
 
     private String getUserId(String token) throws Exception {
         try {
-            return authRmiPort.extractSubject(token);
+            return authRmiPort.extractSubject(token).get("id");
         } catch (Exception e) {
             throw new Exception("Error en la obtencion del perfil");
         }
