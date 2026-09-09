@@ -1,6 +1,7 @@
 import './assets/Profile.css'
 import './assets/Dashboard.css'
 import Profile from './Profile'
+import Header from './Header'
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
 import Info from './Info';
@@ -25,6 +26,7 @@ function App() {
   return (
     <PageContext.Provider value={{ message, setMessage }}>
       {isMsgShow && <Info text={message} setShow={setMsgShow} />}
+      <Header/>
       <Profile />
     </PageContext.Provider>
   )

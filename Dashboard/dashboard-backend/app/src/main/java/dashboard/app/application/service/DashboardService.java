@@ -38,16 +38,12 @@ public class DashboardService implements DashboardServicePort {
             for (RmiPanelData panel : panels) {
                 tt++;
 
-                switch (panel.getEstado()) {
-                    case "PENDIENTE":
-                        pt++;
-                        break;
-                    case "EN_PROGRESO":
-                        tp++;
-                        break;
-                    case "COMPLETADO":
-                        tc++;
-                        break;
+                if (panel.getEstado().equals("PENDIENTE")) {
+                    pt++;
+                } else if (panel.getEstado().equals("EN_PROGRESO")) {
+                    tp++;
+                } else if (panel.getEstado().equals("COMPLETADO")) {
+                    tc++;
                 }
             }
             return Map.of("tt", tt, "tc", tc, "tp", tp, "pt", pt);

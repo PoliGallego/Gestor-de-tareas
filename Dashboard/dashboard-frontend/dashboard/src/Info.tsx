@@ -16,7 +16,7 @@ function Info({ text, setShow }: InfoProps) {
                     <h1>Information</h1>
                 </div>
                 <p>{text || "Hello world!"}</p>
-                <input type="submit" value={"Agreed"} onClick={() => setShow(false)} />
+                <input type="button" value={"Agreed"} onClick={() => setShow(false)} />
             </div>
         </div>
     </div>

@@ -31,17 +31,17 @@ function Profile() {
             );
 
             const data = await response.json();
-            if (response && data && response.status === 200) {
+            if (data && response.status === 200) {
                 setUser(data);
             } else {
-                // window.location.href = "http://localhost:3000/";
+                window.location.href = "http://localhost:3000/";
             }
         } catch (error) {
             console.error(error);
             setMessage("Error");
-            // window.location.href = "http://localhost:3000/";
+            window.location.href = "http://localhost:3000/";
         }
-    }
+    };
 
     async function taks() {
         try {
@@ -57,6 +57,45 @@ function Profile() {
         } catch (error) {
             console.error(error);
         }
+    };
+
+    async function deleteUser() {
+        try {
+            const response = await fetch("http://localhost:8090/api/users", {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (response.status === 204) {
+                setMessage("User deleted");
+                window.location.href = "http://localhost:3000/";
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    async function update() {
+        try {
+            const response = await fetch(
+                'http://localhost:8090/api/users', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editUser)
+            }
+            );
+
+            const data = await response.json();
+            if (response && data && response.status === 200) {
+                setUser(data);
+                setMessage("User updated");
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
@@ -66,6 +105,16 @@ function Profile() {
             setIsRender(true);
         }
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            setEditUser({
+                name: user.name ?? "",
+                email: user.email ?? "",
+                pass: "",
+            });
+        }
+    }, [user]);
 
     return (<div className='body'>
         <div className='profile'>
@@ -79,12 +128,12 @@ function Profile() {
                     <div className='basic-info'>
                         <div className='user-info'>
                             <h2><b>User name: </b>{!isEditing && user.name}</h2>
-                            {isEditing && <input id='editName' type='text' onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
+                            {isEditing && <input id='editName' type='text' value={editUser.name || ""} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
                         </div>
 
                         <div className='user-info'>
-                            <h3><b>E-mail: </b>{!isEditing && user.name}</h3>
-                            {isEditing && <input id='editEmail' type='text' onChange={e => setEditUser({ ...editUser, email: e.target.value })} />}
+                            <h3><b>E-mail: </b>{!isEditing && user.email}</h3>
+                            {isEditing && <input id='editEmail' type='text' value={editUser.email || ""} onChange={e => setEditUser({ ...editUser, email: e.target.value })} />}
                         </div>
 
                         {isEditing && <div className='user-info'>
@@ -93,9 +142,13 @@ function Profile() {
                         </div>}
                     </div>
                     <div className='bts'>
-                        {isEditing && <input type="button" className="del-btn" value="Save" />}
+                        {isEditing && <input type="button" className="del-btn" value="Save" onClick={() => update()} />}
                         <input type="button" className="btn" value={!isEditing ? "Update" : "Cancel"} onClick={() => setIsEditing(!isEditing)} />
-                        <input type="button" className="del-btn" value="Delete" />
+                        <input type="button" className="del-btn" value="Delete" onClick={() => {
+                            if (confirm("Do you want to delete your acount?")) {
+                                deleteUser();
+                            }
+                        }} />
                     </div>
                 </div>
 

@@ -3,7 +3,6 @@ package dashboard.app.infrastructure.adapters.input.rest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rmi.shared.AuthRmiPort;
 import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
