@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react'
+import { usePageContext } from "./PageContext.tsx";
 import Dashboard from './Dashboard';
 
 function Profile() {
+    const { setMessage } = usePageContext();
     const [user, setUser] = useState({
         picture: null,
         name: null,
         email: null
+    });
+    const [editUser, setEditUser] = useState({
+        name: "",
+        email: "",
+        pass: ""
     });
     const [tasks, setTasks] = useState({
         tt: 0,
@@ -15,6 +22,7 @@ function Profile() {
     });
     const [isTasks, setIsTasks] = useState(false);
     const [isRender, setIsRender] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     async function auth() {
         try {
@@ -24,15 +32,14 @@ function Profile() {
 
             const data = await response.json();
             if (response && data && response.status === 200) {
-                // setMessage(msg);
                 setUser(data);
             } else {
-                window.location.href = "http://localhost:3000/";
+                // window.location.href = "http://localhost:3000/";
             }
         } catch (error) {
             console.error(error);
-            // setMessage("Error");
-            window.location.href = "http://localhost:3000/";
+            setMessage("Error");
+            // window.location.href = "http://localhost:3000/";
         }
     }
 
@@ -70,11 +77,24 @@ function Profile() {
                 <div className='container'>
                     <img draggable={false} src={user.picture ? user.picture : "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png"} alt="profile picture" />
                     <div className='basic-info'>
-                        <h2><b>User name: </b>{user.name}</h2>
-                        <h3><b>E-mail: </b>{user.email}</h3>
+                        <div className='user-info'>
+                            <h2><b>User name: </b>{!isEditing && user.name}</h2>
+                            {isEditing && <input id='editName' type='text' onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
+                        </div>
+
+                        <div className='user-info'>
+                            <h3><b>E-mail: </b>{!isEditing && user.name}</h3>
+                            {isEditing && <input id='editEmail' type='text' onChange={e => setEditUser({ ...editUser, email: e.target.value })} />}
+                        </div>
+
+                        {isEditing && <div className='user-info'>
+                            <h3><b>Password: </b></h3>
+                            <input type='text' id='editPass' onChange={e => setEditUser({ ...editUser, pass: e.target.value })} />
+                        </div>}
                     </div>
                     <div className='bts'>
-                        <input type="button" className="btn" value="Update" />
+                        {isEditing && <input type="button" className="del-btn" value="Save" />}
+                        <input type="button" className="btn" value={!isEditing ? "Update" : "Cancel"} onClick={() => setIsEditing(!isEditing)} />
                         <input type="button" className="del-btn" value="Delete" />
                     </div>
                 </div>

@@ -3,8 +3,8 @@ package dashboard.app.infrastructure.adapters.input.rest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rmi.shared.Panel;
-
+import rmi.shared.AuthRmiPort;
+import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
 import java.util.List;
@@ -58,14 +58,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/in-prog")
-    public ResponseEntity<List<Panel>> getInProgressTasks(
+    public ResponseEntity<List<RmiPanelData>> getInProgressTasks(
         @CookieValue(name = "access_token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        List<Panel> inProgList = dashboardService.getInProgressTasks(token);
+        List<RmiPanelData> inProgList = dashboardService.getInProgressTasks(token);
         if (inProgList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -73,14 +73,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<Panel>> getPendingTaks(
+    public ResponseEntity<List<RmiPanelData>> getPendingTaks(
         @CookieValue(name = "access_token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        List<Panel> pendingList = dashboardService.getPendingTasks(token);
+        List<RmiPanelData> pendingList = dashboardService.getPendingTasks(token);
         if (pendingList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

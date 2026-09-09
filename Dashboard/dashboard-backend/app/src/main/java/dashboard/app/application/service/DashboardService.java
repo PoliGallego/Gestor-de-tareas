@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rmi.shared.Panel;
-import rmi.shared.EstadoPanel;
 import rmi.shared.AuthRmiPort;
 import rmi.shared.PanelRemoteService;
-
+import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
 public class DashboardService implements DashboardServicePort {
@@ -34,20 +32,20 @@ public class DashboardService implements DashboardServicePort {
     @Override
     public Map<String, Integer> getTasksInfo(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(getUserId(token));
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
             Integer tt = 0, tc = 0, tp = 0, pt = 0;
 
-            for (Panel panel : panels) {
+            for (RmiPanelData panel : panels) {
                 tt++;
 
                 switch (panel.getEstado()) {
-                    case PENDIENTE:
+                    case "PENDIENTE":
                         pt++;
                         break;
-                    case EN_PROGRESO:
+                    case "EN_PROGRESO":
                         tp++;
                         break;
-                    case COMPLETADO:
+                    case "COMPLETADO":
                         tc++;
                         break;
                 }
@@ -60,12 +58,12 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getInProgressTasks(String token) {
+    public List<RmiPanelData> getInProgressTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(getUserId(token));
-            List<Panel> inProgress = new ArrayList<>();
-            for (Panel panel : panels) {
-                if (panel.getEstado() == EstadoPanel.EN_PROGRESO) {
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
+            List<RmiPanelData> inProgress = new ArrayList<>();
+            for (RmiPanelData panel : panels) {
+                if (panel.getEstado().equals("EN_PROGRESO")) {
                     inProgress.add(panel);
                 }
             }
@@ -77,12 +75,12 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getPendingTasks(String token) {
+    public List<RmiPanelData> getPendingTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(getUserId(token));
-            List<Panel> pending = new ArrayList<>();
-            for (Panel panel : panels) {
-                if (panel.getEstado() == EstadoPanel.PENDIENTE) {
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
+            List<RmiPanelData> pending = new ArrayList<>();
+            for (RmiPanelData panel : panels) {
+                if (panel.getEstado().equals("PENDIENTE")) {
                     pending.add(panel);
                 }
             }
