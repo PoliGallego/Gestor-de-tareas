@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
-import Login from './SignUp'
+import SignUp from './SignUp'
 import Info from './Info';
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
   return (
     <PageContext.Provider value={{ message, setMessage }}>
       {isMsgShow && <Info text={message} setShow={setMsgShow} />}
-      <Login />
+      <SignUp />
     </PageContext.Provider>
   )
 }
