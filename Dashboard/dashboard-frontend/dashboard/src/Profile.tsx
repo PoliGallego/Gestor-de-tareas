@@ -38,7 +38,7 @@ function Profile() {
             }
         } catch (error) {
             console.error(error);
-            setMessage("Error");
+            setMessage("Authentication error");
             window.location.href = "http://localhost:3000/";
         }
     };
