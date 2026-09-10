@@ -1,7 +1,11 @@
 import KanbanBoard from "./components/KanbanBoard";
+import Header from "./components/Header";
 
 function App() {
-  return <KanbanBoard />;
+  return (<div>
+    <Header />
+    <KanbanBoard />
+  </div>);
 }
 
 export default App;

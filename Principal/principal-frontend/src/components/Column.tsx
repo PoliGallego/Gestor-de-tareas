@@ -19,7 +19,7 @@ export default function Column({ title, tasks, memberById, accentColor }: Column
 
       <div className="column__list">
         {tasks.length === 0 ? (
-          <p className="column__empty">Sin tareas</p>
+          <p className="column__empty">No tasks</p>
         ) : (
           tasks.map((task) => (
             <TaskCard key={task.id} task={task} assignee={memberById.get(task.assigneeId)} />

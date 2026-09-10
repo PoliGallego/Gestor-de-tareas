@@ -14,7 +14,7 @@ export default function TeamFilter({ members, selectedId, onSelect }: TeamFilter
         className={`team-filter__chip ${selectedId === null ? "team-filter__chip--active" : ""}`}
         onClick={() => onSelect(null)}
       >
-        Todo el equipo
+        Entire team
       </button>
       {members.map((member) => (
         <button

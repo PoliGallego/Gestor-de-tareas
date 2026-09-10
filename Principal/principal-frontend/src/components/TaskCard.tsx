@@ -34,17 +34,17 @@ export default function TaskCard({ task, assignee }: TaskCardProps) {
       </div>
 
       <h3 className="task-card__title">{task.title}</h3>
-      <p className="task-card__description">{task.description}</p>
+      {/* <p className="task-card__description">{task.description}</p> */}
 
-      <div className="task-card__tags">
+      {/* <div className="task-card__tags">
         {task.tags.map((tag) => (
           <span key={tag} className="task-card__tag">
             #{tag}
           </span>
         ))}
-      </div>
+      </div> */}
 
-      <div className="task-card__footer">
+      {/* <div className="task-card__footer">
         {assignee ? (
           <div className="task-card__assignee">
             <Avatar member={assignee} />
@@ -53,7 +53,7 @@ export default function TaskCard({ task, assignee }: TaskCardProps) {
         ) : (
           <span className="task-card__assignee task-card__assignee--empty">Sin asignar</span>
         )}
-      </div>
+      </div> */}
     </article>
   );
 }
