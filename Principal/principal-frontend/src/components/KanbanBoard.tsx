@@ -1,6 +1,9 @@
-import { useMemo, useState } from "react";
-import { tasks as allTasks, teamMembers } from "../data/mockData";
-import type { TaskStatus } from "../types";
+import { useMemo, useState, useEffect } from "react";
+// 1. Ya no importamos 'tasks', solo los miembros del equipo.
+import { teamMembers } from "../data/mockData"; 
+// 2. Importamos tu servicio y el tipo Task
+import { getPaneles } from "../services/panelesService";
+import type { TaskStatus, Task } from "../types"; 
 import Column from "./Column";
 import TeamFilter from "./TeamFilter";
 
@@ -12,16 +15,51 @@ const columns: { status: TaskStatus; title: string; color: string }[] = [
 
 export default function KanbanBoard() {
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  
+  // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
+  const [allTasks, setAllTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const memberById = useMemo(() => new Map(teamMembers.map((m) => [m.id, m])), []);
 
+  // 4. useEffect para llamar al backend cuando el componente se dibuja por primera vez
+  useEffect(() => {
+    const fetchPaneles = async () => {
+      try {
+        setIsLoading(true);
+        // Llamamos a tu servicio que trae los datos reales
+        const panelesBackend = await getPaneles();
+        // Guardamos los datos en el estado
+        setAllTasks(panelesBackend);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error desconocido al cargar paneles");
+        console.error("Error al cargar paneles:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPaneles();
+  }, []); // El array vacío [] indica que esto solo se ejecuta una vez al cargar la página
+
+  // Este filtro ahora usa el estado 'allTasks' que se llenará con el backend
   const visibleTasks = useMemo(
     () =>
       selectedMemberId
         ? allTasks.filter((task) => task.assigneeId === selectedMemberId)
         : allTasks,
-    [selectedMemberId]
+    [selectedMemberId, allTasks]
   );
+
+  // 5. Pequeña validación visual mientras cargan los datos o si hay error
+  if (isLoading) {
+    return <div style={{ padding: "2rem", textAlign: "center" }}>Cargando paneles del equipo...</div>;
+  }
+
+  if (error) {
+    return <div style={{ padding: "2rem", textAlign: "center", color: "red" }}>Error: {error}</div>;
+  }
 
   return (
     <div className="board">
