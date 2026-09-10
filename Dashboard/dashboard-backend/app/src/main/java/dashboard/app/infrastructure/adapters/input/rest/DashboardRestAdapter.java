@@ -3,8 +3,7 @@ package dashboard.app.infrastructure.adapters.input.rest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rmi.shared.Panel;
-
+import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
 import java.util.List;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/dash")
@@ -25,17 +24,31 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Map<String, String>> getProfile(@RequestParam String token) {
+    public ResponseEntity<Map<String, String>> getProfile(
+            @CookieValue(name = "access_token", required = false) String token) {
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Map<String, String> userInfo = dashboardService.getProfileInfo(token);
 
         if (userInfo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Profile not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Profile not found"));
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(userInfo);
+
+        return ResponseEntity.ok(userInfo);
     }
 
     @GetMapping("/tasks")
-    public ResponseEntity<Map<String, Integer>> getTasksInfo(@RequestParam String token) {
+    public ResponseEntity<Map<String, Integer>> getTasksInfo(
+        @CookieValue(name = "access_token", required = false) String token) {
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         Map<String, Integer> tasksInfo = dashboardService.getTasksInfo(token);
         if (tasksInfo == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -44,8 +57,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/in-prog")
-    public ResponseEntity<List<Panel>> getInProgressTasks(@RequestParam String token) {
-       List<Panel> inProgList = dashboardService.getInProgressTasks(token);
+    public ResponseEntity<List<RmiPanelData>> getInProgressTasks(
+        @CookieValue(name = "access_token", required = false) String token) {
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<RmiPanelData> inProgList = dashboardService.getInProgressTasks(token);
         if (inProgList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -53,8 +72,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<Panel>> getPendingTaks(@RequestParam String token) {
-        List<Panel> pendingList = dashboardService.getPendingTasks(token);
+    public ResponseEntity<List<RmiPanelData>> getPendingTaks(
+        @CookieValue(name = "access_token", required = false) String token) {
+
+        if (token == null || token.isBlank()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<RmiPanelData> pendingList = dashboardService.getPendingTasks(token);
         if (pendingList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

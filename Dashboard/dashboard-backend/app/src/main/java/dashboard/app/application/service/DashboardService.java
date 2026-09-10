@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rmi.shared.Panel;
-import rmi.shared.EstadoPanel;
 import rmi.shared.AuthRmiPort;
 import rmi.shared.PanelRemoteService;
-
+import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
 public class DashboardService implements DashboardServicePort {
@@ -22,9 +20,9 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public Map<String, String> getProfileInfo(String userId) {
+    public Map<String, String> getProfileInfo(String token) {
         try {
-            System.out.println(authRmiPort.extractSubject(userId));
+            return authRmiPort.extractSubject(token);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,24 +30,20 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public Map<String, Integer> getTasksInfo(String userId) {
+    public Map<String, Integer> getTasksInfo(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
             Integer tt = 0, tc = 0, tp = 0, pt = 0;
 
-            for (Panel panel : panels) {
+            for (RmiPanelData panel : panels) {
                 tt++;
 
-                switch (panel.getEstado()) {
-                    case PENDIENTE:
-                        pt++;
-                        break;
-                    case EN_PROGRESO:
-                        tp++;
-                        break;
-                    case COMPLETADO:
-                        tc++;
-                        break;
+                if (panel.getEstado().equals("PENDIENTE")) {
+                    pt++;
+                } else if (panel.getEstado().equals("EN_PROGRESO")) {
+                    tp++;
+                } else if (panel.getEstado().equals("COMPLETADO")) {
+                    tc++;
                 }
             }
             return Map.of("tt", tt, "tc", tc, "tp", tp, "pt", pt);
@@ -60,12 +54,12 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getInProgressTasks(String userId) {
+    public List<RmiPanelData> getInProgressTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
-            List<Panel> inProgress = new ArrayList<>();
-            for (Panel panel : panels) {
-                if (panel.getEstado() == EstadoPanel.EN_PROGRESO) {
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
+            List<RmiPanelData> inProgress = new ArrayList<>();
+            for (RmiPanelData panel : panels) {
+                if (panel.getEstado().equals("EN_PROGRESO")) {
                     inProgress.add(panel);
                 }
             }
@@ -77,12 +71,12 @@ public class DashboardService implements DashboardServicePort {
     }
 
     @Override
-    public List<Panel> getPendingTasks(String userId) {
+    public List<RmiPanelData> getPendingTasks(String token) {
         try {
-            List<Panel> panels = panelService.listarPaneles(userId);
-            List<Panel> pending = new ArrayList<>();
-            for (Panel panel : panels) {
-                if (panel.getEstado() == EstadoPanel.PENDIENTE) {
+            List<RmiPanelData> panels = panelService.listarPaneles(getUserId(token));
+            List<RmiPanelData> pending = new ArrayList<>();
+            for (RmiPanelData panel : panels) {
+                if (panel.getEstado().equals("PENDIENTE")) {
                     pending.add(panel);
                 }
             }
@@ -93,4 +87,11 @@ public class DashboardService implements DashboardServicePort {
         return null;
     }
 
+    private String getUserId(String token) throws Exception {
+        try {
+            return authRmiPort.extractSubject(token).get("id");
+        } catch (Exception e) {
+            throw new Exception("Error en la obtencion del perfil");
+        }
+    }
 }
