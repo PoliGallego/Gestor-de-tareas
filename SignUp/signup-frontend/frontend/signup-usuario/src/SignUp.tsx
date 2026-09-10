@@ -26,7 +26,7 @@ function SignUp() {
             if (response && data) {
                 let msg = data.message;
                 if (response.status === 201) {
-                    window.location.href = "http://localhost:3030/";
+                    window.location.href = "http://localhost:5173/";
                 } else {
                     setMessage(msg);
                 }
