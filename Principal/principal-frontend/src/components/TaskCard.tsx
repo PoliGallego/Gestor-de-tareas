@@ -11,9 +11,12 @@ const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
 interface TaskCardProps {
   task: Task;
   assignee?: TeamMember;
+  onDragStart?: (task: Task) => void;
+  onDragEnd?: () => void;
 }
 
-export default function TaskCard({ task, assignee }: TaskCardProps) {
+export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: TaskCardProps) {
+
   const priorityStyle = priorityStyles[task.priority];
   const dueDate = new Date(task.dueDate);
   const formattedDate = dueDate.toLocaleDateString("es-CO", {
@@ -22,7 +25,8 @@ export default function TaskCard({ task, assignee }: TaskCardProps) {
   });
 
   return (
-    <article className="task-card">
+    <article className="task-card" draggable onDragStart={() => onDragStart?.(task)}
+      onDragEnd={() => onDragEnd?.()} style={{backgroundColor: task.color}}>
       <div className="task-card__header">
         <span
           className="task-card__priority"

@@ -330,6 +330,12 @@ h3 {
   gap: 10px;
 }
 
+.column__list--drop-target {
+  border: 1px dashed #a6c593;
+  border-radius: 8px;
+  background: rgba(166, 197, 147, 0.12);
+}
+
 .column__empty {
   font-size: 13px;
   color: var(--text);

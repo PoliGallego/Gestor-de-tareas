@@ -1,5 +1,4 @@
 export type TaskStatus = "todo" | "in-progress" | "done";
-
 export type TaskPriority = "Baja" | "Media" | "Alta" | "Urgente";
 
 export interface TeamMember {
@@ -18,5 +17,7 @@ export interface Task {
   priority: TaskPriority;
   status: TaskStatus;
   dueDate: string;
+  color: string;
+  startDate: string;
   tags: string[];
 }

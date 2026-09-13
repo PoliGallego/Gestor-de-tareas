@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 // 1. Ya no importamos 'tasks', solo los miembros del equipo.
 import { teamMembers } from "../data/mockData";
 // 2. Importamos tu servicio y el tipo Task
-import { crearPanel, getPaneles } from "../services/panelesService";
+import { crearPanel, getPaneles, updatePanel } from "../services/panelesService";
 import type { TaskStatus, Task } from "../types";
 import Column from "./Column";
 
@@ -24,6 +24,7 @@ const initialTaskForm = {
 };
 
 export default function KanbanBoard() {
+  const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [selectedMemberId] = useState<string | null>(null);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
@@ -69,6 +70,24 @@ export default function KanbanBoard() {
     if (isSaving) return;
     setIsModalOpen(false);
     setTaskForm(initialTaskForm);
+  }
+
+  function moveTask(destinationStatus: TaskStatus) {
+    if (!draggedTask || draggedTask.status === destinationStatus) {
+      setDraggedTask(null);
+      return;
+    }
+
+    setAllTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === draggedTask.id
+          ? { ...task, status: destinationStatus }
+          : task
+      )
+    );
+    updatePanel(draggedTask.id, {...draggedTask, status: destinationStatus});
+
+    setDraggedTask(null);
   }
 
   async function handleCreateTask(event: React.FormEvent<HTMLFormElement>) {
@@ -136,6 +155,11 @@ export default function KanbanBoard() {
             accentColor={col.color}
             memberById={memberById}
             tasks={visibleTasks.filter((task) => task.status === col.status)}
+            status={col.status}
+            draggedTask={draggedTask}
+            onDragStart={setDraggedTask}
+            onDragEnd={() => setDraggedTask(null)}
+            onDrop={moveTask}
           />
         ))}
       </div>
@@ -206,10 +230,10 @@ export default function KanbanBoard() {
                   </select>
                 </label>
 
-                {/* <label>
+                <label>
                   Color
                   <input type="color" value={taskForm.color} onChange={(event) => setTaskForm({ ...taskForm, color: event.target.value })} />
-                </label> */}
+                </label>
 
                 <label>
                   Fecha de inicio
