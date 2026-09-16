@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useState } from "react";
 import { crearPanel } from "../services/panelesService";
 import type { Task, TaskStatus } from "../types";
 import { usePageContext } from "../PageContext";

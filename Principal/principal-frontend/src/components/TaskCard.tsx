@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { Task, TeamMember } from "../types";
 import Avatar from "./Avatar";
-import UpdateModal from "./UpdateModal";
 import { usePageContext } from "../PageContext";
 
 const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
