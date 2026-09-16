@@ -131,9 +131,21 @@ export async function updatePanel(panelId: String, task: Task): Promise<Task> {
   });
 
   if (!response.ok) {
-    throw new Error(`Error al crear panel: ${response.status}`);
+    throw new Error(`Error al editar panel: ${response.status}`);
   }
 
   const data: PanelDTO = await response.json();
   return mapPanelToTask(data);
+}
+
+export async function deletePanel(panelId: String) {
+  const response = await fetch("/api/paneles/" + panelId, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+
+  if (response.status !== 204) {
+    throw new Error(`Error al eliminar panel: ${response.status}`);
+  }
 }
