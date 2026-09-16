@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import Task from "./Task";
-import type { TaskData } from "./Task";
+import TaskCard from "./TaskCard";
+import type { TaskData } from "./TaskCard";
 
 function Dashboard() {
     const [progress, setProgress] = useState([]);
     const [pending, setPending] = useState([]);
     const [isRender, setIsRender] = useState(false);
+    const [isPDown, setPDown] = useState(false);
+    const [isQDown, setQDown] = useState(false);
 
     async function showInProgress() {
         try {
@@ -42,16 +44,14 @@ function Dashboard() {
             return <p>There are no tasks.</p>;
         }
 
-        return (
-            <div className="tasks-list">
-                {tasks.map((task) => (
-                    <Task
-                        key={task.nombre}
-                        task={task}
-                    />
-                ))}
-            </div>
-        );
+        return (<div className="tasks-list">
+            {tasks.map((task) => (
+                <TaskCard
+                    key={task.nombre}
+                    task={task}
+                />
+            ))}
+        </div>);
     }
 
     useEffect(() => {
@@ -64,13 +64,23 @@ function Dashboard() {
 
     return (<div className='dashboard'>
         <div className='container'>
-            <h2>Tasks in progress: </h2>
-            {tasks(progress)}
+            <div className="container-header">
+                <h2>Tasks in progress: </h2>
+                <button onClick={() => setPDown(!isPDown)}>Toggle</button>
+            </div>
+            {isPDown && <div className="list-cont">
+                {tasks(progress)}
+            </div>}
         </div>
 
         <div className='container'>
-            <h2>Pending tasks: </h2>
-            {tasks(pending)}
+            <div className="container-header">
+                <h2>Pending tasks: </h2>
+                <button onClick={() => setQDown(!isQDown)}>Toggle</button>
+            </div>
+            {isQDown && <div className="list-cont">
+                {tasks(pending)}
+            </div>}
         </div>
     </div>);
 }
