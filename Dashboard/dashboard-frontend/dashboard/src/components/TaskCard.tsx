@@ -1,12 +1,5 @@
-import './assets/Task.css';
-
-export interface TaskData {
-    prioridad: number;
-    fecha_fin: string;
-    nombre: string;
-    descrip: string;
-    color: string;
-}
+import '../assets/Task.css';
+import type { TaskData } from '../services/dashboardService';
 
 const setPriority: Record<number, { prior: string, bg: string; fg: string }> = {
   1: { prior: "Baja", bg: "#e0f2fe", fg: "#0369a1" },

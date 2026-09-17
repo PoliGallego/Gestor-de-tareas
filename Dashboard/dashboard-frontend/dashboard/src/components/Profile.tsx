@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react'
-import { usePageContext } from "./PageContext.tsx";
-import Dashboard from './Dashboard';
+import { usePageContext } from "../PageContext.tsx";
+import type { User, Totals, PassUser } from "../services/dashboardService.ts";
+import { auth, getTaskTotals, logOut, updateUser } from "../services/dashboardService.ts";
+import Dashboard from './Dashboard.tsx';
 
 function Profile() {
     const { setMessage } = usePageContext();
-    const [user, setUser] = useState({
+    const [user, setUser] = useState<User>({
         picture: null,
         name: null,
         email: null
     });
-    const [editUser, setEditUser] = useState({
+    const [editUser, setEditUser] = useState<PassUser>({
         name: "",
         email: "",
-        pass: ""
+        pass: "",
+        picture: ""
     });
-    const [tasks, setTasks] = useState({
+    const [tasks, setTasks] = useState<Totals>({
         tt: 0,
         tc: 0,
         pt: 0,
@@ -24,33 +27,25 @@ function Profile() {
     const [isRender, setIsRender] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    async function auth() {
+    async function authUser() {
         try {
-            const response = await fetch(
-                'http://localhost:8082/api/dash/profile', { credentials: 'include' }
-            );
-
-            const data = await response.json();
-            if (data && response.status === 200) {
+            const data = await auth();
+            if (data) {
                 setUser(data);
             } else {
-                window.location.href = "http://localhost:3000/";
+                await logOut();
             }
         } catch (error) {
             console.error(error);
             setMessage("Authentication error");
-            window.location.href = "http://localhost:3000/";
+            await logOut();
         }
     };
 
     async function taks() {
         try {
-            const response = await fetch(
-                'http://localhost:8082/api/dash/tasks', { credentials: 'include' }
-            );
-
-            const data = await response.json();
-            if (response && data && response.status === 302) {
+            const data = await getTaskTotals();
+            if (data) {
                 setTasks(data);
                 setIsTasks(true);
             }
@@ -59,37 +54,26 @@ function Profile() {
         }
     };
 
-    async function deleteUser() {
-        try {
-            const response = await fetch("http://localhost:8090/api/users", {
-                method: "DELETE",
-                credentials: "include",
-            });
+    // async function deleteUser() {
+    //     try {
+    //         const response = await fetch("http://localhost:8090/api/users", {
+    //             method: "DELETE",
+    //             credentials: "include",
+    //         });
 
-            if (response.status === 204) {
-                setMessage("User deleted");
-                window.location.href = "http://localhost:3000/";
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    //         if (response.status === 204) {
+    //             setMessage("User deleted");
+    //             window.location.href = "http://localhost:3000/";
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
 
     async function update() {
         try {
-            const response = await fetch(
-                'http://localhost:8090/api/users', {
-                method: 'PATCH',
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editUser)
-            }
-            );
-
-            const data = await response.json();
-            if (response && data && response.status === 200) {
+            const data = await updateUser(editUser);
+            if (data) {
                 setUser(data);
                 setMessage("User updated");
             }
@@ -100,7 +84,7 @@ function Profile() {
 
     useEffect(() => {
         if (!isRender) {
-            auth();
+            authUser();
             taks();
             setIsRender(true);
         }
@@ -111,7 +95,8 @@ function Profile() {
             setEditUser({
                 name: user.name ?? "",
                 email: user.email ?? "",
-                pass: "",
+                picture: user.picture ?? "",
+                pass: ""
             });
         }
     }, [user]);
@@ -144,11 +129,11 @@ function Profile() {
                     <div className='bts'>
                         {isEditing && <input type="button" className="del-btn" value="Save" onClick={() => update()} />}
                         <input type="button" className="btn" value={!isEditing ? "Update" : "Cancel"} onClick={() => setIsEditing(!isEditing)} />
-                        <input type="button" className="del-btn" value="Delete" onClick={() => {
+                        {/* <input type="button" className="del-btn" value="Delete" onClick={() => {
                             if (confirm("Do you want to delete your acount?")) {
                                 deleteUser();
                             }
-                        }} />
+                        }} /> */}
                     </div>
                 </div>
 

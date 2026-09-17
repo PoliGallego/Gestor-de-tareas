@@ -1,10 +1,10 @@
 import './assets/Profile.css'
 import './assets/Dashboard.css'
-import Profile from './Profile'
-import Header from './Header'
+import Profile from './components/Profile'
+import Header from './components/Header'
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
-import Info from './Info';
+import Info from './components/Info';
 
 function App() {
   const [isMsgShow, setMsgShow] = useState(false);

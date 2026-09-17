@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import TaskCard from "./TaskCard";
-import type { TaskData } from "./TaskCard";
+import type { TaskData } from "../services/dashboardService";
+import { getInProgressTasks, getPendingTasks } from "../services/dashboardService";
 
 function Dashboard() {
-    const [progress, setProgress] = useState([]);
-    const [pending, setPending] = useState([]);
+    const [progress, setProgress] = useState<TaskData[]>([]);
+    const [pending, setPending] = useState<TaskData[]>([]);
     const [isRender, setIsRender] = useState(false);
     const [isPDown, setPDown] = useState(false);
     const [isQDown, setQDown] = useState(false);
 
     async function showInProgress() {
         try {
-            const response = await fetch(
-                'http://localhost:8082/api/dash/in-prog', { credentials: 'include' }
-            );
-
-            const data = await response.json();
-            if (response && data && response.status === 302) {
+            const data = await getInProgressTasks();
+            if (data) {
                 setProgress(data);
             }
         } catch (error) {
@@ -26,12 +23,8 @@ function Dashboard() {
 
     async function showPending() {
         try {
-            const response = await fetch(
-                'http://localhost:8082/api/dash/pending', { credentials: 'include' }
-            );
-
-            const data = await response.json();
-            if (response && data && response.status === 302) {
+            const data = await getPendingTasks();
+            if (data) {
                 setPending(data);
             }
         } catch (error) {

@@ -1,4 +1,4 @@
-import './assets/Info.css'
+import '../assets/Info.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 type InfoProps = {
