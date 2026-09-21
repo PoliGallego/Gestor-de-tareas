@@ -16,13 +16,13 @@ export function NavBar({imgUrl, userName}: NavBarProps) {
 
     return (<header className="navBar">
         <button className='btn-img' onClick={() => window.location.href = "http://localhost:3030/"}>
-            <ProfilePic imgUrl={imgUrl} userName={userName}/>
+            <ProfilePic imgUrl={imgUrl} userName={userName} />
         </button>
         <Button onClick={() => window.location.href = "http://localhost:3020/"}>
-            <img src={home} alt="home page" />
+            <img className="in-img" src={home} alt="home page" draggable={false}/>
         </Button>
         <Button onClick={() => logOutUser()}>
-            <img src={logout} alt="log out" />
+            <img className="in-img" src={logout} alt="log out" draggable={false}/>
         </Button>
     </header>);
 }

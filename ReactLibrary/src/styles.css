@@ -16,7 +16,6 @@
 }
 
 .btn {
-    width: 100%;
     padding: 14px;
     border: none;
     border-radius: 10px;
@@ -131,7 +130,7 @@
     width: 100vw;
     min-width: 100%;
     margin-left: calc(50% - 50vw);
-    background-color: #afa7a7;
+    background-color: var(--button-bg);
     position: fixed;
     gap: 1rem;
     top: 0;
@@ -153,9 +152,49 @@
 }
 
 .alt-img {
-    height: 100%;
-    width: 100%;
-    max-width: 3rem;
-    max-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
     border-radius: 50%;
+}
+
+.in-img {
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.side-body {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.side-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    background-color: var(--button-bg);
+    padding: 2rem;
+    height: 100%;
+    width: 4rem;
+}
+
+.side-head {
+    border-bottom: 3px solid var(--border);
+    margin-bottom: 1rem;
+}
+
+.side-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
