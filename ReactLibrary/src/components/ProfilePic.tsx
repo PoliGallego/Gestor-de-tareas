@@ -1,9 +1,9 @@
-export type profileProps = {
+export type ProfileProps = {
     imgUrl: string | null;
     userName: string;
 }
 
-export function ProfilePic({ imgUrl, userName }: profileProps) {
+export function ProfilePic({ imgUrl, userName }: ProfileProps) {
 
     const random = (): string => {
         return Math.floor(Math.random() * (200) + 10).toString();

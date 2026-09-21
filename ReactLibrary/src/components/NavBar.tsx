@@ -9,7 +9,7 @@ export type NavBarProps = {
     userName: string;
 }
 
-export function Header({imgUrl, userName}: NavBarProps) {
+export function NavBar({imgUrl, userName}: NavBarProps) {
     const logOutUser = async () => {
         await logOut();
     };
