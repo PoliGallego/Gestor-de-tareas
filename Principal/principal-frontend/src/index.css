@@ -6,7 +6,7 @@
     --code-bg-sec: #888;
     --border: #585858;
     --button-bg: #afa7a7;
-    --button-bg-hover: #a09898;
+    --button-bg-hover: #cabfbf;
     --bg-container: rgb(235, 235, 235);
     --input-border: #979797;
 }
@@ -14,6 +14,7 @@
 * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    transition: all 0.3s ease;
 }
 
 body {
@@ -330,6 +331,12 @@ h3 {
   gap: 10px;
 }
 
+.column__list--drop-target {
+  border: 1px dashed #a6c593;
+  border-radius: 8px;
+  background: rgba(166, 197, 147, 0.12);
+}
+
 .column__empty {
   font-size: 13px;
   color: var(--text);
@@ -352,6 +359,7 @@ h3 {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+  min-height: 32px;
 }
 
 .task-card__priority {
@@ -427,4 +435,38 @@ h3 {
   justify-content: center;
   font-weight: 700;
   flex-shrink: 0;
+}
+
+.ed-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.ed-button {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.ed-button:hover {
+  background-color: rgba(151, 151, 151, 0.473);
+}
+
+.ed-icon {
+  width: 18px;
+  height: 18px; 
+}
+
+.edit {
+  background-image: url('../edit_b.png');
+  background-position: 0 0;
+  background-size:cover;
+}
+
+.delete {
+  width: 20px;
+  height: 20px; 
+  background-image: url('../delete_b.png');
+  background-position: 0 0;
+  background-size: cover;
 }

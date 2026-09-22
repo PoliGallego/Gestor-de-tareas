@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { Task, TeamMember } from "../types";
 import Avatar from "./Avatar";
+import { usePageContext } from "../PageContext";
 
 const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
   Baja: { bg: "#e0f2fe", fg: "#0369a1" },
@@ -11,9 +13,13 @@ const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
 interface TaskCardProps {
   task: Task;
   assignee?: TeamMember;
+  onDragStart?: (task: Task) => void;
+  onDragEnd?: () => void;
 }
 
-export default function TaskCard({ task, assignee }: TaskCardProps) {
+export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: TaskCardProps) {
+  const { setFocusTask, setIsUModalOpen, setIsDModalOpen} = usePageContext();
+  const [isHover, setIsHover] = useState(false);
   const priorityStyle = priorityStyles[task.priority];
   const dueDate = new Date(task.dueDate);
   const formattedDate = dueDate.toLocaleDateString("es-CO", {
@@ -21,16 +27,35 @@ export default function TaskCard({ task, assignee }: TaskCardProps) {
     month: "short",
   });
 
+  const editFunt = () => {
+    setFocusTask(task);
+    setIsUModalOpen(true);
+  };
+
+  const deleteFunt = () => {
+    setFocusTask(task);
+    setIsDModalOpen(true);
+  };
+
   return (
-    <article className="task-card">
-      <div className="task-card__header">
+    <article className="task-card" draggable onDragStart={() => onDragStart?.(task)}
+      onDragEnd={() => onDragEnd?.()} style={{ backgroundColor: task.color }}>
+      <div className="task-card__header" onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <span
           className="task-card__priority"
           style={{ backgroundColor: priorityStyle.bg, color: priorityStyle.fg }}
         >
           {task.priority}
         </span>
-        <span className="task-card__due">{formattedDate}</span>
+        {!isHover ? <span className="task-card__due">{formattedDate}</span> :
+          <div className="ed-buttons">
+            <button className="ed-button" onClick={() => editFunt()}>
+              <div className="ed-icon edit" />
+            </button>
+            <button className="ed-button" onClick={() => deleteFunt()}>
+              <div className="ed-icon delete" />
+            </button>
+          </div>}
       </div>
 
       <h3 className="task-card__title">{task.title}</h3>
