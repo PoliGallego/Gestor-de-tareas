@@ -22,12 +22,12 @@ export function Modal({ title = "modalrmación", text, isChoose, setChoose, setS
         <div className="modal-container">
             <div className="modal-div">
                 <div className='modal-title'>
-                    <img src={info} alt="info icon" draggable={false}/>
+                    <img className="modal-icon" src={info} alt="info icon" draggable={false}/>
                     <h1>{title}</h1>
                 </div>
                 <p>{text || ""}</p>
-                <Button type="submit" value="Aceptar" onClick={() => choose(true)} />
-                {isChoose && <Button type="submit" value="Cancelar" onClick={() => choose(false)} />}
+                <Button type="submit" text="Aceptar" onClick={() => choose(true)} />
+                {isChoose && <Button type="submit" text="Cancelar" onClick={() => choose(false)} />}
             </div>
         </div>
     </div>

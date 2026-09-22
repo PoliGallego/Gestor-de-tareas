@@ -32,11 +32,11 @@ export function SideBar({ setShow }: SideProps) {
             </div>
 
             <div className="side-btns">
-                <Button variant="quiet" value="Home" onClick={() => setPage("home")} />
-                <Button variant="quiet" value="Principal" onClick={() => setPage("prin")} />
-                <Button variant="quiet" value="Perfil" onClick={() => setPage("perf")} />
-                <Button variant="quiet" value="Crear cuenta" onClick={() => setPage("signup")} />
-                <Button variant="quiet" value="Cerrar sesión" onClick={() => logOut()} />
+                <Button variant="quiet" text="Hogar" onClick={() => setPage("home")} />
+                <Button variant="quiet" text="Principal" onClick={() => setPage("prin")} />
+                <Button variant="quiet" text="Perfil" onClick={() => setPage("perf")} />
+                <Button variant="quiet" text="Crear cuenta" onClick={() => setPage("signup")} />
+                <Button variant="quiet" text="Cerrar sesión" onClick={() => logOut()} />
             </div>
         </div>
     </div>;

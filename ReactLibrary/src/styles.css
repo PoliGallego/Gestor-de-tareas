@@ -103,11 +103,6 @@
     text-align: center;
 }
 
-.modal-div div {
-    align-items: center;
-    height: 5rem;
-}
-
 .modal-div span img {
     height: 100%;
     width: 100%;
@@ -149,6 +144,9 @@
 .btn-img {
     padding: 0;
     border-radius: 50%;
+    border: none;
+    overflow: clip;
+    cursor: pointer;
 }
 
 .alt-img {
@@ -185,16 +183,33 @@
     background-color: var(--button-bg);
     padding: 2rem;
     height: 100%;
-    width: 4rem;
+    width: 15rem;
 }
 
 .side-head {
     border-bottom: 3px solid var(--border);
     margin-bottom: 1rem;
+    margin-top: 4rem;
 }
 
 .side-btns {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    display: flex;
+    z-index: 9999;
+}
+
+.h2 {
+    text-align: center;
+}
+
+.modal-icon {
+    height: 3.5rem;
+    width: 3.5rem;
 }
