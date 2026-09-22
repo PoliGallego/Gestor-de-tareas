@@ -1,0 +1,41 @@
+{
+  "name": "@gestor-tareas/react-components",
+  "version": "0.1.0",
+  "description": "Reusable React components for Gestor de tareas",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/index.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly && vite build",
+    "clean": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\"",
+    "pack:check": "npm pack --dry-run"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}
