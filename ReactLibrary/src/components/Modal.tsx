@@ -9,7 +9,7 @@ export type ModalProps = {
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function Modal({ title = "modalrmación", text, isChoose, setChoose, setShow }: ModalProps) {
+export function Modal({ title = "Información", text, isChoose, setChoose, setShow }: ModalProps) {
 
     const choose = (choo: boolean) => {
         if (isChoose && setChoose) {

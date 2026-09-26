@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TaskCard from "./TaskCard";
 import type { TaskData } from "../services/dashboardService";
 import { getInProgressTasks, getPendingTasks } from "../services/dashboardService";
+import { Button } from "@gestor-tareas/react-components";
 
 function Dashboard() {
     const [progress, setProgress] = useState<TaskData[]>([]);
@@ -34,7 +35,7 @@ function Dashboard() {
 
     function tasks(tasks: TaskData[]) {
         if (tasks.length === 0) {
-            return <p>There are no tasks.</p>;
+            return <p>No hay tareas.</p>;
         }
 
         return (<div className="tasks-list">
@@ -58,8 +59,8 @@ function Dashboard() {
     return (<div className='dashboard'>
         <div className='container'>
             <div className="container-header">
-                <h2>Tasks in progress: </h2>
-                <button onClick={() => setPDown(!isPDown)}>Toggle</button>
+                <h2>Tareas en progreso: </h2>
+                <Button variant="quiet" onClick={() => setPDown(!isPDown)}>{isPDown ? "Ocultar" : "Mostrar"}</Button>
             </div>
             {isPDown && <div className="list-cont">
                 {tasks(progress)}
@@ -68,8 +69,8 @@ function Dashboard() {
 
         <div className='container'>
             <div className="container-header">
-                <h2>Pending tasks: </h2>
-                <button onClick={() => setQDown(!isQDown)}>Toggle</button>
+                <h2>Tareas pendientes: </h2>
+                <Button variant="quiet" onClick={() => setQDown(!isQDown)}>{isQDown ? "Ocultar" : "Mostrar"}</Button>
             </div>
             {isQDown && <div className="list-cont">
                 {tasks(pending)}

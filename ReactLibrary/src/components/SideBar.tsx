@@ -1,4 +1,4 @@
-import { logOut } from "../Services/DashboardService";
+import { logOut, setPage } from "../Services/AuthService";
 import { Button } from "./Button";
 
 export type SideProps = {
@@ -6,25 +6,6 @@ export type SideProps = {
 }
 
 export function SideBar({ setShow }: SideProps) {
-    const setPage = (pag: string) => {
-        let url: string = window.location.href;
-        switch (pag) {
-            case "home":
-                url = "http://localhost:3001";
-                break;
-            case "prin":
-                url = "http://localhost:3020";
-                break;
-            case "perf":
-                url = "http://localhost:3030";
-                break;
-            case "signup":
-                url = "http://localhost:3010";
-                break;
-        }
-        window.location.href = url;
-    };
-
     return <div className="side-body" onClick={() => setShow(false)}>
         <div className="side-cont">
             <div className="side-head">

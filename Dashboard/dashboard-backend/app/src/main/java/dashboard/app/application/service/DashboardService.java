@@ -4,28 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dashboard.app.application.ports.input.AuthRemoteServicePort;
 import dashboard.app.application.ports.input.DashboardServicePort;
 import dashboard.app.application.ports.input.PanelRemoteServicePort;
 
 public class DashboardService implements DashboardServicePort {
 
-    private final AuthRemoteServicePort authService;
     private final PanelRemoteServicePort panelService;
 
-    public DashboardService(PanelRemoteServicePort panelService, AuthRemoteServicePort authService) {
-        this.authService = authService;
+    public DashboardService(PanelRemoteServicePort panelService) {
         this.panelService = panelService;
-    }
-
-    @Override
-    public Map<String, String> getProfileInfo(String token) {
-        try {
-            return authService.extractSubject(token);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override

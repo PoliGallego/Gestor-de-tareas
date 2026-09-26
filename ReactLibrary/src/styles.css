@@ -199,10 +199,10 @@
 }
 
 footer {
-    position: fixed;
-    bottom: 0px;
     display: flex;
-    z-index: 9999;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--button-bg);
 }
 
 .h2 {

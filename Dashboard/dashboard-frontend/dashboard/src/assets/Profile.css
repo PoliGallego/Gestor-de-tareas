@@ -36,7 +36,7 @@ h1 {
     min-width: fit-content;
 }
 
-h2 {
+.name {
     font-size: 1.2rem;
     font-weight: 500;
     color: var(--text);
@@ -54,14 +54,7 @@ h3 {
     min-width: fit-content;
 }
 
-img {
-    max-width: 6rem;
-    max-height: 6rem;
-    border-radius: 50%;
-    height: auto;
-}
-
-input[type="button"],
+/* input[type="button"],
 .body .btn {
     width: auto;
     min-width: 7rem;
@@ -74,19 +67,19 @@ input[type="button"],
     font-weight: 600;
     cursor: pointer;
     margin-top: 10px;
-}
+} */
 
-input[type="button"]:hover,
+/* input[type="button"]:hover,
 .body .btn:hover {
     background: var(--button-bg-hover);
     transform: scale(1.03, 1.03);
     transition: all 0.3s ease
-}
+} */
 
-input[type="button"]:active,
+/* input[type="button"]:active,
 .body .btn:active {
     transform: translateY(0);
-}
+} */
 
 .body input[type="text"],
 .body input[type="email"],
@@ -124,12 +117,12 @@ input[type="button"]:active,
     margin: 0;
 }
 
-.bts {
+/* .bts {
     display: flex;
     gap: 10px;
     padding: 10px;
     overflow: visible;
-}
+} */
 
 .container {
     display: flex;
@@ -250,4 +243,9 @@ input[type="button"]:active,
     .container {
         width: 100%;
     }
+}
+
+.container .alt-img {
+    height: 5rem;
+    width: 5rem;
 }

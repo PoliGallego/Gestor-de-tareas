@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface DashboardServicePort {
-    Map<String, String> getProfileInfo(String token);
     Map<String, Integer> getTasksInfo(String token);
     List<Map<String, String>> getInProgressTasks(String token);
     List<Map<String, String>> getPendingTasks(String token);

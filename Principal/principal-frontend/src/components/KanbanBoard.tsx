@@ -9,6 +9,7 @@ import CreateModal from "./CreateModal";
 import { usePageContext } from "../PageContext";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
+import { Button } from "@gestor-tareas/react-components";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -88,7 +89,7 @@ export default function KanbanBoard() {
       <header className="board__header">
         <div>
           <h1>Tareas del equipo</h1>
-          <input type="button" value="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
+          <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
             {selectedMemberId ? ` asignadas a ${memberById.get(selectedMemberId)?.name}` : " en total"}

@@ -27,20 +27,6 @@ export interface TaskData {
     color: string;
 }
 
-export async function auth(): Promise<User> {
-
-    const response = await fetch(
-        'http://localhost:8082/api/dash/profile', { credentials: 'include' }
-    );
-
-    if (!response.ok) {
-        throw new Error(`Auth error: ${response.status}`);
-    }
-
-    const data: User = await response.json();
-    return data;
-}
-
 export async function getTaskTotals(): Promise<Totals> {
     const response = await fetch(
         'http://localhost:8082/api/dash/tasks', { credentials: 'include' }
@@ -98,18 +84,4 @@ export async function getPendingTasks(): Promise<TaskData[]> {
 
     const data: TaskData[] = await response.json();
     return data;
-}
-
-export async function logOut() {
-    try {
-        const response = await fetch(
-            'http://localhost:8090/logout', { credentials: 'include' }
-        );
-
-        if (response && response.ok) {
-            window.location.href = "http://localhost:3000/";
-        }
-    } catch (error) {
-        console.error(error);
-    }
 }

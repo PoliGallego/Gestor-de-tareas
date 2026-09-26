@@ -22,24 +22,6 @@ public class DashboardRestAdapter {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Map<String, String>> getProfile(
-            @CookieValue(name = "access_token", required = false) String token) {
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Map<String, String> userInfo = dashboardService.getProfileInfo(token);
-
-        if (userInfo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Profile not found"));
-        }
-
-        return ResponseEntity.ok(userInfo);
-    }
-
     @GetMapping("/tasks")
     public ResponseEntity<Map<String, Integer>> getTasksInfo(
         @CookieValue(name = "access_token", required = false) String token) {

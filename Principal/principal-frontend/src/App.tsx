@@ -1,5 +1,6 @@
 import KanbanBoard from "./components/KanbanBoard";
-import Header from "./components/Header";
+import { NavBar } from "@gestor-tareas/react-components";
+import "@gestor-tareas/react-components/styles.css";
 import { PageContext } from "./PageContext";
 import { useState } from "react";
 import type { Task } from "./types";
@@ -16,7 +17,7 @@ function App() {
     error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen, setIsDModalOpen,
     isUModalOpen, setIsUModalOpen, allTasks, setAllTasks, focusTask, setFocusTask
   }}>
-    <Header />
+    <NavBar/>
     <KanbanBoard />
   </PageContext.Provider>);
 }

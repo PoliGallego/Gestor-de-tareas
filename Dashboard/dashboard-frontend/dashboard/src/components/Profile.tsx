@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { usePageContext } from "../PageContext.tsx";
 import type { User, Totals, PassUser } from "../services/dashboardService.ts";
-import { auth, getTaskTotals, logOut, updateUser } from "../services/dashboardService.ts";
+import { getTaskTotals, updateUser } from "../services/dashboardService.ts";
 import Dashboard from './Dashboard.tsx';
+import { auth, logOut, ProfilePic } from '@gestor-tareas/react-components';
 
 function Profile() {
     const { setMessage } = usePageContext();
@@ -36,8 +37,6 @@ function Profile() {
                 await logOut();
             }
         } catch (error) {
-            console.error(error);
-            setMessage("Authentication error");
             await logOut();
         }
     };
@@ -75,7 +74,7 @@ function Profile() {
             const data = await updateUser(editUser);
             if (data) {
                 setUser(data);
-                setMessage("User updated");
+                setMessage("Perfil Actualizado");
             }
         } catch (error) {
             console.error(error);
@@ -104,15 +103,15 @@ function Profile() {
     return (<div className='body'>
         <div className='profile'>
             <div className='title'>
-                <h1>Profile information</h1>
+                <h1>Información del perfil</h1>
             </div>
 
             <div className='grup'>
                 <div className='container'>
-                    <img draggable={false} src={user.picture ? user.picture : "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png"} alt="profile picture" />
+                    <ProfilePic imgUrl={user.picture} userName={user.name ?? "No encontrado"}/>
                     <div className='basic-info'>
                         <div className='user-info'>
-                            <h2><b>User name: </b>{!isEditing && user.name}</h2>
+                            <h2 className='name'><b>Nombre: </b>{!isEditing && user.name}</h2>
                             {isEditing && <input id='editName' type='text' value={editUser.name || ""} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
                         </div>
 
@@ -122,13 +121,13 @@ function Profile() {
                         </div>
 
                         {isEditing && <div className='user-info'>
-                            <h3><b>Password: </b></h3>
+                            <h3><b>Contraseña: </b></h3>
                             <input type='text' id='editPass' onChange={e => setEditUser({ ...editUser, pass: e.target.value })} />
                         </div>}
                     </div>
                     <div className='bts'>
-                        {isEditing && <input type="button" className="del-btn" value="Save" onClick={() => update()} />}
-                        <input type="button" className="btn" value={!isEditing ? "Update" : "Cancel"} onClick={() => setIsEditing(!isEditing)} />
+                        {isEditing && <input type="button" className="btn" value="Guardar" onClick={() => update()} />}
+                        <input type="button" className="btn" value={!isEditing ? "Actualizar" : "Cancelar"} onClick={() => setIsEditing(!isEditing)} />
                         {/* <input type="button" className="del-btn" value="Delete" onClick={() => {
                             if (confirm("Do you want to delete your acount?")) {
                                 deleteUser();
@@ -139,20 +138,20 @@ function Profile() {
 
                 {isTasks && <div className='container'>
                     <div className='tasks'>
-                        <p><b>Total tasks: </b>{tasks.tt}</p>
-                        <p><b>Tasks completed: </b>{tasks.tc}</p>
+                        <p><b>Total de tareas: </b>{tasks.tt}</p>
+                        <p><b>Tareas completadas: </b>{tasks.tc}</p>
                     </div>
 
                     <div className='tasks'>
-                        <p><b>Tasks in progress: </b>{tasks.tp}</p>
-                        <p><b>Pending tasks: </b>{tasks.pt}</p>
+                        <p><b>Tareas en progreso: </b>{tasks.tp}</p>
+                        <p><b>Tareas pendientes: </b>{tasks.pt}</p>
                     </div>
                 </div>}
             </div>
         </div>
 
         <div className='title'>
-            <h1>Dashboard</h1>
+            <h1>Resumen</h1>
         </div>
         <Dashboard></Dashboard>
     </div>);

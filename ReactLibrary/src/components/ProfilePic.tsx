@@ -5,12 +5,28 @@ export type ProfileProps = {
 
 export function ProfilePic({ imgUrl, userName }: ProfileProps) {
 
-    const random = (): string => {
-        return Math.floor(Math.random() * (200) + 10).toString();
-    };
+    const validNum = (num: number): number => {
+        if (isNaN(num)) {
+            return 0;
+        }
 
-    const getColor = (): string => {
-        return random() + "," + random() + "," + random();
+        if (num > 255) {
+            return 255;
+        }
+
+        return num;
+    }
+
+    const getColor = (name: string): string => {
+        let r: number = name.charCodeAt(0);
+        let g: number = name.charCodeAt(1);
+        let b: number = name.charCodeAt(2);
+        
+        r = validNum(r);
+        g = validNum(g);
+        b = validNum(b);
+
+        return r.toString + "," + g.toString + "," + b.toString;
     };
 
     const getInitials = (name: string): string => {
@@ -28,7 +44,7 @@ export function ProfilePic({ imgUrl, userName }: ProfileProps) {
 
     return imgUrl ? <img draggable={false} className='header-img'
         src={imgUrl} alt="profile picture" /> :
-        <div className="alt-img" style={{ background: 'rgb(' + getColor() + ')' }}>
+        <div className="alt-img" style={{ background: 'rgb(' + getColor(userName) + ')' }}>
             <h2>{getInitials(userName)}</h2>
         </div>
 }
