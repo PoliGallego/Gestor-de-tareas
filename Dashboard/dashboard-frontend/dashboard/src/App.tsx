@@ -1,10 +1,10 @@
-import './assets/Profile.css'
-import './assets/Dashboard.css'
-import Profile from './Profile'
-import Header from './Header'
-import { useEffect, useState } from 'react'
+import './assets/Profile.css';
+import './assets/Dashboard.css';
+import Profile from './components/Profile';
+import { useEffect, useState } from 'react';
 import { PageContext } from './PageContext';
-import Info from './Info';
+import { Modal, NavBar } from '@gestor-tareas/react-components';
+import '@gestor-tareas/react-components/styles.css';
 
 function App() {
   const [isMsgShow, setMsgShow] = useState(false);
@@ -25,8 +25,8 @@ function App() {
 
   return (
     <PageContext.Provider value={{ message, setMessage }}>
-      {isMsgShow && <Info text={message} setShow={setMsgShow} />}
-      <Header/>
+      {isMsgShow && <Modal text={message} setShow={setMsgShow} title={'Información'} isChoose={false} />}
+      <NavBar/>
       <Profile />
     </PageContext.Provider>
   )
