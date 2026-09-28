@@ -16,6 +16,7 @@ export function SideBar({ setShow }: SideProps) {
                 <Button variant="quiet" text="Hogar" onClick={() => setPage("home")} />
                 <Button variant="quiet" text="Principal" onClick={() => setPage("prin")} />
                 <Button variant="quiet" text="Perfil" onClick={() => setPage("perf")} />
+                <Button variant="quiet" text="Reportes" onClick={() => setPage("reportes")} />
                 <Button variant="quiet" text="Crear cuenta" onClick={() => setPage("signup")} />
                 <Button variant="quiet" text="Cerrar sesión" onClick={() => logOut()} />
             </div>

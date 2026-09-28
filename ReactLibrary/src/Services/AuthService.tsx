@@ -44,6 +44,9 @@ export function setPage(page: string) {
         case "perf":
             url = "http://localhost:3030";
             break;
+        case "reportes":
+            url = "http://localhost:3040";
+            break;
         case "signup":
             url = "http://localhost:3010";
             break;
