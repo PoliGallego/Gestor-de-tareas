@@ -25,7 +25,7 @@ export default function TaskCard({ task }: { task: TaskData }) {
         >
           {priority.prior}
         </span>
-        <span className="task-card__due">{formattedDate}</span>
+        <span className="task-card__due">{task.fecha_fin ? formattedDate : "Sin fecha límite"}</span>
       </div>
 
       <h3 className="task-card__title">{task.nombre}</h3>

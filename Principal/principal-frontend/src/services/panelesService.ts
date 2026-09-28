@@ -12,21 +12,13 @@ export interface PanelDTO {
   fechaCreacion?: string;
 }
 
-export interface updatePanelDTO {
+export interface PanelRequest {
   nombre: string;
   color?: string;
   estado: "PENDIENTE" | "EN_PROGRESO" | "COMPLETADO";
   fechaInicio?: string;
   fechaFin?: string;
   prioridad: number;
-}
-
-export interface CrearPanelRequest {
-  nombre: string;
-  color?: string;
-  prioridad?: number;
-  fechaInicio?: string;
-  fechaFin?: string;
 }
 
 export function getAuthHeaders(): Record<string, string> {
@@ -64,7 +56,7 @@ export function mapPanelToTask(panel: PanelDTO): Task {
   };
 }
 
-export function mapTaskToPanel(task: Task): updatePanelDTO {
+export function mapTaskToPanel(task: Task): PanelRequest {
   const statusMap: Record<TaskStatus, ("PENDIENTE" | "EN_PROGRESO" | "COMPLETADO")> = {
     todo: "PENDIENTE",
     "in-progress": "EN_PROGRESO",
@@ -106,7 +98,7 @@ export async function getPaneles(): Promise<Task[]> {
 /**
  * Crea un nuevo panel en el backend.
  */
-export async function crearPanel(nuevoPanel: CrearPanelRequest): Promise<Task> {
+export async function crearPanel(nuevoPanel: PanelRequest): Promise<Task> {
   const response = await fetch("/api/paneles", {
     method: "POST",
     headers: getAuthHeaders(),

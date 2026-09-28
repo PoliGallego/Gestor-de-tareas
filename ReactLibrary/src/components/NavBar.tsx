@@ -44,7 +44,7 @@ export function NavBar() {
         <button className='btn-img' onClick={() => setSBShow(true)}>
             <ProfilePic imgUrl={user?.picture} userName={user.name ?? "NA"} />
         </button>
-        <Button onClick={() => setPage("home")}>
+        <Button onClick={() => setPage("prin")}>
             <img className="in-img" src={home} alt="home page" draggable={false} />
         </Button>
         <Button onClick={() => logOutUser()}>

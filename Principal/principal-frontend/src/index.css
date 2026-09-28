@@ -288,9 +288,11 @@ h3 {
 
 .column {
   background: var(--bg-container);
-  border-radius: 10px;
+  border-radius: 10px;  
   padding: 12px;
   min-height: 120px;
+  max-height: 40rem;
+  overflow-y: auto;
 }
 
 .column__header {
@@ -339,8 +341,7 @@ h3 {
 
 .column__empty {
   font-size: 13px;
-  color: var(--text);
-  opacity: 0.6;
+  color: var(--text-light);
   padding: 12px 4px;
 }
 

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { crearPanel } from "../services/panelesService";
+import { crearPanel, mapTaskToPanel } from "../services/panelesService";
 import type { Task, TaskStatus } from "../types";
 import { usePageContext } from "../PageContext";
 
-const initialTaskForm = {
+const initialTaskForm: Task = {
     title: "",
     description: "",
     priority: "Media" as Task["priority"],
@@ -11,12 +11,15 @@ const initialTaskForm = {
     color: "#afa7a7",
     startDate: "",
     dueDate: "",
+    id: "",
+    assigneeId: "",
+    tags: []
 };
 
 export default function CreateModal() {
     const { error, setError, setAllTasks, setIsCModalOpen } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
-    const [taskForm, setTaskForm] = useState(initialTaskForm);
+    const [taskForm, setTaskForm] = useState<Task>(initialTaskForm);
 
     async function handleCreateTask(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -24,13 +27,7 @@ export default function CreateModal() {
         setIsSaving(true);
 
         try {
-            const savedTask = await crearPanel({
-                nombre: taskForm.title,
-                color: taskForm.color,
-                prioridad: { Baja: 1, Media: 2, Alta: 3, Urgente: 4 }[taskForm.priority],
-                fechaInicio: taskForm.startDate || undefined,
-                fechaFin: taskForm.dueDate || undefined,
-            });
+            const savedTask = await crearPanel(mapTaskToPanel(taskForm));
 
             setAllTasks((currentTasks) => [
                 ...currentTasks,

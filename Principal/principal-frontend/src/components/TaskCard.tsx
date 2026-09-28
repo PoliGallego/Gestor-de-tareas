@@ -46,7 +46,7 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         >
           {task.priority}
         </span>
-        {!isHover ? <span className="task-card__due">{formattedDate}</span> :
+        {!isHover ? <span className="task-card__due">{task.dueDate ? formattedDate : "Sin fecha límite"}</span> :
           <div className="ed-buttons">
             <button className="ed-button" onClick={() => editFunt()}>
               <div className="ed-icon edit" />

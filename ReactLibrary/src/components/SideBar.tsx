@@ -13,7 +13,7 @@ export function SideBar({ setShow }: SideProps) {
             </div>
 
             <div className="side-btns">
-                <Button variant="quiet" text="Hogar" onClick={() => setPage("home")} />
+                {/* <Button variant="quiet" text="Hogar" onClick={() => setPage("home")} /> */}
                 <Button variant="quiet" text="Principal" onClick={() => setPage("prin")} />
                 <Button variant="quiet" text="Perfil" onClick={() => setPage("perf")} />
                 <Button variant="quiet" text="Reportes" onClick={() => setPage("reportes")} />

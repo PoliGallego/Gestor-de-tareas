@@ -29,7 +29,7 @@ export default function Column({ title, status, tasks, memberById, accentColor,
       <div className={`column__list${isDropTarget ? " column__list--drop-target" : ""}`}
         onDragOver={(event) => event.preventDefault()} onDrop={() => onDrop(status)}>
         {tasks.length === 0 ? (
-          <p className="column__empty">No tasks</p>
+          <p className="column__empty">Sin tareas</p>
         ) : (
           tasks.map((task) => (
             <TaskCard

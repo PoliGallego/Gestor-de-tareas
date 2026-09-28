@@ -4,8 +4,10 @@ import { obtenerEstadisticasPersonales, UnauthorizedError } from '../services/re
 import type { EstadisticasPersonales } from '../services/reportesService';
 import { Button } from '@gestor-tareas/react-components';
 import '../assets/ReportesDashboard.css';
+import { usePageContext } from '../PageContext';
 
 export const ReportesDashboard: React.FC = () => {
+  const { setMessage } = usePageContext();
   const [estadisticas, setEstadisticas] = useState<EstadisticasPersonales | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +38,13 @@ export const ReportesDashboard: React.FC = () => {
     cargarDatos();
   }, [cargarDatos]);
 
+  const actualizar = async () => {
+    await cargarDatos();
+    if (!loading) {
+      setMessage("Datos más recientes obtenidos");
+    }
+  };
+
   const irAlLogin = () => {
     window.location.href = 'http://localhost:3000/';
   };
@@ -60,7 +69,7 @@ export const ReportesDashboard: React.FC = () => {
             <Button
               variant="quiet"
               text={loading ? 'Actualizando...' : 'Actualizar'}
-              onClick={cargarDatos}
+              onClick={actualizar}
               disabled={loading}
             />
           </div>
@@ -70,7 +79,7 @@ export const ReportesDashboard: React.FC = () => {
         {isUnauthorized && (
           <div className="container reportes-alert-container warning-border">
             <div className="reportes-alert-content">
-              <div className="alert-icon-box">🔒</div>
+              <div className="alert-icon-box"></div>
               <div className="alert-texts">
                 <h2>Acceso Restringido o Sesión Expirada</h2>
                 <p>{error || 'Tu sesión no es válida o ha expirado. Por favor, inicia sesión nuevamente para continuar.'}</p>
@@ -87,7 +96,7 @@ export const ReportesDashboard: React.FC = () => {
         {error && !isUnauthorized && (
           <div className="container reportes-alert-container danger-border">
             <div className="reportes-alert-content">
-              <div className="alert-icon-box">⚠️</div>
+              <div className="alert-icon-box"></div>
               <div className="alert-texts">
                 <h2>Error de Conexión</h2>
                 <p>{error}</p>
@@ -120,7 +129,7 @@ export const ReportesDashboard: React.FC = () => {
               <div className="container metrica-card activa">
                 <div className="card-header-row">
                   <span className="card-badge badge-activa">En Curso</span>
-                  <span className="card-emoji">📋</span>
+                  <span className="card-emoji"></span>
                 </div>
                 <h3 className="card-label">Tareas Activas</h3>
                 <div className="valor-container">
@@ -135,7 +144,7 @@ export const ReportesDashboard: React.FC = () => {
                   <span className={`card-badge ${estadisticas.tareasEnRiesgo > 0 ? 'badge-riesgo-alerta' : 'badge-riesgo-ok'}`}>
                     {estadisticas.tareasEnRiesgo > 0 ? 'Atención' : 'Estable'}
                   </span>
-                  <span className="card-emoji">⚡</span>
+                  <span className="card-emoji"></span>
                 </div>
                 <h3 className="card-label">Tareas en Riesgo</h3>
                 <div className="valor-container">
@@ -150,7 +159,7 @@ export const ReportesDashboard: React.FC = () => {
               <div className="container metrica-card puntualidad">
                 <div className="card-header-row">
                   <span className="card-badge badge-puntualidad">Cumplimiento</span>
-                  <span className="card-emoji">🎯</span>
+                  <span className="card-emoji"></span>
                 </div>
                 <h3 className="card-label">Puntualidad</h3>
                 <div className="valor-container">
@@ -174,7 +183,7 @@ export const ReportesDashboard: React.FC = () => {
               <div className="container metrica-card tiempo">
                 <div className="card-header-row">
                   <span className="card-badge badge-tiempo">Agilidad</span>
-                  <span className="card-emoji">⏱️</span>
+                  <span className="card-emoji"></span>
                 </div>
                 <h3 className="card-label">Resolución Promedio</h3>
                 <div className="valor-container">
@@ -194,7 +203,7 @@ export const ReportesDashboard: React.FC = () => {
               </div>
               <div className="diagnostico-items">
                 <div className="diagnostico-item">
-                  <span className="diagnostico-bullet">📌</span>
+                  <span className="diagnostico-bullet"></span>
                   <p>
                     <strong>Carga de trabajo: </strong>
                     Tienes <b>{estadisticas.tareasActivas}</b> {estadisticas.tareasActivas === 1 ? 'tarea activa' : 'tareas activas'}.
@@ -204,7 +213,7 @@ export const ReportesDashboard: React.FC = () => {
                   </p>
                 </div>
                 <div className="diagnostico-item">
-                  <span className="diagnostico-bullet">📊</span>
+                  <span className="diagnostico-bullet"></span>
                   <p>
                     <strong>Efectividad mensual: </strong>
                     Tu puntualidad actual es del <b>{formatearDecimal(estadisticas.porcentajePuntualidad)}%</b> con un tiempo medio de resolución de <b>{formatearDecimal(estadisticas.tiempoPromedioResolucionDias)} días</b> por tarea.
