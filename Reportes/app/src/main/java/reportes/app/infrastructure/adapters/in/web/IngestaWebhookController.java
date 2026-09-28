@@ -24,4 +24,11 @@ public class IngestaWebhookController {
         
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/evento/eliminacion")
+    public ResponseEntity<Void> recibirEventoEliminacionPanel(@RequestBody Comando comando) {
+        ingestarUseCase.ejecutarEliminar(comando);
+        
+        return ResponseEntity.ok().build();
+    }
 }

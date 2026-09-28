@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 public interface IngestarRegistroPanelUseCase {
     
     void ejecutar(Comando comando);
+    
+    void ejecutarEliminar(Comando comando);
 
     // Este record actúa como el sobre del mensaje que envía el Webhook
     record Comando(

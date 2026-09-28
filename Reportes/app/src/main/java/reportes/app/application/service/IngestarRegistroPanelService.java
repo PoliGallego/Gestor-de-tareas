@@ -24,4 +24,9 @@ public class IngestarRegistroPanelService implements IngestarRegistroPanelUseCas
                 .build();
         repositorio.guardar(nuevoRegistro);
     }
+
+    @Override 
+    public void ejecutarEliminar(Comando comando) {
+        repositorio.eliminar(comando.panelIdOriginal());
+    }
 }

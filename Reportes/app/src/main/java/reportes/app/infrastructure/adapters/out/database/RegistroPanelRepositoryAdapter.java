@@ -18,6 +18,11 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
 
     @Override
     public void guardar(RegistroPanel registroPanel) {
+        
+    System.out.println("=== GUARDANDO REGISTRO PANEL ===");
+    System.out.println("Panel ID: " + registroPanel.getPanelIdOriginal());
+    System.out.println("Estado: " + registroPanel.getEstado());
+    System.out.println("Fecha completado: " + registroPanel.getFechaCompletado());
         RegistroPanelEntity entity = RegistroPanelEntity.builder()
                 .panelIdOriginal(registroPanel.getPanelIdOriginal())
                 .propietarioId(registroPanel.getPropietarioId())
@@ -28,6 +33,12 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
                 .build();
         
         jpaRepository.save(entity);
+    }
+
+
+    @Override 
+    public void eliminar(String IdregistroPanel){
+        jpaRepository.deleteById(IdregistroPanel);
     }
 
     @Override

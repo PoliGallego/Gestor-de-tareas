@@ -6,7 +6,8 @@ import java.util.List;
 public interface RegistroPanelRepositoryPort {
     
     void guardar(RegistroPanel registroPanel);
-    
+
+    void eliminar(String registroPanel);
     // Para buscar todos los paneles de un usuario (útil para varios cálculos)
     List<RegistroPanel> buscarTodosPorUsuario(String propietarioId);
     
