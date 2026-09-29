@@ -27,7 +27,29 @@ export default function CreateModal() {
         setIsSaving(true);
 
         try {
+<<<<<<< HEAD
             const savedTask = await crearPanel(mapTaskToPanel(taskForm));
+=======
+            const statusMap = {
+                todo: "PENDIENTE",
+                "in-progress": "EN_PROGRESO",
+                done: "COMPLETADO",
+            } as const;
+
+            const savedTask = await crearPanel({
+                nombre: taskForm.title,
+                color: taskForm.color,
+                estado: statusMap[taskForm.status],
+                prioridad: {
+                    Baja: 1,
+                    Media: 2,
+                    Alta: 3,
+                    Urgente: 4,
+                }[taskForm.priority],
+                fechaInicio: taskForm.startDate || undefined,
+                fechaFin: taskForm.dueDate || undefined,
+            });
+>>>>>>> 954c813 (fix(Principal-Frontend) Enviar estado al crear panel)
 
             setAllTasks((currentTasks) => [
                 ...currentTasks,
@@ -38,14 +60,19 @@ export default function CreateModal() {
                     status: taskForm.status,
                 },
             ]);
+
             setIsSaving(false);
             closeModal();
         } catch (err) {
-            setError(err instanceof Error ? err.message : "No se pudo guardar la tarea");
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "No se pudo guardar la tarea"
+            );
         } finally {
             setIsSaving(false);
         }
-    };
+    }
 
     function closeModal() {
         if (isSaving) return;

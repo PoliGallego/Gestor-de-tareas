@@ -21,6 +21,18 @@ export interface PanelRequest {
   prioridad: number;
 }
 
+<<<<<<< HEAD
+=======
+export interface CrearPanelRequest {
+  nombre: string;
+  color?: string;
+  estado: "PENDIENTE" | "EN_PROGRESO" | "COMPLETADO";
+  prioridad?: number;
+  fechaInicio?: string;
+  fechaFin?: string;
+}
+
+>>>>>>> 954c813 (fix(Principal-Frontend) Enviar estado al crear panel)
 export function getAuthHeaders(): Record<string, string> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
