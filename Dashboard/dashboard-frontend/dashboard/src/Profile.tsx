@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { usePageContext } from "./PageContext.tsx";
 import Dashboard from './Dashboard';
+import { validateEditUser } from './validation';
 
 function Profile() {
     const { setMessage } = usePageContext();
@@ -76,6 +77,12 @@ function Profile() {
     };
 
     async function update() {
+        const error = validateEditUser(editUser);
+        if (error) {
+            setMessage(error);
+            return;
+        }
+
         try {
             const response = await fetch(
                 'http://localhost:8090/api/users', {
@@ -84,7 +91,11 @@ function Profile() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(editUser)
+                body: JSON.stringify({
+                    ...editUser,
+                    name: editUser.name.trim(),
+                    email: editUser.email.trim()
+                })
             }
             );
 
