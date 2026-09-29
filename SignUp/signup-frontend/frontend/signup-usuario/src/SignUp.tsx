@@ -2,6 +2,7 @@ import './assets/css/SignUp.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useState, type SubmitEvent } from 'react';
 import { usePageContext } from "./PageContext.tsx";
+import { validateSignUp } from "./validation.ts";
 
 function SignUp() {
     const { setMessage } = usePageContext();
@@ -19,7 +20,11 @@ function SignUp() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(signUpForm)
+                body: JSON.stringify({
+                    ...signUpForm,
+                    name: signUpForm.name.trim(),
+                    email: signUpForm.email.trim()
+                })
             });
 
             let data = await response.json();
@@ -39,11 +44,12 @@ function SignUp() {
 
     async function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (signUpForm.pass === confirmPass) {
-            signUp();
-        } else {
-            setMessage("The passwords do not match");
+        const error = validateSignUp(signUpForm, confirmPass);
+        if (error) {
+            setMessage(error);
+            return;
         }
+        signUp();
     };
 
     return <div className='body'>
@@ -53,7 +59,7 @@ function SignUp() {
                     <h2>Sign Up</h2>
                 </div>
 
-                <form id="signupFormElement" onSubmit={e => handleSubmit(e)}>
+                <form id="signupFormElement" noValidate onSubmit={e => handleSubmit(e)}>
                     <div className="form-group">
                         <label htmlFor="user-name">User Name</label>
                         <input type="text" id="user-name" name="identification" onChange={e => setSignUpForm({ ...signUpForm, name: e.target.value })} required />

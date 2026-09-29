@@ -3,6 +3,7 @@ import { useMemo, useState, useEffect } from "react";
 import { teamMembers } from "../data/mockData";
 // 2. Importamos tu servicio y el tipo Task
 import { crearPanel, getPaneles } from "../services/panelesService";
+import { validatePanelForm } from "../services/panelValidation";
 import type { TaskStatus, Task } from "../types";
 import Column from "./Column";
 
@@ -74,11 +75,18 @@ export default function KanbanBoard() {
   async function handleCreateTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+
+    const validationError = validatePanelForm(taskForm);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setIsSaving(true);
 
     try {
       const savedTask = await crearPanel({
-        nombre: taskForm.title,
+        nombre: taskForm.title.trim(),
         color: taskForm.color,
         prioridad: { Baja: 1, Media: 2, Alta: 3, Urgente: 4 }[taskForm.priority],
         fechaInicio: taskForm.startDate || undefined,
@@ -156,7 +164,7 @@ export default function KanbanBoard() {
               </div>
             </div>
 
-            <form className="task-form" onSubmit={handleCreateTask}>
+            <form className="task-form" noValidate onSubmit={handleCreateTask}>
               {error && <p className="task-form__error">{error}</p>}
               <label>
                 Título
