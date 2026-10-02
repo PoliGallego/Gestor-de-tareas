@@ -42,7 +42,7 @@ export async function getTaskTotals(): Promise<Totals> {
 
 export async function updateUser(user: PassUser): Promise<User> {
     const response = await fetch(
-        'http://localhost:8090/api/users', {
+        'http://localhost:8090/edit', {
         method: 'PATCH',
         credentials: 'include',
         headers: {

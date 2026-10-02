@@ -20,25 +20,48 @@ export default function UpdateModal() {
     const { focusTask, error, setError, setAllTasks, setIsUModalOpen, setFocusTask } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
     const [taskForm, setTaskForm] = useState(focusTask ?? initialTaskForm);
+    const [isErrorTitle, setErrorTitle] = useState(false);
+    const [isErrorDate, setErrorDate] = useState(false);
+
+    const validate = (): boolean => {
+        const errorTitle: boolean = taskForm.title.length > 50;
+        const startDate = new Date(taskForm.startDate);
+        const endDate = new Date(taskForm.dueDate);
+        const errorDate: boolean = isNaN(startDate.getTime());
+        let difDate: boolean = false;
+
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            if (endDate.getTime() <= startDate.getTime()) {
+                difDate = true;
+            }
+        }
+
+        setErrorTitle(errorTitle);
+        setErrorDate(errorDate || difDate);
+
+        return errorTitle || errorDate || difDate;
+    };
 
     async function handleUpdateTask(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         setError(null);
-        setIsSaving(true);
+        
+        if (!validate()) {
+            setIsSaving(true);
+            try {
+                if (!focusTask || !taskForm || taskForm.id.length === 0) {
+                    return
+                }
+                const updatedTask = await updatePanel(focusTask?.id, taskForm);
 
-        try {
-            if (!focusTask || !taskForm || taskForm.id.length === 0) {
-                return
+                setAllTasks((currentTasks) => currentTasks.map((task) => task.id === updatedTask.id ? { ...task, ...updatedTask } : task));
+                setIsSaving(false);
+                closeModal();
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "No se pudo guardar la tarea");
+            } finally {
+                setIsSaving(false);
             }
-            const updatedTask = await updatePanel(focusTask?.id, taskForm);
-
-            setAllTasks((currentTasks) => currentTasks.map((task) => task.id === updatedTask.id? {...task, ...updatedTask} : task));
-            setIsSaving(false);
-            closeModal();
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "No se pudo guardar la tarea");
-        } finally {
-            setIsSaving(false);
         }
     };
 
@@ -73,9 +96,10 @@ export default function UpdateModal() {
                         placeholder="Escribe el título de la tarea"
                         required
                     />
+                    {isErrorTitle && <p className="task-form__error">Título inválido</p>}
                 </label>
 
-                <label>
+                {/* <label>
                     Descripción
                     <textarea
                         value={taskForm.description}
@@ -83,7 +107,7 @@ export default function UpdateModal() {
                         placeholder="Describe lo que hay que hacer"
                         rows={3}
                     />
-                </label>
+                </label> */}
 
                 <div className="task-form__grid">
                     {/* <label>
@@ -120,6 +144,7 @@ export default function UpdateModal() {
                     <label>
                         Fecha de inicio
                         <input type="date" value={taskForm.startDate} onChange={(event) => setTaskForm({ ...taskForm, startDate: event.target.value })} />
+                        {isErrorDate && <p className="task-form__error">Fecha inválida</p>}
                     </label>
 
                     <label>

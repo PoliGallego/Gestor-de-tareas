@@ -69,15 +69,28 @@ function Profile() {
     //     }
     // };
 
+    const validate = () : boolean => {
+        const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;;
+        const regexName: RegExp = /^[A-Za-z]{3,30}$/;;
+
+        const passPass: boolean = editUser.pass.length === 0 ? true : editUser.pass.length > 7;
+
+        return regexName.test(editUser.name) && regex.test(editUser.email) && passPass;
+    };
+
     async function update() {
-        try {
-            const data = await updateUser(editUser);
-            if (data) {
-                setUser(data);
-                setMessage("Perfil Actualizado");
+        if (validate()) {
+            try {
+                const data = await updateUser(editUser);
+                if (data) {
+                    setUser(data);
+                    setMessage("Perfil Actualizado");
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
+        } else {
+            setMessage("Datos inválidos");
         }
     }
 
@@ -108,7 +121,7 @@ function Profile() {
 
             <div className='grup'>
                 <div className='container'>
-                    <ProfilePic imgUrl={user.picture} userName={user.name ?? "No encontrado"}/>
+                    <ProfilePic imgUrl={user.picture} userName={user.name ?? "No encontrado"} />
                     <div className='basic-info'>
                         <div className='user-info'>
                             <h2 className='name'><b>Nombre: </b>{!isEditing && user.name}</h2>
