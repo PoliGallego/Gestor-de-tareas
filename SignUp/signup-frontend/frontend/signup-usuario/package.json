@@ -1,5 +1,5 @@
 {
-  "name": "login-usuario",
+  "name": "signup-usuario",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",
+    "@gestor-tareas/react-components": "file:../../../../ReactLibrary",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

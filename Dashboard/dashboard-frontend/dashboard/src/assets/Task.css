@@ -8,6 +8,7 @@
 }
 
 .task-card {
+  min-width: 20rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;

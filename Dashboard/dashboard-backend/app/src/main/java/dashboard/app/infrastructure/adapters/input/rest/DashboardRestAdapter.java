@@ -3,7 +3,6 @@ package dashboard.app.infrastructure.adapters.input.rest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rmi.shared.RmiPanelData;
 import dashboard.app.application.ports.input.DashboardServicePort;
 
 import java.util.List;
@@ -23,24 +22,6 @@ public class DashboardRestAdapter {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<Map<String, String>> getProfile(
-            @CookieValue(name = "access_token", required = false) String token) {
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Map<String, String> userInfo = dashboardService.getProfileInfo(token);
-
-        if (userInfo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Profile not found"));
-        }
-
-        return ResponseEntity.ok(userInfo);
-    }
-
     @GetMapping("/tasks")
     public ResponseEntity<Map<String, Integer>> getTasksInfo(
         @CookieValue(name = "access_token", required = false) String token) {
@@ -57,14 +38,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/in-prog")
-    public ResponseEntity<List<RmiPanelData>> getInProgressTasks(
+    public ResponseEntity<List<Map<String, String>>> getInProgressTasks(
         @CookieValue(name = "access_token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        List<RmiPanelData> inProgList = dashboardService.getInProgressTasks(token);
+        List<Map<String, String>> inProgList = dashboardService.getInProgressTasks(token);
         if (inProgList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -72,14 +53,14 @@ public class DashboardRestAdapter {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<RmiPanelData>> getPendingTaks(
+    public ResponseEntity<List<Map<String, String>>> getPendingTaks(
         @CookieValue(name = "access_token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        List<RmiPanelData> pendingList = dashboardService.getPendingTasks(token);
+        List<Map<String, String>> pendingList = dashboardService.getPendingTasks(token);
         if (pendingList == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
