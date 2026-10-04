@@ -81,7 +81,7 @@ export default function KanbanBoard() {
   }
 
   if (error && !isCModalOpen && !isUModalOpen) {
-    return <div style={{ padding: "2rem", textAlign: "center", color: "red" }}>Error: {error}</div>;
+    return <div className="error-label">Error: {error}</div>;
   }
 
   return (
