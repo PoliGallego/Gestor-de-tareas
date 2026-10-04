@@ -1,57 +1,55 @@
-import './assets/css/SignUp.css'
+import '../assets/css/SignUp.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { useState, type SubmitEvent } from 'react';
-import { usePageContext } from "./PageContext.tsx";
+import { usePageContext } from "../PageContext.tsx";
+import { signup, type SignUpDTO } from '../services/signUpService.ts';
+import { setPage } from '@gestor-tareas/react-components';
 
 function SignUp() {
     const { setMessage } = usePageContext();
-    const [isErrorName, setErrorName] = useState(false);
-    const [isErrorEmail, setErrorEmail] = useState(false);
-    const [isErrorPass, setErrorPass] = useState(false);
+    const [isSending, setIsSending] = useState(false);
     const [confirmPass, setConfirmPass] = useState("");
-    const [signUpForm, setSignUpForm] = useState({
+    const [signUpForm, setSignUpForm] = useState<SignUpDTO>({
         name: "",
         email: "",
         pass: ""
     });
 
     async function signUp() {
-        try {
-            const response = await fetch('http://localhost:8090/signup', {
-                credentials: 'include',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(signUpForm)
-            });
-
-            let data = await response.json();
-            if (response && data) {
-                let msg = data.message;
-                if (response.status === 202) {
-                    window.location.href = "http://localhost:3020";
-                } else {
-                    setMessage(msg);
+        if (!isSending) {
+            try {
+                setIsSending(true);
+                await signup(signUpForm);
+                setIsSending(false);
+                try {
+                    await setPage("prin");
+                } catch (error) {
+                    setMessage("No se pudo cargar la página principal")
                 }
+                return;
+            } catch (error) {
+                console.error(error);
+                setIsSending(false);
+                setMessage("Error Interno, inténtalo más tarde");
             }
-        } catch (error) {
-            console.error(error);
-            setMessage("Error Interno");
         }
     };
 
     const validate = (): boolean => {
-        const regexMail: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;;
-        const regexName: RegExp = /^[A-Za-z]{3,30}$/;;
+        const regexMail: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;;
+        const regexName: RegExp = /^[A-Za-z ]{3,30}$/;;
 
         const errorName: boolean = !regexName.test(signUpForm.name);
         const errorEmail: boolean = !regexMail.test(signUpForm.email);
         const errorPass: boolean = signUpForm.pass.length < 8;
 
-        setErrorName(errorName);
-        setErrorEmail(errorEmail);
-        setErrorPass(errorPass);
+        if (errorName) {
+            setMessage("Nombre de usuario inválido");
+        } else if (errorEmail) {
+            setMessage("Correo electrónico inválido");
+        } else if (errorPass) {
+            setMessage("Contraseña demasiado débil");
+        }
 
         return errorName || errorEmail || errorPass;
     };
@@ -78,19 +76,16 @@ function SignUp() {
                     <div className="form-group">
                         <label htmlFor="user-name">Nombre de usuario</label>
                         <input type="text" id="user-name" name="identification" onChange={e => setSignUpForm({ ...signUpForm, name: e.target.value })} required />
-                        {isErrorName && <h4>Nombre de usuario inválido</h4>}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="identification">E-mail</label>
                         <input type="email" id="identification" name="identification" onChange={e => setSignUpForm({ ...signUpForm, email: e.target.value })} required />
-                        {isErrorEmail && <h4>Correo electrónico inválido</h4>}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password">Contraseña</label>
                         <input type="password" id="password" name="password" onChange={e => setSignUpForm({ ...signUpForm, pass: e.target.value })} required />
-                        {isErrorPass && <h4>La contraseña debe tener mínimo ocho caracteres</h4>}
                     </div>
 
                     <div className="form-group">
@@ -106,13 +101,19 @@ function SignUp() {
                                 <a className='alter-btn'><i className='alter-btn fab fa-facebook'></i></a>
                             </div>
                         </div> */}
-                        <button type="submit" className="btn">Aceptar</button>
+                        <button type="submit" className="btn" disabled={isSending}>Aceptar</button>
                     </div>
                 </form>
 
                 <div className="switch-form">
                     ¿Ya tienes una cuenta?
-                    <a className="switch-link" onClick={() => window.location.href = "http://localhost:3000/"}> Inicia sesión aquí</a>
+                    <a className="switch-link" onClick={async () => {
+                        try {
+                            await setPage("login");
+                        } catch (error) {
+                            setMessage("No se pudo cargar la página")
+                        }
+                    }}> Inicia sesión aquí</a>
                 </div>
             </div>
         </div>

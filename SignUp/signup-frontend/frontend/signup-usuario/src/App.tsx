@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
-import SignUp from './SignUp'
+import SignUp from './components/SignUp'
 import { Modal } from '@gestor-tareas/react-components';
 import '@gestor-tareas/react-components/styles.css';
 
