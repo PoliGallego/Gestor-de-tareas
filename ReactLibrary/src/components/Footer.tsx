@@ -1,4 +1,4 @@
-import { logOut, setPage } from "../Services/AuthService";
+import { logOut, setPage } from "../services/AuthService";
 import { Button } from "./Button";
 
 export function Footer() {

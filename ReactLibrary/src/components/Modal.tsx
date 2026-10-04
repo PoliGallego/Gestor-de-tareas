@@ -22,7 +22,7 @@ export function Modal({ title = "Información", text, isChoose, setChoose, setSh
         <div className="modal-container">
             <div className="modal-div">
                 <div className='modal-title'>
-                    <img className="modal-icon" src={info} alt="info icon" draggable={false}/>
+                    <img className="modal-icon" src={info} alt="info icon" draggable={false} />
                     <h1>{title}</h1>
                 </div>
                 <p>{text || ""}</p>

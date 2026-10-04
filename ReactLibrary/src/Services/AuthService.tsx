@@ -25,14 +25,19 @@ export async function logOut() {
         );
 
         if (response && response.ok) {
-            window.location.href = "http://localhost:3000/";
+            try {
+                await setPage("login");
+            } catch (error) {
+                alert("Ha ocurrido un error, la ventana se cerrará a continuación");
+                window.close();
+            }
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export function setPage(page: string) {
+export async function setPage(page: string) {
     let url: string = window.location.href;
     switch (page) {
         case "home":
@@ -50,6 +55,18 @@ export function setPage(page: string) {
         case "signup":
             url = "http://localhost:3010";
             break;
+        case "login":
+            url = "http://localhost:3000";
+            break;
     }
+    await isPageLoad(url);
     window.location.href = url;
+}
+
+export async function isPageLoad(url: string) {
+    const response = await fetch(url, { method: 'GET' });
+
+    if (!response.ok) {
+        throw new Error("Page not load");
+    }
 }
