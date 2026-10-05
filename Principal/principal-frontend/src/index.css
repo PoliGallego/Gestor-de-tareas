@@ -2,11 +2,12 @@
   --bg: #f8f9fa;
   --text: #020202;
   --text-light: #555;
+  --text-lighter: #f3f3f3;
   --code-bg: #828282;
   --code-bg-sec: #888;
   --border: #585858;
-  --button-bg: #afa7a7;
-  --button-bg-hover: #cabfbf;
+  --button-bg: #dfa7a7;
+  --button-bg-hover: #977a7a;
   --bg-container: rgb(235, 235, 235);
   --input-border: #979797;
 }
@@ -49,8 +50,7 @@ body {
 }
 
 h1,
-h2,
-h3 {
+h2 {
   color: var(--text-light);
   margin: 0;
 }
@@ -72,6 +72,7 @@ h3 {
 }
 
 .board__subtitle {
+  text-align: right;
   margin-top: 4px;
   font-size: 14px;
   color: var(--text);
@@ -159,7 +160,6 @@ h3 {
 .task-form input,
 .task-form textarea,
 .task-form select {
-  width: 100%;
   padding: 11px 12px;
   color: var(--text);
   background: var(--surface, white);
@@ -174,6 +174,7 @@ h3 {
 }
 
 .task-form input[type="color"] {
+  width: 100%;
   height: 41px;
   padding: 4px;
 }
@@ -216,6 +217,8 @@ h3 {
 .task-modal__save:hover,
 .task-modal__cancel:hover {
   transform: translateY(-1px);
+  border: 1px solid var(--button-bg-hover);
+  background: var(--button-bg-hover);
 }
 
 .task-modal__save:disabled {
@@ -287,7 +290,7 @@ h3 {
   border-radius: 10px;
   padding: 12px;
   min-height: 120px;
-  max-height: 40rem;
+  max-height: 35rem;
   overflow-y: auto;
 }
 
@@ -324,18 +327,21 @@ h3 {
 }
 
 .column__list {
+  min-width: fit-content;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .column__list--drop-target {
-  border: 1px dashed #a6c593;
+  border: 3px dashed #296b00a8;
   border-radius: 8px;
-  background: rgba(166, 197, 147, 0.12);
+  background: rgba(133, 156, 117, 0.466);
 }
 
 .column__empty {
+  text-align: center;
+  min-width: 10rem;
   font-size: 13px;
   color: var(--text-light);
   padding: 12px 4px;
@@ -370,14 +376,12 @@ h3 {
 
 .task-card__due {
   font-size: 12px;
-  color: var(--text);
   opacity: 0.7;
 }
 
 .task-card__title {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--text-light);
   margin-bottom: 6px;
   line-height: 1.35;
 }
@@ -448,6 +452,7 @@ h3 {
 }
 
 .ed-button:hover {
+  cursor: pointer;
   background-color: rgba(151, 151, 151, 0.473);
 }
 
@@ -474,6 +479,14 @@ h3 {
   padding: 2rem;
   text-align: center;
   color: rgb(95, 35, 35);
+  background-color: var(--bg);
+  border-radius: 10px;
+}
+
+.loading-label {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text);
   background-color: var(--bg);
   border-radius: 10px;
 }

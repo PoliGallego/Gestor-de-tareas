@@ -5,8 +5,9 @@
     --code-bg: #828282;
     --code-bg-sec: #888;
     --border: #585858;
-    --button-bg: #afa7a7;
-    --button-bg-hover: #a09898;
+    --prin-color: #afa7a7;
+    --button-bg: #b18585;
+    --button-bg-hover: #977a7a;
     --bg-container: rgb(235, 235, 235);
     --input-border: #979797;
 }
@@ -27,7 +28,7 @@
 
 .btn:hover {
     background: var(--button-bg-hover);
-    transform: scale(1.03,1.03);
+    transform: scale(1.03, 1.03);
     transition: all 0.3s ease
 }
 
@@ -35,11 +36,29 @@
     transform: translateY(0);
 }
 
-.btn:focus-visible { outline: 3px solid #9dd9e9; outline-offset: 2px; }
-.btn--primary { background: var(--button-bg); color: var(--bg); }
-.btn--primary:hover { background: var(--button-bg-hover); }
-.btn--secondary { background: var(--border); border-color: var(--border);}
-.btn--quiet { background: transparent; color: var(--text); }
+.btn:focus-visible {
+    outline: 3px solid #9dd9e9;
+    outline-offset: 2px;
+}
+
+.btn--primary {
+    background: var(--button-bg);
+    color: var(--bg);
+}
+
+.btn--primary:hover {
+    background: var(--button-bg-hover);
+}
+
+.btn--secondary {
+    background: var(--border);
+    border-color: var(--border);
+}
+
+.btn--quiet {
+    background: transparent;
+    color: var(--text);
+}
 
 .modal-body {
     position: fixed;
@@ -125,7 +144,7 @@
     width: 100vw;
     min-width: 100%;
     margin-left: calc(50% - 50vw);
-    background-color: var(--button-bg);
+    background-color: var(--prin-color);
     position: fixed;
     gap: 1rem;
     top: 0;
@@ -180,7 +199,7 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    background-color: var(--button-bg);
+    background-color: var(--prin-color);
     padding: 2rem;
     height: 100%;
     width: 15rem;
@@ -201,8 +220,12 @@
 footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background-color: var(--button-bg);
+    justify-content: space-evenly;
+    background-color: var(--bg-container);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .h2 {

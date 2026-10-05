@@ -14,7 +14,7 @@ export function SideBar({ setShow, onError }: SideProps) {
             </div>
 
             <div className="side-btns">
-                {/* <Button variant="quiet" text="Hogar" onClick={() => setPage("home").catch((error) => onError?.(error))} /> */}
+                <Button variant="quiet" text="Hogar" onClick={() => setPage("home").catch((error) => onError?.(error))} />
                 <Button variant="quiet" text="Principal" onClick={() => setPage("prin").catch((error) => onError?.(error))} />
                 <Button variant="quiet" text="Perfil" onClick={() => setPage("perf").catch((error) => onError?.(error))} />
                 <Button variant="quiet" text="Reportes" onClick={() => setPage("reportes").catch((error) => onError?.(error))} />

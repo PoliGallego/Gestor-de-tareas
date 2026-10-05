@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavBar, Modal } from '@gestor-tareas/react-components';
+import { NavBar, Modal, Footer } from '@gestor-tareas/react-components';
 import '@gestor-tareas/react-components/styles.css';
 import { PageContext } from './PageContext';
 import { ReportesDashboard } from './components/ReportesDashboard';
@@ -27,6 +27,7 @@ function App() {
       <main>
         <ReportesDashboard />
       </main>
+      <Footer/>
     </PageContext.Provider>
   );
 }

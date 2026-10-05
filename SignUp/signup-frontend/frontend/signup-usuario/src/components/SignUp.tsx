@@ -106,14 +106,14 @@ function SignUp() {
                 </form>
 
                 <div className="switch-form">
-                    ¿Ya tienes una cuenta?
+                    {"¿Ya tienes una cuenta? "}
                     <a className="switch-link" onClick={async () => {
                         try {
                             await setPage("login");
                         } catch (error) {
                             setMessage("No se pudo cargar la página")
                         }
-                    }}> Inicia sesión aquí</a>
+                    }}>Inicia sesión aquí</a>
                 </div>
             </div>
         </div>

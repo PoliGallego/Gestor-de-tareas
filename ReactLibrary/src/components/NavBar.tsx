@@ -46,10 +46,10 @@ export function NavBar() {
         <button className='btn-img' onClick={() => setSBShow(true)}>
             <ProfilePic imgUrl={user?.picture} userName={user.name ?? "NA"} />
         </button>
-        <Button onClick={() => setPage("prin").catch(() => setIsPageNotLoad(true))}>
+        <Button variant="quiet" onClick={() => setPage("home").catch(() => setIsPageNotLoad(true))}>
             <img className="in-img" src={home} alt="home page" draggable={false} />
         </Button>
-        <Button onClick={() => logOutUser()}>
+        <Button variant="quiet" onClick={() => logOutUser()}>
             <img className="in-img" src={logout} alt="log out" draggable={false} />
         </Button>
         {isPageNotLoad && <Modal title={"Información"} text={"No se pudo cargar la página"} isChoose={false} setShow={setIsPageNotLoad} />}

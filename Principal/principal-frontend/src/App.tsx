@@ -1,5 +1,5 @@
 import KanbanBoard from "./components/KanbanBoard";
-import { NavBar } from "@gestor-tareas/react-components";
+import { Footer, NavBar } from "@gestor-tareas/react-components";
 import "@gestor-tareas/react-components/styles.css";
 import { PageContext } from "./PageContext";
 import { useState } from "react";
@@ -19,6 +19,7 @@ function App() {
   }}>
     <NavBar/>
     <KanbanBoard />
+    <Footer/>
   </PageContext.Provider>);
 }
 

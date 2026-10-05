@@ -3,7 +3,7 @@ import './assets/Dashboard.css';
 import Profile from './components/Profile';
 import { useEffect, useState } from 'react';
 import { PageContext } from './PageContext';
-import { Modal, NavBar } from '@gestor-tareas/react-components';
+import { Footer, Modal, NavBar } from '@gestor-tareas/react-components';
 import '@gestor-tareas/react-components/styles.css';
 
 function App() {
@@ -28,6 +28,7 @@ function App() {
       {isMsgShow && <Modal text={message} setShow={setMsgShow} title={'Información'} isChoose={false} />}
       <NavBar/>
       <Profile />
+      <Footer/>
     </PageContext.Provider>
   )
 }

@@ -77,7 +77,7 @@ export default function KanbanBoard() {
 
   // 5. Pequeña validación visual mientras cargan los datos o si hay error
   if (isLoading) {
-    return <div style={{ padding: "2rem", textAlign: "center" }}>Cargando paneles del equipo...</div>;
+    return <div className="loading-label">Cargando paneles del usuario...</div>;
   }
 
   if (error && !isCModalOpen && !isUModalOpen) {
@@ -88,7 +88,7 @@ export default function KanbanBoard() {
     <div className="board">
       <header className="board__header">
         <div>
-          <h1>Tareas del equipo</h1>
+          <h1>Tus tareas</h1>
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
