@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+}
+
+.body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 100vh;
+    margin: 0;
+    background-image: url('../cuboisometrico.png');
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: 300px;
+}
+
+.body h1 {
+    text-align: center;
+}
+
+.body h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.body h4 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.body .switch-link {
+    color: var(--code-bg);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.body .switch-link:hover {
+    color: var(--code-bg);
+    text-decoration: underline;
+}
+
+.alt {
+    min-height: 5rem;
+}
+
+.welcome {
+    background-color: var(--bg);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.subtitle {
+    background-color: var(--bg-container);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+@media (max-width: 480px) {
+    .body .in-container {
+        margin: 10px;
+        width: min(100%, 500px);
+    }
+
+    .body .form-container {
+        padding: 30px 25px;
+    }
+}
