@@ -7,17 +7,46 @@
     gap: 10px;
 }
 
+.list-cont {
+    width: 100%;
+    overflow-x: auto;
+}
+
+@container (min-width: 50rem) {
+    .tasks-list {
+        overflow-x: scroll;
+    }
+}
+
 .tasks-list {
-    overflow-x: scroll;
+    display: flex;
+    max-width: 50rem;
+    flex-direction: row;
+    min-width: 0;
+    gap: 1rem;
+}
+
+.container-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .dashboard .container {
     justify-content: left;
     align-items: baseline;
+    flex-direction: column;
+    min-width: 0;
 }
 
 @media (max-width: 680px) {
     .dashboard {
         padding: 0;
+    }
+
+    .tasks-list {
+        flex-direction: column;
+        overflow: hidden;
+        min-width: stretch;
     }
 }

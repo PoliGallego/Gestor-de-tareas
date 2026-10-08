@@ -10,6 +10,13 @@ export default defineConfig({
   ],
   server: {
     port: 3010,
-    strictPort: true
+    strictPort: true,
+    proxy: {
+      '/signup': {
+        target: 'http://localhost:8090',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
   }
 })

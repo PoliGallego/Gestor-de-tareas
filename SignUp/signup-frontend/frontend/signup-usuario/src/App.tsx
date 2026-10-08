@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
-import SignUp from './SignUp'
-import Info from './Info';
+import SignUp from './components/SignUp'
+import { Modal } from '@gestor-tareas/react-components';
+import '@gestor-tareas/react-components/styles.css';
 
 function App() {
   const [isMsgShow, setMsgShow] = useState(false);
@@ -22,7 +23,7 @@ function App() {
 
   return (
     <PageContext.Provider value={{ message, setMessage }}>
-      {isMsgShow && <Info text={message} setShow={setMsgShow} />}
+      {isMsgShow && <Modal text={message} setShow={setMsgShow} title={'Información'} isChoose={false} />}
       <SignUp />
     </PageContext.Provider>
   )
