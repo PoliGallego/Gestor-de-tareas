@@ -87,6 +87,7 @@ h3 {
 .body input[type="number"],
 .body input[type="date"],
 .body textarea {
+    color: var(--text);
     padding: 12px 16px;
     border: 2px solid var(--input-border);
     border-radius: 10px;
@@ -107,6 +108,17 @@ h3 {
     outline: none;
     border-color: #727272;
     background: var(--bg);
+}
+
+.body input:-webkit-autofill,
+.body input:-webkit-autofill:hover,
+.body input:-webkit-autofill:focus,
+.body input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text);
+    -webkit-box-shadow: 0 0 0 1000px var(--bg) inset;
+    box-shadow: 0 0 0 1000px var(--bg) inset;
+    caret-color: var(--text);
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .body {
