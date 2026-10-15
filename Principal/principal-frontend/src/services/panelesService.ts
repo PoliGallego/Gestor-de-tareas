@@ -65,7 +65,7 @@ export function mapPanelToTask(panel: PanelDTO): Task {
   };
 }
 
-export function mapTaskToPanel(task: Task): PanelRequest {
+export function mapTaskToPanel(task: Task): PanelDTO {
   const statusMap: Record<TaskStatus, ("PENDIENTE" | "EN_PROGRESO" | "COMPLETADO")> = {
     todo: "PENDIENTE",
     "in-progress": "EN_PROGRESO",
@@ -85,7 +85,9 @@ export function mapTaskToPanel(task: Task): PanelRequest {
     prioridad: priorityMap[task.priority],
     color: task.color,
     fechaInicio: task.startDate,
-    fechaFin: task.dueDate
+    fechaFin: task.dueDate,
+    id: task.id,
+    propietarioId: task.assigneeId
   };
 }
 
@@ -123,11 +125,13 @@ export async function crearPanel(nuevoPanel: PanelRequest): Promise<Task> {
   return mapPanelToTask(data);
 }
 
-export async function updatePanel(panelId: String, task: Task): Promise<Task> {
+export async function updatePanel(panelId: string, task: Task): Promise<Task> {
+  let panel: PanelDTO = mapTaskToPanel(task);
+
   const response = await fetch("/api/paneles/" + panelId, {
     method: "PUT",
     headers: getAuthHeaders(),
-    body: JSON.stringify(mapTaskToPanel(task)),
+    body: JSON.stringify({...panel, panelId: panelId}),
     credentials: "include",
   });
 

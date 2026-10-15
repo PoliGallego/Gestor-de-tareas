@@ -26,10 +26,10 @@ La estructura está pensada para separar responsabilidades por módulo, facilita
 
 ## Estructura del repositorio
 
-<!-- ├── .env
-├── dockercompose.yml -->
 ```text
 Gestor-de-tareas/
+├── .env
+├── dockercompose.yml
 ├── ReactLibrary/
 ├── Login/
 │   ├── login-backend/
@@ -84,11 +84,15 @@ cd Gestor-de-tareas
 git submodule update --init --recursive
 ```
 
-<!-- 3. Configura las variables de entorno del proyecto. El repositorio ya incluye un archivo `.env` en la raíz con la configuración base para desarrollo local.
+3. Configura las variables de entorno del proyecto. El repositorio ya incluye un archivo `.env` en la raíz con la configuración base para desarrollo local.
 
 Variables relevantes:
 
 ```env
+AUTH_BACK_HOST=auth-backend
+PANEL_BACK_HOST=panels-backend
+PROFILE_BACK_HOST=profile-backend
+REPORT_BACK_HOST=report-backend
 AUTH_BACK_PORT=8090
 PANEL_BACK_PORT=8081
 PROFILE_BACK_PORT=8082
@@ -102,9 +106,9 @@ HOME_PORT=3050
 DB_URL=jdbc:postgresql://postgres_db:5432/tasks_db
 DB_USERNAME=postgres
 DB_PASSWORD=postgres123
-``` -->
+```
 
-<!-- ## Levantar la base de datos
+## Levantar la base de datos
 
 El proyecto incluye un `dockercompose.yml` para levantar PostgreSQL junto con el servicio de autenticación backend.
 
@@ -112,7 +116,7 @@ El proyecto incluye un `dockercompose.yml` para levantar PostgreSQL junto con el
 docker compose up -d
 ```
 
-Esto dejará disponible la base de datos en el puerto `5432` y el backend de autenticación en el puerto configurado por `AUTH_BACK_PORT`. -->
+Esto dejará disponible la base de datos en el puerto `5432` y los backends configurados según su puerto.
 
 ## Ejecutar frontend
 
