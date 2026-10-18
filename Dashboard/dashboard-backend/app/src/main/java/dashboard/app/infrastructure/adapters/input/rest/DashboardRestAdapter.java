@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dashboard.app.application.ports.input.DashboardServicePort;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,48 +24,30 @@ public class DashboardRestAdapter {
         this.dashboardService = dashboardService;
     }
 
-    @GetMapping("/tasks")
-    public ResponseEntity<Map<String, Integer>> getTasksInfo(
-        @CookieValue(name = "access_token", required = false) String token) {
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getDashboard(
+            @CookieValue(name = "access_token", required = false) String token) {
 
         if (token == null || token.isBlank()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        Map<String, Object> output = new HashMap<>();
 
         Map<String, Integer> tasksInfo = dashboardService.getTasksInfo(token);
-        if (tasksInfo == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.FOUND).body(tasksInfo);
-    }
-
-    @GetMapping("/in-prog")
-    public ResponseEntity<List<Map<String, String>>> getInProgressTasks(
-        @CookieValue(name = "access_token", required = false) String token) {
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (tasksInfo != null) {
+            output.put("count", tasksInfo);
         }
 
         List<Map<String, String>> inProgList = dashboardService.getInProgressTasks(token);
-        if (inProgList == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.FOUND).body(inProgList);
-    }
-
-    @GetMapping("/pending")
-    public ResponseEntity<List<Map<String, String>>> getPendingTaks(
-        @CookieValue(name = "access_token", required = false) String token) {
-
-        if (token == null || token.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (inProgList != null) {
+            output.put("inprog", inProgList);
         }
 
         List<Map<String, String>> pendingList = dashboardService.getPendingTasks(token);
-        if (pendingList == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        if (pendingList != null) {
+            output.put("pending", pendingList);
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(pendingList);
+        return ResponseEntity.status(HttpStatus.FOUND).body(output);
     }
 }

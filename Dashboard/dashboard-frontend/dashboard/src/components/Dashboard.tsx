@@ -1,40 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TaskCard from "./TaskCard";
 import type { TaskData } from "../services/dashboardService";
-import { getInProgressTasks, getPendingTasks } from "../services/dashboardService";
 import { Button } from "@gestor-tareas/react-components";
 
-function Dashboard() {
-    const [progress, setProgress] = useState<TaskData[]>([]);
-    const [pending, setPending] = useState<TaskData[]>([]);
-    const [isRender, setIsRender] = useState(false);
+interface dashboardProps {
+    progress: TaskData[] | null | undefined;
+    pending: TaskData[] | null | undefined;
+}
+
+function Dashboard({progress, pending}: dashboardProps) {
     const [isPDown, setPDown] = useState(false);
     const [isQDown, setQDown] = useState(false);
 
-    async function showInProgress() {
-        try {
-            const data = await getInProgressTasks();
-            if (data) {
-                setProgress(data);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    async function showPending() {
-        try {
-            const data = await getPendingTasks();
-            if (data) {
-                setPending(data);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    function tasks(tasks: TaskData[]) {
-        if (tasks.length === 0) {
+    function tasks(tasks: TaskData[] | null | undefined) {
+        if (!tasks || tasks.length === 0) {
             return <p>No hay tareas.</p>;
         }
 
@@ -47,14 +26,6 @@ function Dashboard() {
             ))}
         </div>);
     }
-
-    useEffect(() => {
-        if (!isRender) {
-            showInProgress();
-            showPending();
-            setIsRender(true);
-        }
-    }, []);
 
     return (<div className='dashboard'>
         <div className='container'>
