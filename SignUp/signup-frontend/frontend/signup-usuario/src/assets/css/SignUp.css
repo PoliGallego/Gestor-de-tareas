@@ -228,6 +228,21 @@ input[type="submit"]:active,
     justify-content: right;
 }
 
+.back-btn {
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+    width: 4rem;
+    height: 4rem;
+    max-width: 4rem;
+    max-height: 4rem;
+}
+
+.back-img {
+    height: 2rem;
+    width: 2rem;
+}
+
 @media (max-width: 480px) {
     .body .in-container {
         margin: 10px;
