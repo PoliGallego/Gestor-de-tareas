@@ -26,7 +26,8 @@ export async function logOut() {
 
         if (response && response.ok) {
             try {
-                history.replaceState(null, "", location.href);
+                window.open("http://localhost:3000");
+                window.close();
                 await setPage("login");
             } catch (error) {
                 alert("Ha ocurrido un error, la ventana se cerrará a continuación");
