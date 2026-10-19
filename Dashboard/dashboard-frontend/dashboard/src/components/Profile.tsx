@@ -51,12 +51,28 @@ function Profile({ totals }: { totals: Totals | null | undefined }) {
     // };
 
     const validate = (): boolean => {
-        const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;;
+        const regexEmail: RegExp = /[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?/;;
         const regexName: RegExp = /^[A-Za-z]{3,30}$/;;
 
-        const passPass: boolean = editUser.pass.length === 0 ? true : editUser.pass.length > 7;
+        const passName: boolean = regexName.test(editUser.name);
+        const passEmail: boolean = regexEmail.test(editUser.email);
+        const passPass: boolean = editUser.pass.length === 0 ? true : editUser.pass.length > 8;
 
-        return regexName.test(editUser.name) && regex.test(editUser.email) && passPass;
+        if (!passName) {
+            if (editUser.name.length < 3) {
+                setMessage("Nombre de usuario demasiado corto");
+            } else if (editUser.name.length > 30) {
+                setMessage("Nombre de usuario demasiado largo");
+            } else {
+                setMessage("El nombre de usuario solo puede contener letras");
+            }
+        } else if (!passEmail) {
+            setMessage("Correo electrónico inválido");
+        } else if (!passPass) {
+            setMessage("La contraseña debe contener por lo menos ocho caracteres");
+        }
+
+        return passName && passEmail && passPass;
     };
 
     async function update() {
@@ -70,8 +86,6 @@ function Profile({ totals }: { totals: Totals | null | undefined }) {
             } catch (error) {
                 console.error(error);
             }
-        } else {
-            setMessage("Datos inválidos");
         }
     }
 
