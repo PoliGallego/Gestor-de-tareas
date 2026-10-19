@@ -21,22 +21,42 @@ export interface Totals {
 
 export interface TaskData {
     prioridad: number;
-    fecha_fin: string;
+    fechaFin: string;
     nombre: string;
     descrip: string;
     color: string;
 }
 
-export async function getTaskTotals(): Promise<Totals> {
+export interface InfoDTO {
+    count: Totals;
+    inprog: TaskData[];
+    pending: TaskData[];
+}
+
+export async function auth() {
+
     const response = await fetch(
-        'http://localhost:8082/api/dash/tasks', { credentials: 'include' }
+        'http://localhost:8090/auth', { credentials: 'include' }
     );
 
     if (response.status !== 302) {
-        throw new Error(`Tasks totaks error: ${response.status}`);
+        throw new Error(`Auth error: ${response.status}`);
     }
 
-    const data: Totals = await response.json();
+    const data: User = await response.json();
+    return data;
+}
+
+export async function getInfo(): Promise<InfoDTO> {
+    const response = await fetch(
+        'http://localhost:8082/api/dash', { credentials: 'include' }
+    );
+
+    if (response.status !== 302) {
+        throw new Error(`Profile info error: ${response.status}`);
+    }
+
+    const data = await response.json();
     return data;
 }
 
@@ -57,31 +77,5 @@ export async function updateUser(user: PassUser): Promise<User> {
     }
 
     const data: User = await response.json();
-    return data;
-}
-
-export async function getInProgressTasks(): Promise<TaskData[]> {
-    const response = await fetch(
-        'http://localhost:8082/api/dash/in-prog', { credentials: 'include' }
-    );
-
-    if (response.status !== 302) {
-        throw new Error(`In-progress tasks error: ${response.status}`);
-    }
-
-    const data: TaskData[] = await response.json();
-    return data;
-}
-
-export async function getPendingTasks(): Promise<TaskData[]> {
-    const response = await fetch(
-        'http://localhost:8082/api/dash/pending', { credentials: 'include' }
-    );
-
-    if (response.status !== 302) {
-        throw new Error(`Pending tasks error: ${response.status}`);
-    }
-
-    const data: TaskData[] = await response.json();
     return data;
 }

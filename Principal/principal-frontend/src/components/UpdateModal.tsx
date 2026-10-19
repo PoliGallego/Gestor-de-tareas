@@ -96,7 +96,7 @@ export default function UpdateModal() {
                         placeholder="Escribe el título de la tarea"
                         required
                     />
-                    {isErrorTitle && <p className="task-form__error">Título inválido</p>}
+                    {isErrorTitle && <p className="task-form__error">El título debe tener menos de cincuenta caracteres</p>}
                 </label>
 
                 {/* <label>
@@ -143,13 +143,15 @@ export default function UpdateModal() {
 
                     <label>
                         Fecha de inicio
-                        <input type="date" value={taskForm.startDate} onChange={(event) => setTaskForm({ ...taskForm, startDate: event.target.value })} />
-                        {isErrorDate && <p className="task-form__error">Fecha inválida</p>}
+                        <input type="date" value={taskForm.startDate} onClick={e => {e.currentTarget.showPicker()}}
+                        onChange={(event) => setTaskForm({ ...taskForm, startDate: event.target.value })} />
+                        {isErrorDate && <p className="task-form__error">Toda tarea debe tener una fecha de inicio</p>}
                     </label>
 
                     <label>
                         Fecha límite
-                        <input type="date" value={taskForm.dueDate} onChange={(event) => setTaskForm({ ...taskForm, dueDate: event.target.value })} />
+                        <input type="date" value={taskForm.dueDate} onClick={e => {e.currentTarget.showPicker()}}
+                        onChange={(event) => setTaskForm({ ...taskForm, dueDate: event.target.value })} />
                     </label>
                 </div>
 

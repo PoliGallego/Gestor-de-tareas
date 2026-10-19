@@ -1,5 +1,7 @@
 package dashboard.app.infrastructure.config;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,7 @@ import dashboard.app.application.service.PanelRemoteService;
 
 @Configuration
 public class ClientConfig {
+    private static final Logger logger = Logger.getLogger(ClientConfig.class.getName());
 
     @Value("${auth.host}")
     private String authHost;
@@ -25,7 +28,8 @@ public class ClientConfig {
 
     @Bean
     public PanelRemoteServicePort panelRemoteService() {
-       return new PanelRemoteService(panelHost + panelPort);
+        logger.info("panel url: " + panelHost + panelPort);
+        return new PanelRemoteService(panelHost + panelPort);
     }
 
     @Bean

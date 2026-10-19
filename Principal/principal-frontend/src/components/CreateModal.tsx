@@ -140,7 +140,7 @@ export default function CreateModal() {
                         />
                         {isErrorTitle && (
                             <p className="task-form__error">
-                                Título inválido
+                                El título debe tener menos de cincuenta caracteres
                             </p>
                         )}
                     </label>
@@ -247,10 +247,11 @@ export default function CreateModal() {
                                         startDate: event.target.value
                                     })
                                 }
+                                onClick={e => {e.currentTarget.showPicker()}}
                             />
                             {isErrorDate && (
                                 <p className="task-form__error">
-                                    Fecha inválida
+                                    Toda tarea debe tener una fecha de inicio
                                 </p>
                             )}
                         </label>
@@ -266,6 +267,7 @@ export default function CreateModal() {
                                         dueDate: event.target.value
                                     })
                                 }
+                                onClick={e => {e.currentTarget.showPicker()}}
                             />
                         </label>
                     </div>

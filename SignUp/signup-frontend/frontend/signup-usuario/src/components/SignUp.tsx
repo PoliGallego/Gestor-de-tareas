@@ -1,9 +1,10 @@
 import '../assets/css/SignUp.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import back_arrow from "../assets/img/back-arrow.png";
 import { useState, type SubmitEvent } from 'react';
 import { usePageContext } from "../PageContext.tsx";
 import { signup, type SignUpDTO } from '../services/signUpService.ts';
-import { setPage } from '@gestor-tareas/react-components';
+import { Button, setPage } from '@gestor-tareas/react-components';
 
 function SignUp() {
     const { setMessage } = usePageContext();
@@ -36,7 +37,7 @@ function SignUp() {
     };
 
     const validate = (): boolean => {
-        const regexMail: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;;
+        const regexMail: RegExp = /[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?/;;
         const regexName: RegExp = /^[A-Za-z ]{3,30}$/;;
 
         const errorName: boolean = !regexName.test(signUpForm.name);
@@ -44,11 +45,17 @@ function SignUp() {
         const errorPass: boolean = signUpForm.pass.length < 8;
 
         if (errorName) {
-            setMessage("Nombre de usuario inválido");
+            if (signUpForm.name.length < 3) {
+                setMessage("Nombre de usuario demasiado corto");
+            } else if (signUpForm.name.length > 30) {
+                setMessage("Nombre de usuario demasiado largo");
+            } else {
+                setMessage("El nombre de usuario solo puede contener letras");
+            }
         } else if (errorEmail) {
             setMessage("Correo electrónico inválido");
         } else if (errorPass) {
-            setMessage("Contraseña demasiado débil");
+            setMessage("La contraseña debe contener por lo menos ocho caracteres");
         }
 
         return errorName || errorEmail || errorPass;
@@ -66,6 +73,9 @@ function SignUp() {
     };
 
     return <div className='body'>
+        <Button className='back-btn' onClick={() => { history.back() }}>
+          <img className='back-img' src={back_arrow} alt="go back" draggable={false} />
+        </Button>
         <div className="in-container">
             <div id="signupForm" className="signup form-container">
                 <div className="form-header">
