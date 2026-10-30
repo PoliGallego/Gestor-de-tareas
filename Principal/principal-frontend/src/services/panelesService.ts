@@ -19,6 +19,7 @@ export interface PanelRequest {
   fechaInicio?: string;
   fechaFin?: string;
   prioridad: number;
+  tableroId: string;
 }
 
 export interface CrearPanelRequest {
@@ -91,8 +92,8 @@ export function mapTaskToPanel(task: Task): PanelDTO {
   };
 }
 
-export async function getPaneles(): Promise<Task[]> {
-  const response = await fetch("/api/paneles", {
+export async function getPaneles(tableroId: string): Promise<Task[]> {
+  const response = await fetch("/api/paneles?tableroId=" + encodeURIComponent(tableroId), {
     method: "GET",
     headers: getAuthHeaders(),
     credentials: "include",

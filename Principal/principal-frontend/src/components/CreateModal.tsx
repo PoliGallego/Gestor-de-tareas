@@ -17,7 +17,7 @@ const initialTaskForm: Task = {
 };
 
 export default function CreateModal() {
-    const { error, setError, setAllTasks, setIsCModalOpen } = usePageContext();
+    const { error, setError, setAllTasks, setIsCModalOpen, tableroActual } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
     const [taskForm, setTaskForm] = useState<Task>(initialTaskForm);
     const [isErrorTitle, setErrorTitle] = useState(false);
@@ -71,6 +71,7 @@ export default function CreateModal() {
                 }[taskForm.priority],
                 fechaInicio: taskForm.startDate || undefined,
                 fechaFin: taskForm.dueDate || undefined,
+                tableroId: tableroActual?.id ?? "",
             });
 
             setAllTasks((currentTasks) => [

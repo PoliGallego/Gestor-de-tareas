@@ -10,6 +10,9 @@ import { usePageContext } from "../PageContext";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
 import { Button } from "@gestor-tareas/react-components";
+import { getTableros } from "../services/tablerosService";
+import type { Tablero } from "../services/tablerosService";
+import BoardSelector from "./BoardSelector";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -19,22 +22,43 @@ const columns: { status: TaskStatus; title: string; color: string }[] = [
 
 export default function KanbanBoard() {
   const { error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen,
-    isUModalOpen, allTasks, setAllTasks } = usePageContext();
+    isUModalOpen, allTasks, setAllTasks, tableroActual, setTableroActual } = usePageContext();
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [selectedMemberId] = useState<string | null>(null);
+  const [tableros, setTableros] = useState<Tablero[]>([]);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const memberById = useMemo(() => new Map(teamMembers.map((m) => [m.id, m])), []);
 
-  // 4. useEffect para llamar al backend cuando el componente se dibuja por primera vez
+  // Al cargar la página se consultan los tableros del usuario y se selecciona el primero
   useEffect(() => {
+    const fetchTableros = async () => {
+      try {
+        const tablerosBackend = await getTableros();
+        setTableros(tablerosBackend);
+        setTableroActual(tablerosBackend[0] ?? null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error desconocido al cargar tableros");
+        setIsLoading(false);
+      }
+    };
+
+    fetchTableros();
+  }, []);
+
+  // 4. useEffect para llamar al backend cada vez que cambia el tablero seleccionado
+  useEffect(() => {
+    if (!tableroActual) {
+      return;
+    }
+
     const fetchPaneles = async () => {
       try {
         setIsLoading(true);
         // Llamamos a tu servicio que trae los datos reales
-        const panelesBackend = await getPaneles();
+        const panelesBackend = await getPaneles(tableroActual.id);
         // Guardamos los datos en el estado
         setAllTasks(panelesBackend);
       } catch (err) {
@@ -46,7 +70,7 @@ export default function KanbanBoard() {
     };
 
     fetchPaneles();
-  }, []); // El array vacío [] indica que esto solo se ejecuta una vez al cargar la página
+  }, [tableroActual]); // Se vuelve a ejecutar cada vez que cambia 'tableroActual'
 
   // Este filtro ahora usa el estado 'allTasks' que se llenará con el backend
   const visibleTasks = useMemo(
@@ -89,6 +113,7 @@ export default function KanbanBoard() {
       <header className="board__header">
         <div>
           <h1>Tus tareas</h1>
+          <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual} />
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
