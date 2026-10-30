@@ -10,8 +10,8 @@ import { usePageContext } from "../PageContext";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
 import { Button, Modal } from "@gestor-tareas/react-components";
-import { eliminarTablero, getTableros } from "../services/tablerosService";
-import type { Tablero } from "../services/tablerosService";
+import { eliminarTablero, getParticipantes, getTableros } from "../services/tablerosService";
+import type { Participante, Tablero } from "../services/tablerosService";
 import BoardSelector from "./BoardSelector";
 import CreateBoardModal from "./CreateBoardModal";
 import ParticipantsModal from "./ParticipantsModal";
@@ -31,6 +31,7 @@ export default function KanbanBoard() {
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
   const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
+  const [participantes, setParticipantes] = useState<Participante[]>([]);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -66,6 +67,8 @@ export default function KanbanBoard() {
         const panelesBackend = await getPaneles(tableroActual.id);
         // Guardamos los datos en el estado
         setAllTasks(panelesBackend);
+        // Los participantes se usan para elegir y mostrar el responsable de cada tarea
+        setParticipantes(await getParticipantes(tableroActual.id));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error desconocido al cargar paneles");
         console.error("Error al cargar paneles:", err);
@@ -112,6 +115,23 @@ export default function KanbanBoard() {
       setTableroActual(tablerosBackend[0] ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido al eliminar el tablero");
+    }
+  }
+
+  // Al cerrar el modal de participantes se recargan los datos: si se quitó a alguien,
+  // el backend dejó sin responsable las tareas que tenía asignadas
+  async function handleParticipantsClosed() {
+    setIsParticipantsOpen(false);
+
+    if (!tableroActual) {
+      return;
+    }
+
+    try {
+      setParticipantes(await getParticipantes(tableroActual.id));
+      setAllTasks(await getPaneles(tableroActual.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido al recargar el tablero");
     }
   }
 
@@ -177,15 +197,15 @@ export default function KanbanBoard() {
         ))}
       </div>
 
-      {isCModalOpen && <CreateModal/>}
-      {isUModalOpen && <UpdateModal/>}
+      {isCModalOpen && <CreateModal participantes={participantes}/>}
+      {isUModalOpen && <UpdateModal participantes={participantes}/>}
       {isDModalOpen && <DeleteModal/>}
       {isBoardModalOpen && <CreateBoardModal onCreated={handleBoardCreated} onClose={() => setIsBoardModalOpen(false)} />}
       {isDeleteBoardOpen && <Modal title="Eliminar tablero" isChoose={true}
         text={`Se eliminará el tablero "${tableroActual?.nombre}" y todas sus tareas. ¿Deseas continuar?`}
         setChoose={handleDeleteBoardChoice} setShow={setIsDeleteBoardOpen} />}
       {isParticipantsOpen && tableroActual &&
-        <ParticipantsModal tablero={tableroActual} onClose={() => setIsParticipantsOpen(false)} />}
+        <ParticipantsModal tablero={tableroActual} onClose={handleParticipantsClosed} />}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { updatePanel } from "../services/panelesService";
 import type { Task, TaskStatus } from "../types";
 import { usePageContext } from "../PageContext";
+import type { Participante } from "../services/tablerosService";
 
 const initialTaskForm: Task = {
     title: "",
@@ -16,7 +17,11 @@ const initialTaskForm: Task = {
     tags: []
 };
 
-export default function UpdateModal() {
+interface UpdateModalProps {
+    participantes: Participante[];
+}
+
+export default function UpdateModal({ participantes }: UpdateModalProps) {
     const { focusTask, error, setError, setAllTasks, setIsUModalOpen, setFocusTask } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
     const [taskForm, setTaskForm] = useState(focusTask ?? initialTaskForm);
@@ -110,12 +115,13 @@ export default function UpdateModal() {
                 </label> */}
 
                 <div className="task-form__grid">
-                    {/* <label>
+                    <label>
                   Responsable
                   <select value={taskForm.assigneeId} onChange={(event) => setTaskForm({ ...taskForm, assigneeId: event.target.value })}>
-                    {teamMembers.map((member) => <option key={member.id} value={member.id}>{member.name}</option>)}
+                    <option value="">Sin asignar</option>
+                    {participantes.map((participante) => <option key={participante.usuarioId} value={participante.usuarioId}>{participante.nombre}</option>)}
                   </select>
-                </label> */}
+                </label>
 
                     <label>
                         Prioridad

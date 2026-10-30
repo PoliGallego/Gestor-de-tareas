@@ -2,6 +2,7 @@ import { useState } from "react";
 import { crearPanel } from "../services/panelesService";
 import type { Task, TaskStatus } from "../types";
 import { usePageContext } from "../PageContext";
+import type { Participante } from "../services/tablerosService";
 
 const initialTaskForm: Task = {
     title: "",
@@ -16,7 +17,11 @@ const initialTaskForm: Task = {
     tags: []
 };
 
-export default function CreateModal() {
+interface CreateModalProps {
+    participantes: Participante[];
+}
+
+export default function CreateModal({ participantes }: CreateModalProps) {
     const { error, setError, setAllTasks, setIsCModalOpen, tableroActual } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
     const [taskForm, setTaskForm] = useState<Task>(initialTaskForm);
@@ -72,6 +77,7 @@ export default function CreateModal() {
                 fechaInicio: taskForm.startDate || undefined,
                 fechaFin: taskForm.dueDate || undefined,
                 tableroId: tableroActual?.id ?? "",
+                responsableId: taskForm.assigneeId || null,
             });
 
             setAllTasks((currentTasks) => [
@@ -162,7 +168,7 @@ export default function CreateModal() {
                     </label> */}
 
                     <div className="task-form__grid">
-                        {/* <label>
+                        <label>
                             Responsable
                             <select
                                 value={taskForm.assigneeId}
@@ -173,16 +179,17 @@ export default function CreateModal() {
                                     })
                                 }
                             >
-                                {teamMembers.map((member) => (
+                                <option value="">Sin asignar</option>
+                                {participantes.map((participante) => (
                                     <option
-                                        key={member.id}
-                                        value={member.id}
+                                        key={participante.usuarioId}
+                                        value={participante.usuarioId}
                                     >
-                                        {member.name}
+                                        {participante.nombre}
                                     </option>
                                 ))}
                             </select>
-                        </label> */}
+                        </label>
 
                         <label>
                             Prioridad

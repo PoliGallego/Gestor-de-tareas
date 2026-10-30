@@ -10,6 +10,7 @@ export interface PanelDTO {
   prioridad: number;
   propietarioId: string;
   fechaCreacion?: string;
+  responsableId?: string | null;
 }
 
 export interface PanelRequest {
@@ -20,6 +21,7 @@ export interface PanelRequest {
   fechaFin?: string;
   prioridad: number;
   tableroId: string;
+  responsableId?: string | null;
 }
 
 export interface CrearPanelRequest {
@@ -56,7 +58,7 @@ export function mapPanelToTask(panel: PanelDTO): Task {
     id: panel.id,
     title: panel.nombre,
     description: `Panel ID: ${panel.id} - Color: ${panel.color || "predeterminado"}`,
-    assigneeId: panel.propietarioId || "u1",
+    assigneeId: panel.responsableId ?? "",
     priority: priorityMap[panel.prioridad] || "Media",
     status: statusMap[panel.estado] || "todo",
     dueDate: panel.fechaFin || "",
@@ -88,7 +90,8 @@ export function mapTaskToPanel(task: Task): PanelDTO {
     fechaInicio: task.startDate,
     fechaFin: task.dueDate,
     id: task.id,
-    propietarioId: task.assigneeId
+    propietarioId: task.assigneeId,
+    responsableId: task.assigneeId || null
   };
 }
 
