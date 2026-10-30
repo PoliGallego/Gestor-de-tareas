@@ -1,9 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
-// 1. Ya no importamos 'tasks', solo los miembros del equipo.
-import { teamMembers } from "../data/mockData";
 // 2. Importamos tu servicio y el tipo Task
 import { getPaneles, updatePanel } from "../services/panelesService";
-import type { TaskStatus, Task } from "../types";
+import type { TaskStatus, Task, TeamMember } from "../types";
 import Column from "./Column";
 import CreateModal from "./CreateModal";
 import { usePageContext } from "../PageContext";
@@ -22,6 +20,20 @@ const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "done", title: "Hecho", color: "#22c55e" },
 ];
 
+// Convierte un participante del tablero al formato que usa el Avatar de la tarjeta
+function toTeamMember(participante: Participante): TeamMember {
+  const initials = participante.nombre.split(" ").filter((palabra) => palabra.length > 0)
+    .slice(0, 2).map((palabra) => palabra[0].toUpperCase()).join("");
+
+  return {
+    id: participante.usuarioId,
+    name: participante.nombre,
+    role: participante.esPropietario ? "Propietario" : "Miembro",
+    initials,
+    color: "#977a7a",
+  };
+}
+
 export default function KanbanBoard() {
   const { error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen,
     isUModalOpen, allTasks, setAllTasks, tableroActual, setTableroActual } = usePageContext();
@@ -36,7 +48,10 @@ export default function KanbanBoard() {
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const memberById = useMemo(() => new Map(teamMembers.map((m) => [m.id, m])), []);
+  const memberById = useMemo(
+    () => new Map(participantes.map((participante) => [participante.usuarioId, toTeamMember(participante)])),
+    [participantes]
+  );
 
   // Al cargar la página se consultan los tableros del usuario y se selecciona el primero
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Task, TeamMember } from "../types";
 import { usePageContext } from "../PageContext";
+import Avatar from "./Avatar";
 
 const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
   Baja: { bg: "#e0f2fe", fg: "#0369a1" },
@@ -114,7 +115,7 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         ))}
       </div> */}
 
-      {/* <div className="task-card__footer">
+      <div className="task-card__footer">
         {assignee ? (
           <div className="task-card__assignee">
             <Avatar member={assignee} />
@@ -123,7 +124,7 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         ) : (
           <span className="task-card__assignee task-card__assignee--empty">Sin asignar</span>
         )}
-      </div> */}
+      </div>
     </article>
   );
 }
