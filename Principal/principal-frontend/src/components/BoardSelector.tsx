@@ -6,9 +6,10 @@ interface BoardSelectorProps {
   tableroActual: Tablero | null;
   onSelect: (tablero: Tablero) => void;
   onCreate: () => void;
+  onDelete: () => void;
 }
 
-export default function BoardSelector({ tableros, tableroActual, onSelect, onCreate }: BoardSelectorProps) {
+export default function BoardSelector({ tableros, tableroActual, onSelect, onCreate, onDelete }: BoardSelectorProps) {
 
   function handleChange(tableroId: string) {
     const tablero = tableros.find((t) => t.id === tableroId);
@@ -32,6 +33,7 @@ export default function BoardSelector({ tableros, tableroActual, onSelect, onCre
         ))}
       </select>
       <Button text="Nuevo tablero" onClick={onCreate} />
+      <Button text="Eliminar tablero" onClick={onDelete} disabled={!tableroActual} />
     </div>
   );
 }

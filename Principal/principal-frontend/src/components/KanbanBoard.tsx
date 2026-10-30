@@ -9,8 +9,8 @@ import CreateModal from "./CreateModal";
 import { usePageContext } from "../PageContext";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
-import { Button } from "@gestor-tareas/react-components";
-import { getTableros } from "../services/tablerosService";
+import { Button, Modal } from "@gestor-tareas/react-components";
+import { eliminarTablero, getTableros } from "../services/tablerosService";
 import type { Tablero } from "../services/tablerosService";
 import BoardSelector from "./BoardSelector";
 import CreateBoardModal from "./CreateBoardModal";
@@ -28,6 +28,7 @@ export default function KanbanBoard() {
   const [selectedMemberId] = useState<string | null>(null);
   const [tableros, setTableros] = useState<Tablero[]>([]);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -89,6 +90,29 @@ export default function KanbanBoard() {
     setIsBoardModalOpen(false);
   }
 
+  // El Modal de la librería llama a esta función con true al presionar "Aceptar"
+  function handleDeleteBoardChoice(aceptado: React.SetStateAction<boolean>) {
+    if (aceptado === true) {
+      deleteBoard();
+    }
+  }
+
+  async function deleteBoard() {
+    if (!tableroActual) {
+      return;
+    }
+
+    try {
+      await eliminarTablero(tableroActual.id);
+      // Se vuelve a consultar la lista: si era el único tablero, el backend crea uno por defecto
+      const tablerosBackend = await getTableros();
+      setTableros(tablerosBackend);
+      setTableroActual(tablerosBackend[0] ?? null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido al eliminar el tablero");
+    }
+  }
+
   function moveTask(destinationStatus: TaskStatus) {
     if (!draggedTask || draggedTask.status === destinationStatus) {
       setDraggedTask(null);
@@ -122,7 +146,7 @@ export default function KanbanBoard() {
         <div>
           <h1>Tus tareas</h1>
           <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
-            onCreate={() => setIsBoardModalOpen(true)} />
+            onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)} />
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
@@ -154,6 +178,9 @@ export default function KanbanBoard() {
       {isUModalOpen && <UpdateModal/>}
       {isDModalOpen && <DeleteModal/>}
       {isBoardModalOpen && <CreateBoardModal onCreated={handleBoardCreated} onClose={() => setIsBoardModalOpen(false)} />}
+      {isDeleteBoardOpen && <Modal title="Eliminar tablero" isChoose={true}
+        text={`Se eliminará el tablero "${tableroActual?.nombre}" y todas sus tareas. ¿Deseas continuar?`}
+        setChoose={handleDeleteBoardChoice} setShow={setIsDeleteBoardOpen} />}
     </div>
   );
 }

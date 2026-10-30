@@ -37,3 +37,15 @@ export async function crearTablero(nombre: string): Promise<Tablero> {
   const data: Tablero = await response.json();
   return data;
 }
+
+export async function eliminarTablero(tableroId: string) {
+  const response = await fetch("/api/tableros/" + tableroId, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+
+  if (response.status !== 204) {
+    throw new Error(`Error al eliminar tablero: ${response.status}`);
+  }
+}
