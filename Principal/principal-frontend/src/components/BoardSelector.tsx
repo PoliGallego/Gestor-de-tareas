@@ -30,13 +30,13 @@ export default function BoardSelector({ tableros, tableroActual, onSelect, onCre
       >
         {tableros.map((tablero) => (
           <option key={tablero.id} value={tablero.id}>
-            {tablero.nombre}
+            {tablero.nombre}{!tablero.esPropietario && " (compartido)"}
           </option>
         ))}
       </select>
       <Button text="Nuevo tablero" onClick={onCreate} />
       <Button text="Participantes" onClick={onParticipants} disabled={!tableroActual} />
-      <Button text="Eliminar tablero" onClick={onDelete} disabled={!tableroActual} />
+      {tableroActual?.esPropietario && <Button text="Eliminar tablero" onClick={onDelete} />}
     </div>
   );
 }

@@ -17,7 +17,7 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: TaskCardProps) {
-  const { setFocusTask, setIsUModalOpen, setIsDModalOpen } = usePageContext();
+  const { setFocusTask, setIsUModalOpen, setIsDModalOpen, tableroActual } = usePageContext();
   const [isHover, setIsHover] = useState(false);
   const priorityStyle = priorityStyles[task.priority];
   const dueDate = new Date(task.dueDate);
@@ -96,9 +96,10 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
             <button className="ed-button" onClick={() => editFunt()}>
               <div className="ed-icon edit" style={{ backgroundImage: getEditIconColor() }} />
             </button>
+            {tableroActual?.esPropietario &&
             <button className="ed-button" onClick={() => deleteFunt()}>
               <div className="ed-icon delete" style={{ backgroundImage: getDeleteIconColor() }}/>
-            </button>
+            </button>}
           </div>}
       </div>
 
