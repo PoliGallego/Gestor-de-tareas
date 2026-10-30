@@ -13,6 +13,7 @@ import { Button } from "@gestor-tareas/react-components";
 import { getTableros } from "../services/tablerosService";
 import type { Tablero } from "../services/tablerosService";
 import BoardSelector from "./BoardSelector";
+import CreateBoardModal from "./CreateBoardModal";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -26,6 +27,7 @@ export default function KanbanBoard() {
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [selectedMemberId] = useState<string | null>(null);
   const [tableros, setTableros] = useState<Tablero[]>([]);
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -81,6 +83,12 @@ export default function KanbanBoard() {
     [selectedMemberId, allTasks]
   );
 
+  function handleBoardCreated(tablero: Tablero) {
+    setTableros((currentTableros) => [...currentTableros, tablero]);
+    setTableroActual(tablero);
+    setIsBoardModalOpen(false);
+  }
+
   function moveTask(destinationStatus: TaskStatus) {
     if (!draggedTask || draggedTask.status === destinationStatus) {
       setDraggedTask(null);
@@ -113,7 +121,8 @@ export default function KanbanBoard() {
       <header className="board__header">
         <div>
           <h1>Tus tareas</h1>
-          <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual} />
+          <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
+            onCreate={() => setIsBoardModalOpen(true)} />
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
@@ -144,6 +153,7 @@ export default function KanbanBoard() {
       {isCModalOpen && <CreateModal/>}
       {isUModalOpen && <UpdateModal/>}
       {isDModalOpen && <DeleteModal/>}
+      {isBoardModalOpen && <CreateBoardModal onCreated={handleBoardCreated} onClose={() => setIsBoardModalOpen(false)} />}
     </div>
   );
 }

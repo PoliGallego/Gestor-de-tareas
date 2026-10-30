@@ -1,12 +1,14 @@
+import { Button } from "@gestor-tareas/react-components";
 import type { Tablero } from "../services/tablerosService";
 
 interface BoardSelectorProps {
   tableros: Tablero[];
   tableroActual: Tablero | null;
   onSelect: (tablero: Tablero) => void;
+  onCreate: () => void;
 }
 
-export default function BoardSelector({ tableros, tableroActual, onSelect }: BoardSelectorProps) {
+export default function BoardSelector({ tableros, tableroActual, onSelect, onCreate }: BoardSelectorProps) {
 
   function handleChange(tableroId: string) {
     const tablero = tableros.find((t) => t.id === tableroId);
@@ -29,6 +31,7 @@ export default function BoardSelector({ tableros, tableroActual, onSelect }: Boa
           </option>
         ))}
       </select>
+      <Button text="Nuevo tablero" onClick={onCreate} />
     </div>
   );
 }
