@@ -14,6 +14,7 @@ import { eliminarTablero, getTableros } from "../services/tablerosService";
 import type { Tablero } from "../services/tablerosService";
 import BoardSelector from "./BoardSelector";
 import CreateBoardModal from "./CreateBoardModal";
+import ParticipantsModal from "./ParticipantsModal";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -29,6 +30,7 @@ export default function KanbanBoard() {
   const [tableros, setTableros] = useState<Tablero[]>([]);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -146,7 +148,8 @@ export default function KanbanBoard() {
         <div>
           <h1>Tus tareas</h1>
           <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
-            onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)} />
+            onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)}
+            onParticipants={() => setIsParticipantsOpen(true)} />
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
@@ -181,6 +184,8 @@ export default function KanbanBoard() {
       {isDeleteBoardOpen && <Modal title="Eliminar tablero" isChoose={true}
         text={`Se eliminará el tablero "${tableroActual?.nombre}" y todas sus tareas. ¿Deseas continuar?`}
         setChoose={handleDeleteBoardChoice} setShow={setIsDeleteBoardOpen} />}
+      {isParticipantsOpen && tableroActual &&
+        <ParticipantsModal tablero={tableroActual} onClose={() => setIsParticipantsOpen(false)} />}
     </div>
   );
 }
