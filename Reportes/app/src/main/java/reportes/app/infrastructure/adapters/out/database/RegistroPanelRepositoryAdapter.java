@@ -30,6 +30,7 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
                 .fechaInicio(registroPanel.getFechaInicio())
                 .fechaFin(registroPanel.getFechaFin())
                 .fechaCompletado(registroPanel.getFechaCompletado())
+                .responsableId(registroPanel.getResponsableId())
                 .build();
         
         jpaRepository.save(entity);
@@ -64,6 +65,7 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
                 .fechaInicio(entity.getFechaInicio())
                 .fechaFin(entity.getFechaFin())
                 .fechaCompletado(entity.getFechaCompletado())
+                .responsableId(entity.getResponsableId())
                 .build();
     }
 }
