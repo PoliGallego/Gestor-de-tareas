@@ -44,7 +44,8 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
 
     @Override
     public List<RegistroPanel> buscarTodosPorUsuario(String propietarioId) {
-        return jpaRepository.findByPropietarioId(propietarioId).stream()
+        // Cuentan las tareas de las que el usuario es responsable, más las que creó y no tienen responsable
+        return jpaRepository.findByResponsableIdOrResponsableIdIsNullAndPropietarioId(propietarioId, propietarioId).stream()
                 .map(this::traducirADominio)
                 .collect(Collectors.toList());
     }
