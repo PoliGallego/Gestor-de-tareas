@@ -20,6 +20,25 @@ const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "done", title: "Hecho", color: "#22c55e" },
 ];
 
+// Clave del localStorage donde se recuerda el último tablero abierto
+const TABLERO_GUARDADO_KEY = "tableroActualId";
+
+function leerTableroGuardado(): string | null {
+  try {
+    return localStorage.getItem(TABLERO_GUARDADO_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function guardarTablero(tableroId: string) {
+  try {
+    localStorage.setItem(TABLERO_GUARDADO_KEY, tableroId);
+  } catch {
+    // Si el navegador no permite guardar, simplemente no se recuerda el tablero
+  }
+}
+
 // Convierte un participante del tablero al formato que usa el Avatar de la tarjeta
 function toTeamMember(participante: Participante): TeamMember {
   const initials = participante.nombre.split(" ").filter((palabra) => palabra.length > 0)
@@ -53,13 +72,15 @@ export default function KanbanBoard() {
     [participantes]
   );
 
-  // Al cargar la página se consultan los tableros del usuario y se selecciona el primero
+  // Al cargar la página se consultan los tableros del usuario y se abre el último que se usó,
+  // o el primero si no hay uno guardado o ya no se tiene acceso a él
   useEffect(() => {
     const fetchTableros = async () => {
       try {
         const tablerosBackend = await getTableros();
         setTableros(tablerosBackend);
-        setTableroActual(tablerosBackend[0] ?? null);
+        const tableroGuardado = tablerosBackend.find((tablero) => tablero.id === leerTableroGuardado());
+        setTableroActual(tableroGuardado ?? tablerosBackend[0] ?? null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error desconocido al cargar tableros");
         setIsLoading(false);
@@ -74,6 +95,8 @@ export default function KanbanBoard() {
     if (!tableroActual) {
       return;
     }
+
+    guardarTablero(tableroActual.id);
 
     const fetchPaneles = async () => {
       try {
