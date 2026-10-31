@@ -21,6 +21,7 @@ public class RegistroPanel {
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private LocalDateTime fechaCompletado;
+    private String responsableId;
 
 
     public boolean fueEntregadoATiempo() {

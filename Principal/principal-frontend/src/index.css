@@ -78,6 +78,80 @@ h2 {
   color: var(--text);
 }
 
+.board-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.board-selector select {
+  min-width: 220px;
+  padding: 8px 12px;
+  color: var(--text);
+  background: var(--surface, white);
+  border: 1px solid var(--input-border);
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 400;
+}
+
+.participants {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.participants__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 7px;
+}
+
+.participants__item button {
+  padding: 6px 12px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.participants__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.participants__email,
+.participants__empty {
+  margin: 2px 0 0;
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.participants__badge {
+  padding: 2px 8px;
+  color: var(--bg);
+  background: var(--button-bg);
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .task-modal__backdrop {
   position: fixed;
   inset: 0;

@@ -5,6 +5,8 @@
     width: 100%;
     padding: 10px;
     gap: 10px;
+    max-height: 25rem;
+    overflow-y: auto;
 }
 
 .list-cont {
@@ -37,6 +39,7 @@
     align-items: baseline;
     flex-direction: column;
     min-width: 0;
+    min-height: fit-content;
 }
 
 @media (max-width: 680px) {

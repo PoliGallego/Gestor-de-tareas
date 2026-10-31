@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
 import { usePageContext } from "../PageContext.tsx";
 import type { User, Totals, PassUser } from "../services/dashboardService.ts";
-import { getTaskTotals, updateUser } from "../services/dashboardService.ts";
-import Dashboard from './Dashboard.tsx';
-import { auth, logOut, ProfilePic } from '@gestor-tareas/react-components';
+import { auth, updateUser } from "../services/dashboardService.ts";
+import { logOut, ProfilePic } from '@gestor-tareas/react-components';
 
-function Profile() {
+function Profile({ totals }: { totals: Totals | null | undefined }) {
     const { setMessage } = usePageContext();
     const [user, setUser] = useState<User>({
         picture: null,
@@ -17,12 +16,6 @@ function Profile() {
         email: "",
         pass: "",
         picture: ""
-    });
-    const [tasks, setTasks] = useState<Totals>({
-        tt: 0,
-        tc: 0,
-        pt: 0,
-        tp: 0
     });
     const [isTasks, setIsTasks] = useState(false);
     const [isRender, setIsRender] = useState(false);
@@ -38,18 +31,6 @@ function Profile() {
             }
         } catch (error) {
             await logOut();
-        }
-    };
-
-    async function taks() {
-        try {
-            const data = await getTaskTotals();
-            if (data) {
-                setTasks(data);
-                setIsTasks(true);
-            }
-        } catch (error) {
-            console.error(error);
         }
     };
 
@@ -69,13 +50,29 @@ function Profile() {
     //     }
     // };
 
-    const validate = () : boolean => {
-        const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;;
+    const validate = (): boolean => {
+        const regexEmail: RegExp = /[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?/;;
         const regexName: RegExp = /^[A-Za-z]{3,30}$/;;
 
-        const passPass: boolean = editUser.pass.length === 0 ? true : editUser.pass.length > 7;
+        const passName: boolean = regexName.test(editUser.name);
+        const passEmail: boolean = regexEmail.test(editUser.email);
+        const passPass: boolean = editUser.pass.length === 0 ? true : editUser.pass.length > 8;
 
-        return regexName.test(editUser.name) && regex.test(editUser.email) && passPass;
+        if (!passName) {
+            if (editUser.name.length < 3) {
+                setMessage("Nombre de usuario demasiado corto");
+            } else if (editUser.name.length > 30) {
+                setMessage("Nombre de usuario demasiado largo");
+            } else {
+                setMessage("El nombre de usuario solo puede contener letras");
+            }
+        } else if (!passEmail) {
+            setMessage("Correo electrónico inválido");
+        } else if (!passPass) {
+            setMessage("La contraseña debe contener por lo menos ocho caracteres");
+        }
+
+        return passName && passEmail && passPass;
     };
 
     async function update() {
@@ -89,18 +86,19 @@ function Profile() {
             } catch (error) {
                 console.error(error);
             }
-        } else {
-            setMessage("Datos inválidos");
         }
     }
 
     useEffect(() => {
         if (!isRender) {
             authUser();
-            taks();
             setIsRender(true);
         }
     }, []);
+
+    useEffect(() => {
+        setIsTasks(totals ? true : false);
+    }, [totals]);
 
     useEffect(() => {
         if (user) {
@@ -113,60 +111,53 @@ function Profile() {
         }
     }, [user]);
 
-    return (<div className='body'>
-        <div className='profile'>
-            <div className='title'>
-                <h1>Información del perfil</h1>
-            </div>
+    return (<div className='profile'>
+        <div className='title'>
+            <h1>Información del perfil</h1>
+        </div>
 
-            <div className='grup'>
-                <div className='container'>
-                    <ProfilePic imgUrl={user.picture} userName={user.name ?? "No encontrado"} />
-                    <div className='basic-info'>
-                        <div className='user-info'>
-                            <h2 className='name'><b>Nombre: </b>{!isEditing && user.name}</h2>
-                            {isEditing && <input id='editName' type='text' value={editUser.name || ""} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
-                        </div>
-
-                        <div className='user-info'>
-                            <h3><b>E-mail: </b>{!isEditing && user.email}</h3>
-                            {isEditing && <input id='editEmail' type='text' value={editUser.email || ""} onChange={e => setEditUser({ ...editUser, email: e.target.value })} />}
-                        </div>
-
-                        {isEditing && <div className='user-info'>
-                            <h3><b>Contraseña: </b></h3>
-                            <input type='text' id='editPass' onChange={e => setEditUser({ ...editUser, pass: e.target.value })} />
-                        </div>}
+        <div className='grup'>
+            <div className='container'>
+                <ProfilePic imgUrl={user.picture} userName={user.name ?? "No encontrado"} />
+                <div className='basic-info'>
+                    <div className='user-info'>
+                        <h2 className='name'><b>Nombre: </b>{!isEditing && user.name}</h2>
+                        {isEditing && <input id='editName' type='text' value={editUser.name || ""} onChange={e => setEditUser({ ...editUser, name: e.target.value })} />}
                     </div>
-                    <div className='bts'>
-                        {isEditing && <input type="button" className="btn" value="Guardar" onClick={() => update()} />}
-                        <input type="button" className="btn" value={!isEditing ? "Actualizar" : "Cancelar"} onClick={() => setIsEditing(!isEditing)} />
-                        {/* <input type="button" className="del-btn" value="Delete" onClick={() => {
+
+                    <div className='user-info'>
+                        <h3><b>E-mail: </b>{!isEditing && user.email}</h3>
+                        {isEditing && <input id='editEmail' type='text' value={editUser.email || ""} onChange={e => setEditUser({ ...editUser, email: e.target.value })} />}
+                    </div>
+
+                    {isEditing && <div className='user-info'>
+                        <h3><b>Contraseña: </b></h3>
+                        <input type='text' id='editPass' onChange={e => setEditUser({ ...editUser, pass: e.target.value })} />
+                    </div>}
+                </div>
+                <div className='bts'>
+                    {isEditing && <input type="button" className="btn" value="Guardar" onClick={() => update()} />}
+                    <input type="button" className="btn" value={!isEditing ? "Actualizar" : "Cancelar"} onClick={() => setIsEditing(!isEditing)} />
+                    {/* <input type="button" className="del-btn" value="Delete" onClick={() => {
                             if (confirm("Do you want to delete your acount?")) {
                                 deleteUser();
                             }
                         }} /> */}
-                    </div>
+                </div>
+            </div>
+
+            {isTasks && <div className='container'>
+                <div className='tasks'>
+                    <p><b>Total de tareas: </b>{totals?.tt}</p>
+                    <p><b>Tareas completadas: </b>{totals?.tc}</p>
                 </div>
 
-                {isTasks && <div className='container'>
-                    <div className='tasks'>
-                        <p><b>Total de tareas: </b>{tasks.tt}</p>
-                        <p><b>Tareas completadas: </b>{tasks.tc}</p>
-                    </div>
-
-                    <div className='tasks'>
-                        <p><b>Tareas en progreso: </b>{tasks.tp}</p>
-                        <p><b>Tareas pendientes: </b>{tasks.pt}</p>
-                    </div>
-                </div>}
-            </div>
+                <div className='tasks'>
+                    <p><b>Tareas en progreso: </b>{totals?.tp}</p>
+                    <p><b>Tareas pendientes: </b>{totals?.pt}</p>
+                </div>
+            </div>}
         </div>
-
-        <div className='title'>
-            <h1>Resumen</h1>
-        </div>
-        <Dashboard></Dashboard>
     </div>);
 }
 

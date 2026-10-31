@@ -10,7 +10,7 @@ const setPriority: Record<number, { prior: string, bg: string; fg: string }> = {
 
 export default function TaskCard({ task }: { task: TaskData }) {
   const priority = setPriority[task.prioridad];
-  const dueDate = new Date(task.fecha_fin);
+  const dueDate = new Date(task.fechaFin);
   const formattedDate = dueDate.toLocaleDateString("es-CO", {
     day: "2-digit",
     month: "short",
@@ -25,7 +25,7 @@ export default function TaskCard({ task }: { task: TaskData }) {
         >
           {priority.prior}
         </span>
-        <span className="task-card__due">{task.fecha_fin ? formattedDate : "Sin fecha límite"}</span>
+        <span className="task-card__due">{task.fechaFin ? formattedDate : "Sin fecha límite"}</span>
       </div>
 
       <h3 className="task-card__title">{task.nombre}</h3>

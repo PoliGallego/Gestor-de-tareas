@@ -16,6 +16,7 @@ public interface IngestarRegistroPanelUseCase {
         String estado,
         LocalDate fechaInicio,
         LocalDate fechaFin,
-        LocalDateTime fechaCompletado
+        LocalDateTime fechaCompletado,
+        String responsableId
     ) {}
 }
