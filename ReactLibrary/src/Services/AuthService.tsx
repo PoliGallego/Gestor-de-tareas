@@ -7,7 +7,7 @@ export interface User {
 export async function auth(): Promise<User> {
 
     const response = await fetch(
-        'http://localhost:8090/auth', { credentials: 'include' }
+        '/auth', { credentials: 'include' }
     );
 
     if (response.status !== 302) {
@@ -21,14 +21,14 @@ export async function auth(): Promise<User> {
 export async function logOut() {
     try {
         const response = await fetch(
-            'http://localhost:8090/logout', { credentials: 'include' }
+            '/logout', { credentials: 'include' }
         );
 
         if (response && response.ok) {
             try {
-                window.open("http://localhost:3000");
-                window.close();
                 await setPage("login");
+                window.open(window.location.href);
+                window.close();
             } catch (error) {
                 alert("Ha ocurrido un error, la ventana se cerrará a continuación");
                 window.close();
@@ -40,29 +40,58 @@ export async function logOut() {
 }
 
 export async function setPage(page: string) {
-    let url: string = window.location.href;
+    let pathname: string = window.location.pathname;
+
+    if (window.location.hostname.includes("localhost")) {
+        let port: string = window.location.port;
+        switch (page) {
+            case "home":
+                port = "3001";
+                break;
+            case "prin":
+                port = "3020";
+                break;
+            case "perf":
+                port = "3030";
+                break;
+            case "reportes":
+                port = "3040";
+                break;
+            case "signup":
+                port = "3010";
+                break;
+            case "login":
+                port = "3000";
+                break;
+        }
+
+        await isPageLoad("http://" + window.location.hostname + ":" + port);
+        window.location.href = "http://" + window.location.hostname + ":" + port;
+        return;
+    }
+
     switch (page) {
         case "home":
-            url = "http://localhost:3001";
+            pathname = import.meta.env.VITE_HOME_URL;
             break;
         case "prin":
-            url = "http://localhost:3020";
+            pathname = import.meta.env.VITE_PRIN_URL;
             break;
         case "perf":
-            url = "http://localhost:3030";
+            pathname = import.meta.env.VITE_PRIN_URL;
             break;
         case "reportes":
-            url = "http://localhost:3040";
+            pathname = import.meta.env.VITE_PRIN_URL;
             break;
         case "signup":
-            url = "http://localhost:3010";
+            pathname = import.meta.env.VITE_PRIN_URL;
             break;
         case "login":
-            url = "http://localhost:3000";
+            pathname = import.meta.env.VITE_PRIN_URL;
             break;
     }
-    await isPageLoad(url);
-    window.location.href = url;
+    await isPageLoad("http://" + window.location.host + pathname);
+    window.location.pathname = pathname;
 }
 
 export async function isPageLoad(url: string) {

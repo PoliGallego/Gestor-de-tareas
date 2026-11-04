@@ -27,7 +27,7 @@ body {
   padding-top: 5.5rem;
   height: 100vh;
   margin: 0;
-  background-image: url('../cuboisometrico.png');
+  background-image: url('/cuboisometrico.png');
   background-repeat: repeat;
   background-position: 0 0;
   background-size: 300px;
@@ -536,7 +536,6 @@ h2 {
 }
 
 .edit {
-  background-image: url('../edit_b.png');
   background-position: 0 0;
   background-size: cover;
 }
@@ -544,7 +543,6 @@ h2 {
 .delete {
   width: 20px;
   height: 20px;
-  background-image: url('../delete_b.png');
   background-position: 0 0;
   background-size: cover;
 }
