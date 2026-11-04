@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EstadisticasPersonales {
-    
-    private String propietarioId;
-    
     // Métrica 1: Carga Actual
     private long tareasActivas;
     

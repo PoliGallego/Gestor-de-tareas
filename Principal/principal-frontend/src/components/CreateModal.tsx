@@ -13,7 +13,7 @@ const initialTaskForm: Task = {
     startDate: "",
     dueDate: "",
     id: "",
-    assigneeId: "",
+    assigneeEmail: "",
     tags: []
 };
 
@@ -77,7 +77,7 @@ export default function CreateModal({ participantes }: CreateModalProps) {
                 fechaInicio: taskForm.startDate || undefined,
                 fechaFin: taskForm.dueDate || undefined,
                 tableroId: tableroActual?.id ?? "",
-                responsableId: taskForm.assigneeId || null,
+                responsableEmail: taskForm.assigneeEmail || null,
             });
 
             setAllTasks((currentTasks) => [
@@ -171,19 +171,19 @@ export default function CreateModal({ participantes }: CreateModalProps) {
                         <label>
                             Responsable
                             <select
-                                value={taskForm.assigneeId}
+                                value={taskForm.assigneeEmail}
                                 onChange={(event) =>
                                     setTaskForm({
                                         ...taskForm,
-                                        assigneeId: event.target.value
+                                        assigneeEmail: event.target.value
                                     })
                                 }
                             >
                                 <option value="">Sin asignar</option>
                                 {participantes.map((participante) => (
                                     <option
-                                        key={participante.usuarioId}
-                                        value={participante.usuarioId}
+                                        key={participante.email}
+                                        value={participante.email}
                                     >
                                         {participante.nombre}
                                     </option>

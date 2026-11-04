@@ -21,7 +21,7 @@ export interface PanelRequest {
   fechaFin?: string;
   prioridad: number;
   tableroId: string;
-  responsableId?: string | null;
+  responsableEmail?: string | null;
 }
 
 export interface CrearPanelRequest {
