@@ -81,20 +81,16 @@
   align-items: center;
   gap: 10px;
   margin: 12px 0;
-  color: var(--text-light);
+  color: var(--ink-soft);
   font-size: 14px;
   font-weight: 600;
 }
 
+/* El select toma el estilo de campo de la librería; aquí solo su ancho */
 .board-selector select {
+  width: auto;
   min-width: 220px;
-  padding: 8px 12px;
-  color: var(--text);
-  background: var(--surface, white);
-  border: 1px solid var(--input-border);
-  border-radius: 7px;
-  font: inherit;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .participants {
@@ -112,16 +108,26 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 12px;
-  border: 1px solid var(--input-border);
-  border-radius: 7px;
+  background: var(--surface);
+  border-radius: 10px;
+  box-shadow: var(--lift);
 }
 
 .participants__item button {
+  min-height: 36px;
   padding: 6px 12px;
-  border-radius: 7px;
+  color: var(--ink);
+  background: var(--canvas);
+  border: none;
+  border-radius: 10px;
   font: inherit;
   font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+.participants__item button:hover {
+  background: color-mix(in srgb, var(--tape) 45%, var(--surface));
 }
 
 .participants__name {
@@ -129,7 +135,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  color: var(--text-light);
+  color: var(--ink);
   font-size: 14px;
   font-weight: 600;
 }
@@ -137,16 +143,17 @@
 .participants__email,
 .participants__empty {
   margin: 2px 0 0;
-  color: var(--text-light);
+  color: var(--ink-soft);
   font-size: 13px;
 }
 
+/* Etiqueta del propietario del tablero */
 .participants__badge {
-  padding: 2px 8px;
-  color: var(--bg);
-  background: var(--button-bg);
-  border-radius: 10px;
-  font-size: 11px;
+  padding: 2px 10px;
+  color: var(--ink);
+  background: var(--tape);
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -553,19 +560,21 @@
   display: flex;
   align-items: center;
   padding-top: 8px;
-  border-top: 1px solid var(--line);
+  /* currentColor = color del texto de la nota: la línea se ve en fondos claros y oscuros */
+  border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 }
 
+/* El responsable hereda el color que TaskCard.tsx calcula según el fondo, igual que el título */
 .task-card__assignee {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--text-light);
+  color: inherit;
 }
 
 .task-card__assignee--empty {
-  opacity: 0.6;
+  opacity: 0.75;
   font-style: italic;
 }
 
