@@ -4,10 +4,10 @@ import { usePageContext } from "../PageContext";
 import Avatar from "./Avatar";
 
 const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
-  Baja: { bg: "#e0f2fe", fg: "#0369a1" },
-  Media: { bg: "#fef3c7", fg: "#b45309" },
-  Alta: { bg: "#ffe4e6", fg: "#be123c" },
-  Urgente: { bg: "#fee2e2", fg: "#991b1b" },
+  Baja: { bg: "#DDF0F5", fg: "#1F4F5C" },
+  Media: { bg: "#FFE7C2", fg: "#5C3A07" },
+  Alta: { bg: "#FFD3E2", fg: "#6E1638" },
+  Urgente: { bg: "#422618", fg: "#FFFFFF" },
 };
 
 interface TaskCardProps {
