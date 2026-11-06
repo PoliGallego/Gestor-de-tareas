@@ -43,15 +43,19 @@ export function NavBar() {
     };
 
     return (<header className="navBar">
-        <button className='btn-img' onClick={() => setSBShow(true)}>
-            <ProfilePic imgUrl={user?.picture} userName={user.name ?? "NA"} />
-        </button>
+        <div className="nav-brand">
+            <img className="nav-logo" src="/icon.png" alt="" draggable={false} />
+            <span>Gestor de tareas</span>
+        </div>
         <Button variant="quiet" onClick={() => setPage("home").catch(() => setIsPageNotLoad(true))}>
             <img className="in-img" src={home} alt="home page" draggable={false} />
         </Button>
         <Button variant="quiet" onClick={() => logOutUser()}>
             <img className="in-img" src={logout} alt="log out" draggable={false} />
         </Button>
+        <button className='btn-img' onClick={() => setSBShow(true)}>
+            <ProfilePic imgUrl={user?.picture} userName={user.name ?? "NA"} />
+        </button>
         {isPageNotLoad && <Modal title={"Información"} text={"No se pudo cargar la página"} isChoose={false} setShow={setIsPageNotLoad} />}
         {isSBShow && <SideBar setShow={setSBShow} onError={() => setIsPageNotLoad(true)} />}
     </header>);
