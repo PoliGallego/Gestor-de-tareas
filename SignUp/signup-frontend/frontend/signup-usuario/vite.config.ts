@@ -1,5 +1,4 @@
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
+import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
 // https://vite.dev/config/
@@ -8,8 +7,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      react(),
-      babel({ presets: [reactCompilerPreset()] })
+      react() 
     ],
     base: env.VITE_SIGNUP_URL || '/sign-up',
     server: {

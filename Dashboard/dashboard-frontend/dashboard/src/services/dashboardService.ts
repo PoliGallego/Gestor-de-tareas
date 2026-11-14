@@ -36,10 +36,10 @@ export interface InfoDTO {
 export async function auth() {
 
     const response = await fetch(
-        'http://localhost:8090/auth', { credentials: 'include' }
+        '/auth', { credentials: 'include' }
     );
 
-    if (response.status !== 302) {
+    if (!response.ok) {
         throw new Error(`Auth error: ${response.status}`);
     }
 
@@ -49,10 +49,10 @@ export async function auth() {
 
 export async function getInfo(): Promise<InfoDTO> {
     const response = await fetch(
-        'http://localhost:8082/api/dash', { credentials: 'include' }
+        '/api/dash', { credentials: 'include' }
     );
 
-    if (response.status !== 302) {
+    if (!response.ok) {
         throw new Error(`Profile info error: ${response.status}`);
     }
 
@@ -62,7 +62,7 @@ export async function getInfo(): Promise<InfoDTO> {
 
 export async function updateUser(user: PassUser): Promise<User> {
     const response = await fetch(
-        'http://localhost:8090/edit', {
+        '/edit', {
         method: 'PATCH',
         credentials: 'include',
         headers: {

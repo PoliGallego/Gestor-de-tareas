@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -7,7 +8,18 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    resolve: {
+      dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
+      alias: {
+        react: path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+      }
+    },
     base: env.VITE_PRIN_URL || '/board',
+    build: {
+        minify: false,
+        sourcemap: true,
+    },
     server: {
       port: Number(env.PRIN_PORT) || 3020,
       strictPort: true,

@@ -6,10 +6,8 @@ import { ProfilePic } from "./ProfilePic";
 import { SideBar } from "./SideBar";
 import { auth, logOut, setPage } from "../services/AuthService";
 import type { User } from "../services/AuthService";
-import { Modal } from "./Modal";
 
 export function NavBar() {
-    const [isPageNotLoad, setIsPageNotLoad] = useState(false);
     const [isSBShow, setSBShow] = useState(false);
     const [isRender, setIsRender] = useState(false);
     const [user, setUser] = useState<User>({
@@ -46,13 +44,13 @@ export function NavBar() {
         <button className='btn-img' onClick={() => setSBShow(true)}>
             <ProfilePic imgUrl={user?.picture} userName={user.name ?? "NA"} />
         </button>
-        <Button variant="quiet" onClick={() => setPage("home").catch(() => setIsPageNotLoad(true))}>
+        <Button variant="quiet" onClick={() => setPage("home")}>
             <img className="in-img" src={home} alt="home page" draggable={false} />
         </Button>
         <Button variant="quiet" onClick={() => logOutUser()}>
             <img className="in-img" src={logout} alt="log out" draggable={false} />
         </Button>
-        {isPageNotLoad && <Modal title={"Información"} text={"No se pudo cargar la página"} isChoose={false} setShow={setIsPageNotLoad} />}
-        {isSBShow && <SideBar setShow={setSBShow} onError={() => setIsPageNotLoad(true)} />}
+    
+        {isSBShow && <SideBar setShow={setSBShow}/>}
     </header>);
 }

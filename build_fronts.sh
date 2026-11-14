@@ -91,7 +91,7 @@ for index in "${!frontend_dirs[@]}"; do
   frontend_name="${frontend_names[$index]}"
 
   printf '\n[%s] npm run build\n' "$frontend_name"
-  (cd "$ROOT_DIR/$frontend_dir" && npm run build)
+  (cd "$ROOT_DIR/$frontend_dir" &&  npm run build)
 done
 
 printf '\nBiblioteca y seis frontends construidos correctamente.\n'

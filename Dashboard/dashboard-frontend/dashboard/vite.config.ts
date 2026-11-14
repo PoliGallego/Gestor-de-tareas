@@ -11,6 +11,9 @@ export default defineConfig(({ mode }) => {
       react(),
       babel({ presets: [reactCompilerPreset()] })
     ],
+    resolve: {
+      dedupe: ['react', 'react-dom']
+    },
     base: env.VITE_PROFILE_URL || '/prof',
     server: {
       port: Number(env.PROFILE_PORT) || 3030,
@@ -26,6 +29,16 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+	'/edit': {
+          target: 'http://localhost:' + (env.AUTH_BACK_PORT || "8090"),
+          changeOrigin: true,
+          secure: false,
+        },
+	'/api': {
+          target: 'http://gestortareas.dpdns.org',
+          changeOrigin: true,
+          secure: false,
+        }
       }
     }
   }

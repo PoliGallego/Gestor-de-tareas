@@ -10,7 +10,7 @@ export async function auth(): Promise<User> {
         '/auth', { credentials: 'include' }
     );
 
-    if (response.status !== 302) {
+    if (!response.ok) {
         throw new Error(`Auth error: ${response.status}`);
     }
 
@@ -65,7 +65,7 @@ export async function setPage(page: string) {
                 break;
         }
 
-        await isPageLoad("http://" + window.location.hostname + ":" + port);
+        //await isPageLoad("http://" + window.location.hostname + ":" + port);
         window.location.href = "http://" + window.location.hostname + ":" + port;
         return;
     }
@@ -78,19 +78,19 @@ export async function setPage(page: string) {
             pathname = import.meta.env.VITE_PRIN_URL;
             break;
         case "perf":
-            pathname = import.meta.env.VITE_PRIN_URL;
+            pathname = import.meta.env.VITE_PROFILE_URL;
             break;
         case "reportes":
-            pathname = import.meta.env.VITE_PRIN_URL;
+            pathname = import.meta.env.VITE_REPORT_URL;
             break;
         case "signup":
-            pathname = import.meta.env.VITE_PRIN_URL;
+            pathname = import.meta.env.VITE_SIGNUP_URL;
             break;
         case "login":
-            pathname = import.meta.env.VITE_PRIN_URL;
+            pathname = import.meta.env.VITE_LOGIN_URL;
             break;
     }
-    await isPageLoad("http://" + window.location.host + pathname);
+    //await isPageLoad("http://" + window.location.host + pathname);
     window.location.pathname = pathname;
 }
 
