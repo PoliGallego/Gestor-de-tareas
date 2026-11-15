@@ -13,7 +13,7 @@ const initialTaskForm: Task = {
     startDate: "",
     dueDate: "",
     id: "",
-    assigneeId: "",
+    assigneeEmail: "",
     tags: []
 };
 
@@ -117,9 +117,9 @@ export default function UpdateModal({ participantes }: UpdateModalProps) {
                 <div className="task-form__grid">
                     <label>
                   Responsable
-                  <select value={taskForm.assigneeId} onChange={(event) => setTaskForm({ ...taskForm, assigneeId: event.target.value })}>
+                  <select value={taskForm.assigneeEmail} onChange={(event) => setTaskForm({ ...taskForm, assigneeEmail: event.target.value })}>
                     <option value="">Sin asignar</option>
-                    {participantes.map((participante) => <option key={participante.usuarioId} value={participante.usuarioId}>{participante.nombre}</option>)}
+                    {participantes.map((participante) => <option key={participante.email} value={participante.email}>{participante.nombre}</option>)}
                   </select>
                 </label>
 

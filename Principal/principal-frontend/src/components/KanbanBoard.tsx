@@ -45,7 +45,6 @@ function toTeamMember(participante: Participante): TeamMember {
     .slice(0, 2).map((palabra) => palabra[0].toUpperCase()).join("");
 
   return {
-    id: participante.usuarioId,
     name: participante.nombre,
     role: participante.esPropietario ? "Propietario" : "Miembro",
     initials,
@@ -57,7 +56,7 @@ export default function KanbanBoard() {
   const { error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen,
     isUModalOpen, allTasks, setAllTasks, tableroActual, setTableroActual } = usePageContext();
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
-  const [selectedMemberId] = useState<string | null>(null);
+  const [selectedMemberEmail] = useState<string | null>(null);
   const [tableros, setTableros] = useState<Tablero[]>([]);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
@@ -67,8 +66,8 @@ export default function KanbanBoard() {
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const memberById = useMemo(
-    () => new Map(participantes.map((participante) => [participante.usuarioId, toTeamMember(participante)])),
+  const memberByEmail = useMemo(
+    () => new Map(participantes.map((participante) => [participante.email, toTeamMember(participante)])),
     [participantes]
   );
 
@@ -90,7 +89,7 @@ export default function KanbanBoard() {
     fetchTableros();
   }, []);
 
-  // 4. useEffect para llamar al backend cada vez que cambia el tablero seleccionado
+  // useEffect para llamar al backend cada vez que cambia el tablero seleccionado
   useEffect(() => {
     if (!tableroActual) {
       return;
@@ -121,10 +120,10 @@ export default function KanbanBoard() {
   // Este filtro ahora usa el estado 'allTasks' que se llenará con el backend
   const visibleTasks = useMemo(
     () =>
-      selectedMemberId
-        ? allTasks.filter((task) => task.assigneeId === selectedMemberId)
+      selectedMemberEmail
+        ? allTasks.filter((task) => task.assigneeEmail === selectedMemberEmail)
         : allTasks,
-    [selectedMemberId, allTasks]
+    [selectedMemberEmail, allTasks]
   );
 
   function handleBoardCreated(tablero: Tablero) {
@@ -186,35 +185,43 @@ export default function KanbanBoard() {
           : task
       )
     );
-    updatePanel(draggedTask.id, {...draggedTask, status: destinationStatus});
+    updatePanel(draggedTask.id, { ...draggedTask, status: destinationStatus });
 
     setDraggedTask(null);
   }
 
-  // 5. Pequeña validación visual mientras cargan los datos o si hay error
+  const header = () => {
+    return <header className="board__header">
+      <div>
+        <h1>Tus tareas</h1>
+        <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
+          onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)}
+          onParticipants={() => setIsParticipantsOpen(true)} />
+        {tableroActual?.esPropietario && <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />}
+        <p className="board__subtitle">
+          {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
+          {selectedMemberEmail ? ` asignadas a ${memberByEmail.get(selectedMemberEmail)?.name}` : " en total"}
+        </p>
+      </div>
+    </header>
+  };
+
+  // Pequeña validación visual mientras cargan los datos o si hay error
   if (isLoading) {
     return <div className="loading-label">Cargando paneles del usuario...</div>;
   }
 
   if (error && !isCModalOpen && !isUModalOpen) {
-    return <div className="error-label">Error: {error}</div>;
+    return <div className="board">
+      {header()}
+      <div className="error-label">{error}
+      </div>
+    </div>;
   }
 
   return (
     <div className="board">
-      <header className="board__header">
-        <div>
-          <h1>Tus tareas</h1>
-          <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
-            onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)}
-            onParticipants={() => setIsParticipantsOpen(true)} />
-          <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
-          <p className="board__subtitle">
-            {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
-            {selectedMemberId ? ` asignadas a ${memberById.get(selectedMemberId)?.name}` : " en total"}
-          </p>
-        </div>
-      </header>
+      {header()}
 
       {/* <TeamFilter members={teamMembers} selectedId={selectedMemberId} onSelect={setSelectedMemberId} /> */}
 
@@ -224,7 +231,7 @@ export default function KanbanBoard() {
             key={col.status}
             title={col.title}
             accentColor={col.color}
-            memberById={memberById}
+            memberByEmail={memberByEmail}
             tasks={visibleTasks.filter((task) => task.status === col.status)}
             status={col.status}
             draggedTask={draggedTask}
@@ -235,9 +242,9 @@ export default function KanbanBoard() {
         ))}
       </div>
 
-      {isCModalOpen && <CreateModal participantes={participantes}/>}
-      {isUModalOpen && <UpdateModal participantes={participantes}/>}
-      {isDModalOpen && <DeleteModal/>}
+      {isCModalOpen && <CreateModal participantes={participantes} />}
+      {isUModalOpen && <UpdateModal participantes={participantes} />}
+      {isDModalOpen && <DeleteModal />}
       {isBoardModalOpen && <CreateBoardModal onCreated={handleBoardCreated} onClose={() => setIsBoardModalOpen(false)} />}
       {isDeleteBoardOpen && <Modal title="Eliminar tablero" isChoose={true}
         text={`Se eliminará el tablero "${tableroActual?.nombre}" y todas sus tareas. ¿Deseas continuar?`}

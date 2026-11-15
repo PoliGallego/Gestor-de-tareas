@@ -21,7 +21,8 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
   const { setFocusTask, setIsUModalOpen, setIsDModalOpen, tableroActual } = usePageContext();
   const [isHover, setIsHover] = useState(false);
   const priorityStyle = priorityStyles[task.priority];
-  const dueDate = new Date(task.dueDate);
+  const [year, month, day] = task.dueDate.split("-").map(Number);
+  const dueDate = new Date(year, month - 1, day);
   const formattedDate = dueDate.toLocaleDateString("es-CO", {
     day: "2-digit",
     month: "short",
@@ -92,15 +93,18 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         >
           {task.priority}
         </span>
-        {!isHover ? <span className="task-card__due">{task.dueDate ? formattedDate : "Sin fecha límite"}</span> :
-          <div className="ed-buttons">
+        
+        {!isHover || !tableroActual?.esPropietario ?
+          <span className="task-card__due">{task.dueDate ? formattedDate : "Sin fecha límite"}</span>
+
+          : <div className="ed-buttons">
             <button className="ed-button" onClick={() => editFunt()}>
               <div className="ed-icon edit" style={{ backgroundImage: getEditIconColor() }} />
             </button>
-            {tableroActual?.esPropietario &&
+
             <button className="ed-button" onClick={() => deleteFunt()}>
-              <div className="ed-icon delete" style={{ backgroundImage: getDeleteIconColor() }}/>
-            </button>}
+              <div className="ed-icon delete" style={{ backgroundImage: getDeleteIconColor() }} />
+            </button>
           </div>}
       </div>
 

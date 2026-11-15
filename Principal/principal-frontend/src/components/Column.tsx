@@ -5,7 +5,7 @@ interface ColumnProps {
   title: string;
   status: TaskStatus;
   tasks: Task[];
-  memberById: Map<string, TeamMember>;
+  memberByEmail: Map<string, TeamMember>;
   accentColor: string;
   draggedTask: Task | null;
   onDragStart: (task: Task) => void;
@@ -13,7 +13,7 @@ interface ColumnProps {
   onDrop: (status: TaskStatus) => void;
 }
 
-export default function Column({ title, status, tasks, memberById, accentColor, 
+export default function Column({ title, status, tasks, memberByEmail, accentColor, 
   draggedTask, onDragStart, onDragEnd, onDrop }: ColumnProps) {
 
   const isDropTarget = draggedTask !== null && draggedTask.status !== status;
@@ -35,7 +35,7 @@ export default function Column({ title, status, tasks, memberById, accentColor,
             <TaskCard
               key={task.id}
               task={task}
-              assignee={memberById.get(task.assigneeId)}
+              assignee={memberByEmail.get(task.assigneeEmail)}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
             />

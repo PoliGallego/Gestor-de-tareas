@@ -3,15 +3,13 @@ import { getAuthHeaders } from "./panelesService";
 export interface Tablero {
   id: string;
   nombre: string;
-  propietarioId: string;
   fechaCreacion?: string;
   esPropietario: boolean;
 }
 
 export interface Participante {
-  usuarioId: string;
   nombre: string;
-  email: string | null;
+  email: string;
   esPropietario: boolean;
 }
 

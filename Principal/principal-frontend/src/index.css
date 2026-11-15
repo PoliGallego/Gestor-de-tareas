@@ -357,6 +357,15 @@ h2 {
   .board__columns {
     grid-template-columns: 1fr;
   }
+
+  body {
+    overflow-y: scroll;
+  }
+
+  .column {
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 .column {
@@ -364,7 +373,7 @@ h2 {
   border-radius: 10px;
   padding: 12px;
   min-height: 120px;
-  max-height: 35rem;
+  max-height: 32rem;
   overflow-y: auto;
 }
 
@@ -450,7 +459,6 @@ h2 {
 
 .task-card__due {
   font-size: 12px;
-  opacity: 0.7;
 }
 
 .task-card__title {
@@ -498,7 +506,6 @@ h2 {
 }
 
 .task-card__assignee--empty {
-  opacity: 0.6;
   font-style: italic;
 }
 

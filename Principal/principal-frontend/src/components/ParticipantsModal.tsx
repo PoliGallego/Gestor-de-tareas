@@ -51,13 +51,13 @@ export default function ParticipantsModal({ tablero, onClose }: ParticipantsModa
         }
     }
 
-    async function handleRemoveMember(usuarioId: string) {
+    async function handleRemoveMember(usuarioEmail: string) {
         setError(null);
 
         try {
-            await quitarMiembro(tablero.id, usuarioId);
+            await quitarMiembro(tablero.id, usuarioEmail);
             setParticipantes((currentParticipantes) =>
-                currentParticipantes.filter((participante) => participante.usuarioId !== usuarioId));
+                currentParticipantes.filter((participante) => participante.email !== usuarioEmail));
         } catch (err) {
             setError(err instanceof Error ? err.message : "No se pudo quitar el participante");
         }
@@ -90,7 +90,7 @@ export default function ParticipantsModal({ tablero, onClose }: ParticipantsModa
                     {isLoading ? <p className="participants__empty">Cargando participantes...</p> :
                         <ul className="participants">
                             {participantes.map((participante) => (
-                                <li key={participante.usuarioId} className="participants__item">
+                                <li key={participante.email} className="participants__item">
                                     <div>
                                         <p className="participants__name">
                                             {participante.nombre}
@@ -100,7 +100,7 @@ export default function ParticipantsModal({ tablero, onClose }: ParticipantsModa
                                     </div>
                                     {tablero.esPropietario && !participante.esPropietario &&
                                         <button type="button" className="task-modal__cancel"
-                                            onClick={() => handleRemoveMember(participante.usuarioId)}>
+                                            onClick={() => handleRemoveMember(participante.email)}>
                                             Quitar
                                         </button>}
                                 </li>

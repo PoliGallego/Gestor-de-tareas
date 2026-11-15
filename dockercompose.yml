@@ -67,7 +67,7 @@ services:
     env_file:
       - .env
 
-  # Servicio secundario (Ejemplo: Base de Datos PostgreSQL)
+  # Servicio secundario: Base de Datos PostgreSQL
   postgres_db:
     image: postgres:16-alpine
     container_name: tasks_data_base
