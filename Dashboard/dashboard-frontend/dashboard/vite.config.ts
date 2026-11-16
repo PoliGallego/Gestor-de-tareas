@@ -1,15 +1,45 @@
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    babel({ presets: [reactCompilerPreset()] })
-  ],
-  server: {
-    port: 3030,
-    strictPort: true
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [
+      react(),
+      babel({ presets: [reactCompilerPreset()] })
+    ],
+    resolve: {
+      dedupe: ['react', 'react-dom']
+    },
+    base: env.VITE_PROFILE_URL || '/prof',
+    server: {
+      port: Number(env.PROFILE_PORT) || 3030,
+      strictPort: true,
+      proxy: {
+        '/auth': {
+          target: 'http://localhost:' + (env.AUTH_BACK_PORT || "8090"),
+          changeOrigin: true,
+          secure: false,
+        },
+        '/logout': {
+          target: 'http://localhost:' + (env.AUTH_BACK_PORT || "8090"),
+          changeOrigin: true,
+          secure: false,
+        },
+	'/edit': {
+          target: 'http://localhost:' + (env.AUTH_BACK_PORT || "8090"),
+          changeOrigin: true,
+          secure: false,
+        },
+	'/api': {
+          target: 'http://gestortareas.dpdns.org',
+          changeOrigin: true,
+          secure: false,
+        }
+      }
+    }
   }
-})
+}) 

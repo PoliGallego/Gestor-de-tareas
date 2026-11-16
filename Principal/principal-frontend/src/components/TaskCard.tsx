@@ -57,19 +57,19 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
   const getEditIconColor = (): string => {
 
     if (isDarkLigth(task.color)) {
-      return "url('../edit_w.png')";
+      return "url('" + window.location.href + "/edit_w.png')";
     }
 
-    return "url('../edit_b.png')";
+    return "url('" + window.location.href + "/edit_b.png')";
   };
 
   const getDeleteIconColor = (): string => {
 
     if (isDarkLigth(task.color)) {
-      return "url('../delete_w.png')";
+      return "url('" + window.location.href + "/delete_w.png')";
     }
 
-    return "url('../delete_b.png')";
+    return "url('" + window.location.href + "/delete_b.png')";
   };
 
   const editFunt = () => {

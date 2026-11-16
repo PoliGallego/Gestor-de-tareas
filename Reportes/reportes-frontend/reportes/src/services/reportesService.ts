@@ -16,7 +16,7 @@ export class UnauthorizedError extends Error {
 }
 
 export const obtenerEstadisticasPersonales = async (): Promise<EstadisticasPersonales> => {
-  const response = await fetch('http://localhost:8083/api/reportes/estadisticas', {
+  const response = await fetch('/api/reportes/estadisticas', {
     method: 'GET',
     credentials: 'include', // CRÍTICO: Envía la cookie 'access_token' para evitar el 401
     headers: {

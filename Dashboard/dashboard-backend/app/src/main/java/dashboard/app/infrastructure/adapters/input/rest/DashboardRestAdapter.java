@@ -47,6 +47,6 @@ public class DashboardRestAdapter {
         if (pendingList != null) {
             output.put("pending", pendingList);
         }
-        return ResponseEntity.status(HttpStatus.FOUND).body(output);
+        return ResponseEntity.status(HttpStatus.OK).body(output);
     }
 }

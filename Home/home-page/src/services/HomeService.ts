@@ -1,10 +1,15 @@
 export async function auth() {
 
     const response = await fetch(
-        'http://localhost:8090/auth', { credentials: 'include' }
-    );
+        '/auth', { 
+	method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        }, 
+    });
 
-    if (response.status !== 302) {
+    if (!response.ok) {
         throw new Error(`Auth error: ${response.status}`);
     }
 
