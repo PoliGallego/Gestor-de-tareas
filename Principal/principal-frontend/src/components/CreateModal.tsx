@@ -9,7 +9,7 @@ const initialTaskForm: Task = {
     description: "",
     priority: "Media" as Task["priority"],
     status: "todo" as TaskStatus,
-    color: "#afa7a7",
+    color: "#FCC171",
     startDate: "",
     dueDate: "",
     id: "",

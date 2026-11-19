@@ -19,7 +19,7 @@ export default function Column({ title, status, tasks, memberByEmail, accentColo
   const isDropTarget = draggedTask !== null && draggedTask.status !== status;
 
   return (
-    <section className="column">
+    <section className="column" data-status={status}>
       <header className="column__header">
         <span className="column__dot" style={{ backgroundColor: accentColor }} />
         <h2>{title}</h2>

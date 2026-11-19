@@ -1,82 +1,128 @@
-body {
-    margin: 0;
-}
+/* Colores y tipografía vienen de la librería (@gestor-tareas/react-components/styles.css) */
 
 .body {
-    min-height: 100vh;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2.5rem;
     align-items: center;
     justify-content: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    height: 100vh;
-    margin: 0;
-    background-image: url('/cuboisometrico.png');
-    background-repeat: repeat;
-    background-position: 0 0;
-    background-size: 300px;
+    padding: 64px 24px;
 }
 
 .body h1 {
+    margin: 0 0 16px;
     text-align: center;
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
 }
 
 .body h2 {
+    margin: 0;
     text-align: center;
-    margin-bottom: 15px;
-    color: var(--text);
-    font-size: 20px;
-    font-weight: 600;
+    color: var(--ink);
+    font-variation-settings: "CASL" 0;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .body h4 {
     text-align: center;
     margin-bottom: 15px;
-    color: var(--text);
+    color: var(--ink);
     font-size: 16px;
     font-weight: 600;
 }
 
+/* Enlace subrayado con el rosa de la marca */
 .body .switch-link {
-    color: var(--code-bg);
-    text-decoration: none;
-    font-weight: 600;
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--note-pink);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: text-decoration-color 0.15s ease;
 }
 
 .body .switch-link:hover {
-    color: var(--code-bg);
-    text-decoration: underline;
+    text-decoration-color: var(--ink);
 }
 
+/* Barra superior cuando no hay sesión: solo muestra la marca */
 .alt {
-    min-height: 5rem;
+    min-height: 64px;
 }
 
+.alt.navBar::before {
+    content: "Gestor de tareas";
+    padding-left: 40px;
+    line-height: 28px;
+    background: url('/icon.png') no-repeat left center / 28px;
+    font-variation-settings: "CASL" 1;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+/* Bienvenida: una nota adhesiva grande con otras dos asomando detrás */
 .welcome {
-    background-color: var(--bg);
-    border-radius: 10px;
-    padding: 2rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    position: relative;
+    max-width: 40rem;
+    padding: 48px 44px 40px;
+    background-color: var(--tape);
+    border-radius: 6px;
+    box-shadow: var(--lift);
+}
+
+.welcome::before,
+.welcome::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 6px;
+    box-shadow: var(--lift);
+}
+
+.welcome::before {
+    background-color: var(--note-pink);
+    transform: rotate(-4deg) translate(-14px, 8px);
+}
+
+.welcome::after {
+    background-color: var(--note-blue);
+    transform: rotate(3deg) translate(16px, 12px);
 }
 
 .subtitle {
-    background-color: var(--bg-container);
-    border-radius: 10px;
-    padding: 1rem;
+    padding: 14px 24px;
+    background-color: var(--surface);
+    border-radius: 999px;
+    box-shadow: var(--lift);
+}
+
+/* Accesos de la página de inicio: botones de papel */
+.home-bts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.home-bts .btn--quiet {
+    background: var(--surface);
+    box-shadow: var(--lift);
+}
+
+.home-bts .btn--quiet:hover {
+    background: color-mix(in srgb, var(--tape) 45%, var(--surface));
 }
 
 @media (max-width: 480px) {
-    .body .in-container {
-        margin: 10px;
-        width: min(100%, 500px);
-    }
-
-    .body .form-container {
-        padding: 30px 25px;
+    .welcome {
+        padding: 36px 24px 32px;
     }
 }

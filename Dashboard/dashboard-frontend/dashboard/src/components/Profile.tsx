@@ -136,7 +136,7 @@ function Profile({ totals }: { totals: Totals | null | undefined }) {
                     </div>}
                 </div>
                 <div className='bts'>
-                    {isEditing && <input type="button" className="btn" value="Guardar" onClick={() => update()} />}
+                    {isEditing && <input type="button" className="btn btn--primary" value="Guardar" onClick={() => update()} />}
                     <input type="button" className="btn" value={!isEditing ? "Actualizar" : "Cancelar"} onClick={() => setIsEditing(!isEditing)} />
                     {/* <input type="button" className="del-btn" value="Delete" onClick={() => {
                             if (confirm("Do you want to delete your acount?")) {
