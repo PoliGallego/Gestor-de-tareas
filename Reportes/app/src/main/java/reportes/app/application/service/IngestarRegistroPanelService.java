@@ -21,6 +21,7 @@ public class IngestarRegistroPanelService implements IngestarRegistroPanelUseCas
                 .fechaInicio(comando.fechaInicio())
                 .fechaFin(comando.fechaFin())
                 .fechaCompletado(comando.fechaCompletado())
+                .responsableId(comando.responsableId())
                 .build();
         repositorio.guardar(nuevoRegistro);
     }

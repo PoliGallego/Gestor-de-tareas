@@ -1,46 +1,11 @@
 /* src/assets/ReportesDashboard.css */
-
-:root {
-  --bg: #f8f9fa;
-  --text: #020202;
-  --text-light: #555;
-  --code-bg: #828282;
-  --code-bg-sec: #888;
-  --border: #585858;
-  --bg-container: rgb(235, 235, 235);
-  --input-border: #979797;
-
-  --accent-blue: #2563eb;
-  --accent-red: #dc2626;
-  --accent-green: #16a34a;
-  --accent-purple: #7c3aed;
-}
-
-body {
-  background-image: url('/cuboisometrico.png');
-  background-repeat: repeat;
-  background-position: 0 0;
-  background-size: 300px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-* {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-sizing: border-box;
-  transition: all 0.25s ease;
-}
+/* Colores y tipografía vienen de la librería (@gestor-tareas/react-components/styles.css) */
 
 .reportes-body {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: clamp(1rem, 3vw, 2.5rem);
-  margin-top: 4.5rem;
+  padding: 32px 24px 48px;
   box-sizing: border-box;
 }
 
@@ -49,29 +14,31 @@ body {
   flex-direction: column;
   width: 100%;
   max-width: 1100px;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 /* Header */
 .reportes-header-box {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 1rem;
   padding-bottom: 0.5rem;
 }
 
 .reportes-title {
-  font-size: clamp(1.6rem, 4vw, 2.2rem);
-  font-weight: 700;
-  color: var(--text);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--ink);
   margin: 0 0 0.4rem 0;
 }
 
 .reportes-subtitle {
-  font-size: 0.95rem;
-  color: var(--text-light);
+  max-width: 60ch;
+  font-size: 15px;
+  color: var(--ink-soft);
   margin: 0;
 }
 
@@ -80,53 +47,56 @@ body {
   align-items: center;
 }
 
-/* Grid de métricas */
+/* "Actualizar" es un botón quiet: aquí se ve como papel para que se note */
+.reportes-actions .btn--quiet {
+  background: var(--surface);
+  box-shadow: var(--lift);
+}
+
+/* Grid de métricas: 4 columnas en pantallas anchas y 2x2 en medianas */
 .metricas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
   width: 100%;
 }
 
-/* Base de tarjeta adaptada a los containers del sistema */
+@media (max-width: 1080px) {
+  .metricas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tarjeta de métrica: hoja blanca con una franja superior del color del dato */
 .container.metrica-card {
+  --band: rgba(66, 38, 24, 0.2);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  background-color: var(--bg);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  padding: 1.5rem;
-  gap: 0.6rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background-color: var(--surface);
+  border-radius: 16px;
+  padding: 26px 22px 22px;
+  gap: 10px;
+  box-shadow: inset 0 8px 0 var(--band), var(--lift);
 }
 
-.container.metrica-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* Bordes superiores temáticos por tarjeta */
+/* Color de la franja por tarjeta (los mismos de las columnas del tablero) */
 .metrica-card.activa {
-  border-top: 4px solid var(--accent-blue);
-}
-
-.metrica-card.riesgo {
-  border-top: 4px solid var(--border);
+  --band: var(--tape);
 }
 
 .metrica-card.riesgo.alerta-activa {
-  border-top: 4px solid var(--accent-red);
-  background-color: #fff9f9;
+  --band: var(--note-pink);
+  background-color: color-mix(in srgb, var(--note-pink) 10%, var(--surface));
 }
 
 .metrica-card.puntualidad {
-  border-top: 4px solid var(--accent-green);
+  --band: var(--note-green);
 }
 
 .metrica-card.tiempo {
-  border-top: 4px solid var(--accent-purple);
+  --band: var(--note-blue);
 }
 
 /* Cabecera interna de cada tarjeta */
@@ -143,46 +113,43 @@ body {
 }
 
 .card-badge {
-  font-size: 0.725rem;
+  font-size: 13px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.2rem 0.6rem;
-  border-radius: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
 .badge-activa {
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: #FFE7C2;
+  color: #5C3A07;
 }
 
 .badge-riesgo-ok {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: rgba(66, 38, 24, 0.08);
+  color: var(--ink-soft);
 }
 
 .badge-riesgo-alerta {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: #FFD3E2;
+  color: #6E1638;
 }
 
 .badge-puntualidad {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #E3F3D8;
+  color: #2C5216;
 }
 
 .badge-tiempo {
-  background-color: #f3e8ff;
-  color: #581c87;
+  background-color: #DDF0F5;
+  color: #1F4F5C;
 }
 
 .card-label {
-  font-size: 0.875rem;
+  font-variation-settings: "CASL" 0;
+  font-size: 15px;
   font-weight: 600;
-  color: var(--text-light);
+  color: var(--ink-soft);
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
 }
 
 .valor-container {
@@ -192,35 +159,36 @@ body {
 }
 
 .valor-principal {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 800;
-  color: var(--text);
-  line-height: 1.1;
+  color: var(--ink);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
 }
 
 .valor-principal.texto-riesgo {
-  color: var(--accent-red);
+  color: var(--danger);
 }
 
 .valor-principal .unidad {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-light);
+  color: var(--ink-soft);
   margin-left: 0.2rem;
 }
 
 .card-info {
-  font-size: 0.825rem;
-  color: var(--text-light);
+  font-size: 14px;
+  color: var(--ink-soft);
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.45;
 }
 
 /* Barra de progreso de puntualidad */
 .barra-progreso-fondo {
   width: 100%;
-  height: 7px;
-  background-color: #e5e7eb;
+  height: 10px;
+  background-color: rgba(66, 38, 24, 0.1);
   border-radius: 9999px;
   overflow: hidden;
   margin: 0.2rem 0 0.4rem 0;
@@ -228,7 +196,7 @@ body {
 
 .barra-progreso-relleno {
   height: 100%;
-  background: linear-gradient(90deg, #10b981, #059669);
+  background-color: #99BC82;
   border-radius: 9999px;
   transition: width 0.5s ease-in-out;
 }
@@ -238,44 +206,52 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: var(--bg);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  padding: 1.5rem 1.75rem;
-  gap: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background-color: var(--surface);
+  border-radius: 16px;
+  padding: 24px 28px;
+  gap: 16px;
+  box-shadow: var(--lift);
 }
 
 .diagnostico-header h2 {
-  font-size: 1.25rem;
-  color: var(--text);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
   margin: 0;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 0.5rem;
 }
 
 .diagnostico-items {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 14px;
 }
 
 .diagnostico-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
+/* Viñeta: un cuadrito de nota adhesiva */
 .diagnostico-bullet {
-  font-size: 1.2rem;
-  line-height: 1.2;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 6px;
+  background-color: var(--tape);
+  border-radius: 3px;
+}
+
+.diagnostico-item:nth-child(2) .diagnostico-bullet {
+  background-color: var(--note-green);
 }
 
 .diagnostico-item p {
+  max-width: 75ch;
   margin: 0;
-  font-size: 0.925rem;
-  color: var(--text);
-  line-height: 1.5;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.55;
 }
 
 /* Alertas de error y 401 */
@@ -283,19 +259,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  border-radius: 12px;
-  padding: 1.5rem;
-  gap: 1rem;
+  border-radius: 16px;
+  padding: 22px 24px;
+  gap: 16px;
 }
 
 .reportes-alert-container.warning-border {
-  border-left: 6px solid #f59e0b;
-  background-color: #fffbeb;
+  background-color: color-mix(in srgb, var(--tape) 30%, var(--surface));
+  box-shadow: inset 6px 0 0 var(--tape), var(--lift);
 }
 
 .reportes-alert-container.danger-border {
-  border-left: 6px solid var(--accent-red);
-  background-color: #fef2f2;
+  background-color: var(--danger-tint);
+  box-shadow: inset 6px 0 0 var(--danger), var(--lift);
 }
 
 .reportes-alert-content {
@@ -310,22 +286,27 @@ body {
 }
 
 .alert-texts h2 {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   margin: 0 0 0.4rem 0;
-  color: var(--text);
+  color: var(--ink);
 }
 
 .alert-texts p {
   margin: 0;
-  font-size: 0.925rem;
-  color: var(--text-light);
+  font-size: 15px;
+  color: var(--ink-soft);
 }
 
 .alert-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: 12px;
   justify-content: flex-end;
   flex-wrap: wrap;
+}
+
+.alert-buttons .btn--quiet {
+  background: var(--surface);
+  box-shadow: var(--lift);
 }
 
 /* Skeletons */
@@ -334,7 +315,7 @@ body {
 }
 
 .skeleton-placeholder {
-  background-color: #cbd5e1;
+  background-color: rgba(66, 38, 24, 0.1);
   border-radius: 6px;
 }
 
@@ -363,8 +344,7 @@ body {
 /* Responsive */
 @media (max-width: 680px) {
   .reportes-body {
-    margin-top: 5rem;
-    padding: 1rem;
+    padding: 24px 16px 40px;
   }
 
   .reportes-header-box {

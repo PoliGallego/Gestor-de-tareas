@@ -1,15 +1,18 @@
 import { useMemo, useState, useEffect } from "react";
-// 1. Ya no importamos 'tasks', solo los miembros del equipo.
-import { teamMembers } from "../data/mockData";
 // 2. Importamos tu servicio y el tipo Task
 import { getPaneles, updatePanel } from "../services/panelesService";
-import type { TaskStatus, Task } from "../types";
+import type { TaskStatus, Task, TeamMember } from "../types";
 import Column from "./Column";
 import CreateModal from "./CreateModal";
 import { usePageContext } from "../PageContext";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "./DeleteModal";
-import { Button } from "@gestor-tareas/react-components";
+import { Button, Modal } from "@gestor-tareas/react-components";
+import { eliminarTablero, getParticipantes, getTableros } from "../services/tablerosService";
+import type { Participante, Tablero } from "../services/tablerosService";
+import BoardSelector from "./BoardSelector";
+import CreateBoardModal from "./CreateBoardModal";
+import ParticipantsModal from "./ParticipantsModal";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -17,26 +20,93 @@ const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "done", title: "Hecho", color: "#22c55e" },
 ];
 
+// Clave del localStorage donde se recuerda el último tablero abierto
+const TABLERO_GUARDADO_KEY = "tableroActualId";
+
+function leerTableroGuardado(): string | null {
+  try {
+    return localStorage.getItem(TABLERO_GUARDADO_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function guardarTablero(tableroId: string) {
+  try {
+    localStorage.setItem(TABLERO_GUARDADO_KEY, tableroId);
+  } catch {
+    // Si el navegador no permite guardar, simplemente no se recuerda el tablero
+  }
+}
+
+// Convierte un participante del tablero al formato que usa el Avatar de la tarjeta
+function toTeamMember(participante: Participante): TeamMember {
+  const initials = participante.nombre.split(" ").filter((palabra) => palabra.length > 0)
+    .slice(0, 2).map((palabra) => palabra[0].toUpperCase()).join("");
+
+  return {
+    id: participante.usuarioId,
+    name: participante.nombre,
+    role: participante.esPropietario ? "Propietario" : "Miembro",
+    initials,
+    color: "#977a7a",
+  };
+}
+
 export default function KanbanBoard() {
   const { error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen,
-    isUModalOpen, allTasks, setAllTasks } = usePageContext();
+    isUModalOpen, allTasks, setAllTasks, tableroActual, setTableroActual } = usePageContext();
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
   const [selectedMemberId] = useState<string | null>(null);
+  const [tableros, setTableros] = useState<Tablero[]>([]);
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
+  const [isParticipantsOpen, setIsParticipantsOpen] = useState(false);
+  const [participantes, setParticipantes] = useState<Participante[]>([]);
 
   // 3. Nuevos estados para manejar los datos del backend, la carga y los errores
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const memberById = useMemo(() => new Map(teamMembers.map((m) => [m.id, m])), []);
+  const memberById = useMemo(
+    () => new Map(participantes.map((participante) => [participante.usuarioId, toTeamMember(participante)])),
+    [participantes]
+  );
 
-  // 4. useEffect para llamar al backend cuando el componente se dibuja por primera vez
+  // Al cargar la página se consultan los tableros del usuario y se abre el último que se usó,
+  // o el primero si no hay uno guardado o ya no se tiene acceso a él
   useEffect(() => {
+    const fetchTableros = async () => {
+      try {
+        const tablerosBackend = await getTableros();
+        setTableros(tablerosBackend);
+        const tableroGuardado = tablerosBackend.find((tablero) => tablero.id === leerTableroGuardado());
+        setTableroActual(tableroGuardado ?? tablerosBackend[0] ?? null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error desconocido al cargar tableros");
+        setIsLoading(false);
+      }
+    };
+
+    fetchTableros();
+  }, []);
+
+  // 4. useEffect para llamar al backend cada vez que cambia el tablero seleccionado
+  useEffect(() => {
+    if (!tableroActual) {
+      return;
+    }
+
+    guardarTablero(tableroActual.id);
+
     const fetchPaneles = async () => {
       try {
         setIsLoading(true);
         // Llamamos a tu servicio que trae los datos reales
-        const panelesBackend = await getPaneles();
+        const panelesBackend = await getPaneles(tableroActual.id);
         // Guardamos los datos en el estado
         setAllTasks(panelesBackend);
+        // Los participantes se usan para elegir y mostrar el responsable de cada tarea
+        setParticipantes(await getParticipantes(tableroActual.id));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error desconocido al cargar paneles");
         console.error("Error al cargar paneles:", err);
@@ -46,7 +116,7 @@ export default function KanbanBoard() {
     };
 
     fetchPaneles();
-  }, []); // El array vacío [] indica que esto solo se ejecuta una vez al cargar la página
+  }, [tableroActual]); // Se vuelve a ejecutar cada vez que cambia 'tableroActual'
 
   // Este filtro ahora usa el estado 'allTasks' que se llenará con el backend
   const visibleTasks = useMemo(
@@ -56,6 +126,52 @@ export default function KanbanBoard() {
         : allTasks,
     [selectedMemberId, allTasks]
   );
+
+  function handleBoardCreated(tablero: Tablero) {
+    setTableros((currentTableros) => [...currentTableros, tablero]);
+    setTableroActual(tablero);
+    setIsBoardModalOpen(false);
+  }
+
+  // El Modal de la librería llama a esta función con true al presionar "Aceptar"
+  function handleDeleteBoardChoice(aceptado: React.SetStateAction<boolean>) {
+    if (aceptado === true) {
+      deleteBoard();
+    }
+  }
+
+  async function deleteBoard() {
+    if (!tableroActual) {
+      return;
+    }
+
+    try {
+      await eliminarTablero(tableroActual.id);
+      // Se vuelve a consultar la lista: si era el único tablero, el backend crea uno por defecto
+      const tablerosBackend = await getTableros();
+      setTableros(tablerosBackend);
+      setTableroActual(tablerosBackend[0] ?? null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido al eliminar el tablero");
+    }
+  }
+
+  // Al cerrar el modal de participantes se recargan los datos: si se quitó a alguien,
+  // el backend dejó sin responsable las tareas que tenía asignadas
+  async function handleParticipantsClosed() {
+    setIsParticipantsOpen(false);
+
+    if (!tableroActual) {
+      return;
+    }
+
+    try {
+      setParticipantes(await getParticipantes(tableroActual.id));
+      setAllTasks(await getPaneles(tableroActual.id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error desconocido al recargar el tablero");
+    }
+  }
 
   function moveTask(destinationStatus: TaskStatus) {
     if (!draggedTask || draggedTask.status === destinationStatus) {
@@ -89,6 +205,9 @@ export default function KanbanBoard() {
       <header className="board__header">
         <div>
           <h1>Tus tareas</h1>
+          <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
+            onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)}
+            onParticipants={() => setIsParticipantsOpen(true)} />
           <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />
           <p className="board__subtitle">
             {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
@@ -116,9 +235,15 @@ export default function KanbanBoard() {
         ))}
       </div>
 
-      {isCModalOpen && <CreateModal/>}
-      {isUModalOpen && <UpdateModal/>}
+      {isCModalOpen && <CreateModal participantes={participantes}/>}
+      {isUModalOpen && <UpdateModal participantes={participantes}/>}
       {isDModalOpen && <DeleteModal/>}
+      {isBoardModalOpen && <CreateBoardModal onCreated={handleBoardCreated} onClose={() => setIsBoardModalOpen(false)} />}
+      {isDeleteBoardOpen && <Modal title="Eliminar tablero" isChoose={true}
+        text={`Se eliminará el tablero "${tableroActual?.nombre}" y todas sus tareas. ¿Deseas continuar?`}
+        setChoose={handleDeleteBoardChoice} setShow={setIsDeleteBoardOpen} />}
+      {isParticipantsOpen && tableroActual &&
+        <ParticipantsModal tablero={tableroActual} onClose={handleParticipantsClosed} />}
     </div>
   );
 }

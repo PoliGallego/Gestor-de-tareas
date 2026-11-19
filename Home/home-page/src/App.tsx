@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { PageContext } from './PageContext';
 import Home from './components/Home'
-import { auth, Footer, Modal, NavBar } from "@gestor-tareas/react-components";
+import { Footer, Modal, NavBar } from "@gestor-tareas/react-components";
 import "@gestor-tareas/react-components/styles.css";
+import { auth } from './services/HomeService';
 
 function App() {
   const [isMsgShow, setMsgShow] = useState(false);

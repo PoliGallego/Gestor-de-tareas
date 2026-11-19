@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { Task, TeamMember } from "../types";
 import { usePageContext } from "../PageContext";
+import Avatar from "./Avatar";
 
 const priorityStyles: Record<Task["priority"], { bg: string; fg: string }> = {
-  Baja: { bg: "#e0f2fe", fg: "#0369a1" },
-  Media: { bg: "#fef3c7", fg: "#b45309" },
-  Alta: { bg: "#ffe4e6", fg: "#be123c" },
-  Urgente: { bg: "#fee2e2", fg: "#991b1b" },
+  Baja: { bg: "#DDF0F5", fg: "#1F4F5C" },
+  Media: { bg: "#FFE7C2", fg: "#5C3A07" },
+  Alta: { bg: "#FFD3E2", fg: "#6E1638" },
+  Urgente: { bg: "#422618", fg: "#FFFFFF" },
 };
 
 interface TaskCardProps {
@@ -17,7 +18,7 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: TaskCardProps) {
-  const { setFocusTask, setIsUModalOpen, setIsDModalOpen } = usePageContext();
+  const { setFocusTask, setIsUModalOpen, setIsDModalOpen, tableroActual } = usePageContext();
   const [isHover, setIsHover] = useState(false);
   const priorityStyle = priorityStyles[task.priority];
   const dueDate = new Date(task.dueDate);
@@ -56,19 +57,19 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
   const getEditIconColor = (): string => {
 
     if (isDarkLigth(task.color)) {
-      return "url('../edit_w.png')";
+      return "url('" + window.location.href + "/edit_w.png')";
     }
 
-    return "url('../edit_b.png')";
+    return "url('" + window.location.href + "/edit_b.png')";
   };
 
   const getDeleteIconColor = (): string => {
 
     if (isDarkLigth(task.color)) {
-      return "url('../delete_w.png')";
+      return "url('" + window.location.href + "/delete_w.png')";
     }
 
-    return "url('../delete_b.png')";
+    return "url('" + window.location.href + "/delete_b.png')";
   };
 
   const editFunt = () => {
@@ -96,9 +97,10 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
             <button className="ed-button" onClick={() => editFunt()}>
               <div className="ed-icon edit" style={{ backgroundImage: getEditIconColor() }} />
             </button>
+            {tableroActual?.esPropietario &&
             <button className="ed-button" onClick={() => deleteFunt()}>
               <div className="ed-icon delete" style={{ backgroundImage: getDeleteIconColor() }}/>
-            </button>
+            </button>}
           </div>}
       </div>
 
@@ -113,7 +115,7 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         ))}
       </div> */}
 
-      {/* <div className="task-card__footer">
+      <div className="task-card__footer">
         {assignee ? (
           <div className="task-card__assignee">
             <Avatar member={assignee} />
@@ -122,7 +124,7 @@ export default function TaskCard({ task, assignee, onDragStart, onDragEnd }: Tas
         ) : (
           <span className="task-card__assignee task-card__assignee--empty">Sin asignar</span>
         )}
-      </div> */}
+      </div>
     </article>
   );
 }

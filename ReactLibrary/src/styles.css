@@ -1,109 +1,277 @@
+/* =========================================================
+   Sistema de diseño "Notas adhesivas"
+   Los colores salen del ícono del proyecto (public/icon.png).
+   Todas las páginas importan este archivo: aquí viven los
+   colores, la tipografía y los componentes compartidos.
+   ========================================================= */
 :root {
-    --bg: #f8f9fa;
-    --text: #020202;
-    --text-light: #555;
-    --code-bg: #828282;
-    --code-bg-sec: #888;
-    --border: #585858;
-    --prin-color: #afa7a7;
-    --button-bg: #b18585;
-    --button-bg-hover: #977a7a;
-    --bg-container: rgb(235, 235, 235);
-    --input-border: #979797;
+    /* Tinta: el café del contorno del ícono */
+    --ink: #422618;
+    --ink-soft: #6B5549;
+    --line: rgba(66, 38, 24, 0.16);
+    --field-border: rgba(66, 38, 24, 0.5);
+
+    /* Superficies */
+    --canvas: #EEF1EF;
+    --surface: #FFFFFF;
+
+    /* Colores de las notas */
+    --note-pink: #F47DA5;
+    --note-pink-deep: #E06E9A;
+    --note-pink-edge: #CC628E;
+    --note-blue: #8DC8D8;
+    --note-green: #BBE2A1;
+    --tape: #FCC171;
+
+    /* Errores y acciones destructivas */
+    --danger: #B3261E;
+    --danger-tint: #FCE8E6;
+
+    /* Sombras de papel: una línea fina abajo y una sombra suave */
+    --lift: 0 1px 0 rgba(66, 38, 24, 0.12), 0 12px 24px -16px rgba(66, 38, 24, 0.45);
+    --lift-hover: 0 1px 0 rgba(66, 38, 24, 0.12), 0 18px 28px -16px rgba(66, 38, 24, 0.5);
+    --lift-dialog: 0 1px 0 rgba(66, 38, 24, 0.12), 0 28px 56px -24px rgba(66, 38, 24, 0.55);
+
+    --font: 'Recursive', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    /* Nombres que usa TaskCard.tsx (Principal) para el texto de las notas */
+    --text-light: var(--ink-soft);
+    --text-lighter: #FFFDF8;
 }
 
-* {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-.btn {
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font);
+    font-variation-settings: "CASL" 0;
+    line-height: 1.5;
+    color: var(--ink);
+    background-color: var(--canvas);
+    /* Retícula isométrica de puntos, en honor al fondo de cubos anterior */
+    background-image:
+        radial-gradient(rgba(66, 38, 24, 0.13) 1.6px, transparent 1.6px),
+        radial-gradient(rgba(66, 38, 24, 0.13) 1.6px, transparent 1.6px);
+    background-size: 24px 41.6px;
+    background-position: 0 0, 12px 20.8px;
 }
 
-.btn:hover {
-    background: var(--button-bg-hover);
-    transform: scale(1.03, 1.03);
-    transition: all 0.3s ease
+/* La barra queda arriba y el footer siempre al final de la página */
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.btn:active {
-    transform: translateY(0);
+/* Voz de "marcador" (eje CASL de Recursive) para los títulos */
+h1,
+h2,
+h3 {
+    font-variation-settings: "CASL" 1;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
 }
 
-.btn:focus-visible {
-    outline: 3px solid #9dd9e9;
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+:focus-visible {
+    outline: 3px solid var(--ink);
     outline-offset: 2px;
 }
 
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+    background: var(--surface);
+    box-shadow: var(--lift);
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.btn:hover {
+    background: color-mix(in srgb, var(--canvas) 45%, var(--surface));
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
 .btn--primary {
-    background: var(--button-bg);
-    color: var(--bg);
+    background: var(--note-pink);
+    border-bottom: 1px solid var(--note-pink-edge);
+    box-shadow: none;
 }
 
 .btn--primary:hover {
-    background: var(--button-bg-hover);
+    background: var(--note-pink-deep);
 }
 
 .btn--secondary {
-    background: var(--border);
-    border-color: var(--border);
+    background: var(--surface);
 }
 
 .btn--quiet {
     background: transparent;
-    color: var(--text);
+    box-shadow: none;
+}
+
+.btn--quiet:hover {
+    background: rgba(66, 38, 24, 0.06);
+}
+
+/* Campos de formulario: el mismo estilo en todas las páginas */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 16px;
+    line-height: 1.25;
+    color: var(--ink);
+    background-color: var(--surface);
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tape) 70%, transparent);
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 44px;
+    padding: 4px;
+    background-color: var(--surface);
+    border: 1.5px solid var(--field-border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 6px;
+}
+
+input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 6px;
+}
+
+/* Autocompletado del navegador: mantiene los colores del campo */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--ink);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+    box-shadow: 0 0 0 1000px var(--surface) inset;
+    caret-color: var(--ink);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ink);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface) inset, 0 0 0 3px color-mix(in srgb, var(--tape) 70%, transparent);
+    box-shadow: 0 0 0 1000px var(--surface) inset, 0 0 0 3px color-mix(in srgb, var(--tape) 70%, transparent);
+    caret-color: var(--ink);
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .modal-body {
     position: fixed;
     inset: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow-y: auto;
     box-sizing: border-box;
-    padding: 20px;
-    background-color: rgba(220, 220, 220, 0.4);
-    transition: all 0.3s ease;
+    padding: 24px;
+    background-color: rgba(66, 38, 24, 0.35);
     z-index: 9999;
 }
 
+/* El aviso es una hoja blanca pegada con cinta */
 .modal-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: min(30rem, 100%);
-    height: 20rem;
+    width: min(28rem, 100%);
+    margin: auto;
     box-sizing: border-box;
-    background-color: var(--bg);
-    border: 2px solid var(--code-bg);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    border-radius: 8px;
+    background-color: var(--surface);
+    border-radius: 18px;
+    box-shadow: var(--lift-dialog);
+    animation: note-in 0.18s ease-out;
+}
+
+.modal-container::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 96px;
+    height: 24px;
+    transform: translateX(-50%) rotate(-3deg);
+    background-color: color-mix(in srgb, var(--tape) 85%, transparent);
+    border-radius: 2px;
 }
 
 .modal-div {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
-    padding: 2rem;
-    height: 100%;
+    gap: 16px;
+    padding: 40px 32px 32px;
 }
 
 .modal-title {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    font-size: 1.5rem;
-    color: var(--text);
-    overflow: visible;
+    gap: 12px;
+    color: var(--ink);
 }
 
 .modal-div i {
@@ -112,14 +280,20 @@
 }
 
 .modal-div h1 {
-    font-size: 1.2rem;
-    color: var(--text);
-    overflow: visible;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 750;
+    color: var(--ink);
 }
 
 .modal-div p {
-    color: var(--text-light);
+    margin: 0;
+    color: var(--ink-soft);
     text-align: center;
+}
+
+.modal-div .btn {
+    min-width: 10rem;
 }
 
 .modal-div span img {
@@ -128,29 +302,69 @@
 }
 
 @media (max-width: 480px) {
-    .modal-container {
-        margin: 10px;
-        width: min(100%, 500px);
-    }
-
     .modal-div {
-        padding: 30px 25px;
+        padding: 36px 22px 24px;
     }
 }
 
+/* Barra superior: pegada arriba mientras se hace scroll */
 .navBar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
     display: flex;
     align-items: center;
-    width: 100vw;
-    min-width: 100%;
-    margin-left: calc(50% - 50vw);
-    background-color: var(--prin-color);
-    position: fixed;
-    gap: 1rem;
-    top: 0;
-    left: 0;
-    padding: 0.5rem;
-    padding-left: 2rem;
+    gap: 12px;
+    min-height: 64px;
+    padding: 0 24px;
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: auto;
+    font-variation-settings: "CASL" 1;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.nav-brand span {
+    white-space: nowrap;
+}
+
+.nav-logo {
+    width: 28px;
+    height: 28px;
+}
+
+@media (max-width: 480px) {
+    .navBar {
+        gap: 8px;
+        padding: 0 16px;
+    }
+
+    .nav-brand {
+        gap: 8px;
+        font-size: 16px;
+    }
+}
+
+/* Botones de inicio y cerrar sesión: círculos de tinta.
+   ">" = solo los hijos directos de la barra (el menú lateral también vive dentro del header) */
+.navBar > .btn--quiet {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--ink);
+}
+
+.navBar > .btn--quiet:hover {
+    background: var(--ink-soft);
 }
 
 .header-img {
@@ -161,36 +375,63 @@
 }
 
 .btn-img {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
     padding: 0;
     border-radius: 50%;
     border: none;
     overflow: clip;
+    background: none;
     cursor: pointer;
+}
+
+.btn-img .alt-img,
+.btn-img .header-img {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-width: none;
+    max-height: none;
+}
+
+.btn-img .alt-img h2 {
+    font-size: 15px;
 }
 
 .alt-img {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     height: 3rem;
     width: 3rem;
     min-width: 3rem;
     min-height: 3rem;
     border-radius: 50%;
+    color: var(--ink);
+    /* Fondo de las iniciales (el color que calcula ProfilePic no es un CSS válido) */
+    background-color: var(--note-pink);
+}
+
+.alt-img h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .in-img {
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 20px;
+    width: 20px;
 }
 
+/* Menú lateral: entra desde la izquierda sobre un fondo oscurecido */
 .side-body {
     position: fixed;
     inset: 0;
     display: flex;
-    align-items: center;
     box-sizing: border-box;
-    transition: all 0.3s ease;
+    background-color: rgba(66, 38, 24, 0.35);
     z-index: 9999;
 }
 
@@ -199,33 +440,66 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    background-color: var(--prin-color);
-    padding: 2rem;
+    width: min(280px, 85vw);
     height: 100%;
-    width: 15rem;
+    padding: 24px 16px;
+    background-color: var(--surface);
+    box-shadow: var(--lift-dialog);
+    animation: drawer-in 0.22s ease-out;
 }
 
 .side-head {
-    border-bottom: 3px solid var(--border);
-    margin-bottom: 1rem;
-    margin-top: 4rem;
+    margin: 0 8px 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+}
+
+.side-head h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 750;
 }
 
 .side-btns {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 4px;
 }
 
+.side-btns .btn {
+    justify-content: flex-start;
+    width: 100%;
+    font-size: 16px;
+}
+
+.side-btns .btn:hover {
+    background: color-mix(in srgb, var(--tape) 45%, transparent);
+}
+
+/* Footer en el flujo normal: margin-top: auto lo empuja al final */
 footer {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-evenly;
-    background-color: var(--bg-container);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    gap: 4px 8px;
+    width: 100%;
+    max-width: 1280px;
+    margin: auto auto 0;
+    padding: 20px 24px;
+    border-top: 1px solid var(--line);
+}
+
+footer h4 {
+    margin: 0 auto 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-soft);
+}
+
+footer .btn {
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 14px;
 }
 
 .h2 {
@@ -233,6 +507,29 @@ footer {
 }
 
 .modal-icon {
-    height: 3.5rem;
-    width: 3.5rem;
+    height: 40px;
+    width: 40px;
+}
+
+@keyframes note-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+    }
+}
+
+@keyframes drawer-in {
+    from {
+        transform: translateX(-100%);
+    }
+}
+
+/* Si la persona pidió menos movimiento en su sistema, se desactivan las animaciones */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }

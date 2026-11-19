@@ -10,4 +10,7 @@ public interface RegistroPanelJpaRepository extends JpaRepository<RegistroPanelE
     List<RegistroPanelEntity> findByPropietarioId(String propietarioId);
     
     List<RegistroPanelEntity> findByPropietarioIdAndEstadoIn(String propietarioId, List<String> estados);
+
+    // responsable_id = ?1 OR (responsable_id IS NULL AND propietario_id = ?2)
+    List<RegistroPanelEntity> findByResponsableIdOrResponsableIdIsNullAndPropietarioId(String responsableId, String propietarioId);
 }

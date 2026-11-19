@@ -8,7 +8,7 @@ export type { ButtonProps } from './components/Button';
 export type { ModalProps } from './components/Modal';
 export type { ProfileProps } from './components/ProfilePic';
 export type { SideProps } from './components/SideBar';
-export { auth, logOut, setPage, isPageLoad } from './services/AuthService';
+export { logOut, setPage, isPageLoad } from './services/AuthService';
 export type { User } from './services/AuthService';
 
 import './styles.css';

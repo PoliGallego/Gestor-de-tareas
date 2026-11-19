@@ -2,22 +2,34 @@ import '../assets/Task.css';
 import type { TaskData } from '../services/dashboardService';
 
 const setPriority: Record<number, { prior: string, bg: string; fg: string }> = {
-  1: { prior: "Baja", bg: "#e0f2fe", fg: "#0369a1" },
-  2: { prior: "Media", bg: "#fef3c7", fg: "#b45309" },
-  3: { prior: "Alta", bg: "#ffe4e6", fg: "#be123c" },
-  4: { prior: "Urgente", bg: "#fee2e2", fg: "#991b1b" },
+  1: { prior: "Baja", bg: "#DDF0F5", fg: "#1F4F5C" },
+  2: { prior: "Media", bg: "#FFE7C2", fg: "#5C3A07" },
+  3: { prior: "Alta", bg: "#FFD3E2", fg: "#6E1638" },
+  4: { prior: "Urgente", bg: "#422618", fg: "#FFFFFF" },
 };
 
 export default function TaskCard({ task }: { task: TaskData }) {
   const priority = setPriority[task.prioridad];
-  const dueDate = new Date(task.fecha_fin);
+  const dueDate = new Date(task.fechaFin);
   const formattedDate = dueDate.toLocaleDateString("es-CO", {
     day: "2-digit",
     month: "short",
   });
 
+  // Misma regla que TaskCard de Principal: si el fondo es oscuro, el texto va claro
+  const isDarkColor = (hex: string): boolean => {
+    const color = hex.replace("#", "");
+    const r = Number(`0x${color.slice(0, 2)}`);
+    const g = Number(`0x${color.slice(2, 4)}`);
+    const b = Number(`0x${color.slice(4, 6)}`);
+
+    return (r + g + b) < 450;
+  };
+
+  const textColor = isDarkColor(task.color) ? "var(--text-lighter)" : "var(--ink)";
+
   return (
-    <div className="task-card" style={{ backgroundColor: task.color }}>
+    <div className="task-card" style={{ backgroundColor: task.color, color: textColor }}>
       <div className="task-card__header">
         <span
           className="task-card__priority"
@@ -25,7 +37,7 @@ export default function TaskCard({ task }: { task: TaskData }) {
         >
           {priority.prior}
         </span>
-        <span className="task-card__due">{task.fecha_fin ? formattedDate : "Sin fecha límite"}</span>
+        <span className="task-card__due">{task.fechaFin ? formattedDate : "Sin fecha límite"}</span>
       </div>
 
       <h3 className="task-card__title">{task.nombre}</h3>

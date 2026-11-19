@@ -24,7 +24,7 @@ function Home() {
             <Button variant="quiet" text="Principal" onClick={() => setPage("prin").catch(() => setPageNotLoad())} />
             <Button variant="quiet" text="Perfil" onClick={() => setPage("perf").catch(() => setPageNotLoad())} />
             <Button variant="quiet" text="Reportes" onClick={() => setPage("reportes").catch(() => setPageNotLoad())} />
-            <Button variant="quiet" text="Crear cuenta" onClick={() => setPage("signup").catch(() => setPageNotLoad())} />
+            <Button variant="quiet" text="Crear cuenta" onClick={() => { logOut(); setPage("signup").catch(() => setPageNotLoad()); }} />
             <Button variant="quiet" text="Cerrar sesión" onClick={() => logOut()} />
         </div> :
             <h2 className='subtitle'>{"¿Ya tienes una cuenta? "}

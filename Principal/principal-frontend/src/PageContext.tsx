@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Task } from "./types";
+import type { Tablero } from "./services/tablerosService";
 
 type PageContextValue = {
   isCModalOpen: boolean;
@@ -14,6 +15,8 @@ type PageContextValue = {
   setAllTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   focusTask: Task | null;
   setFocusTask: React.Dispatch<React.SetStateAction<Task | null>>;
+  tableroActual: Tablero | null;
+  setTableroActual: React.Dispatch<React.SetStateAction<Tablero | null>>;
 };
 
 export const PageContext = createContext<PageContextValue | null>(null);

@@ -50,7 +50,7 @@ export default function DeleteModal() {
                 <p>El panel será eliminado permanentemente</p>
                 <div className="task-modal__actions">
                     <button type="button" className="task-modal__cancel" onClick={closeModal}>Cerrar</button>
-                    <button type="submit" className="task-modal__save" disabled={isSaving}>
+                    <button type="submit" className="task-modal__save task-modal__save--danger" disabled={isSaving}>
                         {isSaving ? "Eliminando..." : "Eliminar"}
                     </button>
                 </div>

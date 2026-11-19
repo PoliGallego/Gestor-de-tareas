@@ -1,0 +1,97 @@
+services:
+  auth-backend:
+    build:
+      context: ./Login/login-backend/gestor-tareas-login-usuario/login-usuario
+      dockerfile: dockerfile
+      # args:
+      #   JAR_FILE: 
+    container_name: "${AUTH_BACK_HOST:-auth-backend}"
+    ports:
+      - "${AUTH_BACK_PORT:-8080}:${AUTH_BACK_PORT:-8080}"   # Mapea puerto_host:puerto_contenedor (Java API)
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    networks:
+      - tasks-network
+    env_file:
+      - .env
+
+  panels-backend:
+    build:
+      context: ./Panel/gestor-tareas-registro-usuario/backend-paneles
+      dockerfile: dockerfile
+      # args:
+      #   JAR_FILE: 
+    container_name: "${PANEL_BACK_HOST:-panels-backend}"
+    ports:
+      - "${PANEL_BACK_PORT:-8080}:${PANEL_BACK_PORT:-8080}"   # Mapea puerto_host:puerto_contenedor (Java API)
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    networks:
+      - tasks-network
+    env_file:
+      - .env
+
+  profile-backend:
+    build:
+      context: ./Dashboard/dashboard-backend/app
+      dockerfile: dockerfile
+      # args:
+      #   JAR_FILE: 
+    container_name: "${PROFILE_BACK_HOST:-profile-backend}"
+    ports:
+      - "${PROFILE_BACK_PORT:-8080}:${PROFILE_BACK_PORT:-8080}"   # Mapea puerto_host:puerto_contenedor (Java API)
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    networks:
+      - tasks-network
+    env_file:
+      - .env
+
+  report-backend:
+    build:
+      context: ./Reportes/app
+      dockerfile: dockerfile
+      # args:
+      #   JAR_FILE: 
+    container_name: "${REPORT_BACK_HOST:-report-backend}"
+    ports:
+      - "${REPORT_BACK_PORT:-8080}:${REPORT_BACK_PORT:-8080}"   # Mapea puerto_host:puerto_contenedor (Java API)
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    networks:
+      - tasks-network
+    env_file:
+      - .env
+
+  # Servicio secundario (Ejemplo: Base de Datos PostgreSQL)
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: tasks_data_base
+    environment:
+      POSTGRES_DB: tasks_db
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d tasks_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tasks-network
+
+# Volúmenes persistentes
+volumes:
+  postgres_data:
+
+# Red de comunicación entre contenedores
+networks:
+  tasks-network:
+    driver: bridge

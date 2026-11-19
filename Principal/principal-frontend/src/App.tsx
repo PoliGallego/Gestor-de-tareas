@@ -4,6 +4,7 @@ import "@gestor-tareas/react-components/styles.css";
 import { PageContext } from "./PageContext";
 import { useState } from "react";
 import type { Task } from "./types";
+import type { Tablero } from "./services/tablerosService";
 
 function App() {
   const [error, setError] = useState<string | null>(null);
@@ -12,10 +13,12 @@ function App() {
   const [isDModalOpen, setIsDModalOpen] = useState(false);
   const [allTasks, setAllTasks] = useState<Task[]>([]);
   const [focusTask, setFocusTask] = useState<Task | null>(null);
+  const [tableroActual, setTableroActual] = useState<Tablero | null>(null);
 
   return (<PageContext.Provider value={{
     error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen, setIsDModalOpen,
-    isUModalOpen, setIsUModalOpen, allTasks, setAllTasks, focusTask, setFocusTask
+    isUModalOpen, setIsUModalOpen, allTasks, setAllTasks, focusTask, setFocusTask,
+    tableroActual, setTableroActual
   }}>
     <NavBar/>
     <KanbanBoard />

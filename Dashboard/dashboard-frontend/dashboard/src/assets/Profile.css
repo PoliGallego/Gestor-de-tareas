@@ -1,55 +1,28 @@
-:root {
-    --bg: #f8f9fa;
-    --text: #020202;
-    --text-light: #555;
-    --code-bg: #828282;
-    --code-bg-sec: #888;
-    --border: #585858;
-    --button-bg: #afa7a7;
-    --button-bg-hover: #a09898;
-    --bg-container: rgb(235, 235, 235);
-    --input-border: #979797;
-}
-
-body {
-    background-image: url('../cuboisometrico.png');
-    background-repeat: repeat;
-    background-position: 0 0;
-    background-size: 300px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 4rem;
-    overflow: hidden;
-}
-
-* {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
+/* Colores, tipografía y campos de formulario vienen de la librería
+   (@gestor-tareas/react-components/styles.css). Aquí solo va el perfil. */
 
 h1 {
+    margin: 0;
     font-size: 2rem;
-    color: var(--text);
-    margin-bottom: 1rem;
+    font-weight: 800;
+    color: var(--ink);
     min-width: fit-content;
 }
 
 .name {
-    font-size: 1.2rem;
+    margin: 0;
+    font-size: 1.25rem;
     font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.5rem;
+    color: var(--ink);
     overflow-wrap: anywhere;
     min-width: fit-content;
 }
 
 h3 {
+    margin: 0;
     font-size: 1rem;
     font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.5rem;
+    color: var(--ink-soft);
     overflow-wrap: anywhere;
     min-width: fit-content;
 }
@@ -81,40 +54,18 @@ h3 {
     transform: translateY(0);
 } */
 
-.body input[type="text"],
-.body input[type="email"],
-.body input[type="password"],
-.body input[type="number"],
-.body input[type="date"],
-.body textarea {
-    padding: 12px 16px;
-    border: 2px solid var(--input-border);
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-    background: var(--bg);
-    width: 100%;
-    box-sizing: border-box;
-    display: block;
-}
-
-.body input[type="text"]:focus,
-.body input[type="email"]:focus,
-.body input[type="password"]:focus,
-.body input[type="number"]:focus,
-.body input[type="date"]:focus,
-.body textarea:focus {
-    outline: none;
-    border-color: #727272;
-    background: var(--bg);
-}
+/* Los inputs (y su autocompletado) toman el estilo de la librería */
 
 .body {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    padding: clamp(1rem, 3vw, 2rem);
-    margin: 0;
+    align-items: stretch;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 48px;
+    overflow-y: auto;
+    height: fit-content;
 }
 
 /* .bts {
@@ -124,17 +75,18 @@ h3 {
     overflow: visible;
 } */
 
+/* Panel blanco que agrupa información */
 .container {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     min-height: 1rem;
     min-width: 0;
-    background-color: var(--bg);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 20px;
-    gap: 30px;
+    background-color: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--lift);
+    padding: 24px;
+    gap: 24px;
 }
 
 .profile {
@@ -142,41 +94,95 @@ h3 {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    margin-bottom: 32px;
 }
 
 .title {
-    font-size: 1.5rem;
-    color: var(--text);
-    margin-bottom: 1rem;
     width: 100%;
+    margin-bottom: 16px;
 }
 
 .grup {
     display: flex;
-    padding: 10px;
-    gap: 10px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
+.grup > .container {
+    flex: 1 1 300px;
+}
+
+/* La tarjeta del perfil recibe el doble del espacio sobrante */
+.grup > .container:first-child {
+    flex: 2 1 440px;
+}
+
+/* Totales de tareas: cada dato es una notita del color de su estado,
+   en una cuadrícula 2x2 para que las filas queden parejas */
+.grup > .container:has(> .tasks) {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-items: stretch;
+    gap: 12px;
+}
+
+/* "contents": el div no genera caja; sus <p> entran directo a la cuadrícula */
 .tasks {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    gap: 10px;
+    display: contents;
+}
+
+.tasks p {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    box-shadow: var(--lift);
+}
+
+.tasks b {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.tasks:first-child p:first-child {
+    background-color: var(--note-pink);
+}
+
+.tasks:first-child p:last-child {
+    background-color: var(--note-green);
+}
+
+.tasks:last-child p:first-child {
+    background-color: var(--tape);
+}
+
+.tasks:last-child p:last-child {
+    background-color: var(--note-blue);
 }
 
 .basic-info {
     display: flex;
     flex-direction: column;
-    align-items: left;
+    flex: 1;
     gap: 10px;
     min-width: 0;
 }
 
 .bts {
     display: flex;
-    align-items: center;
     flex-direction: column;
+    gap: 10px;
+}
+
+.bts .btn {
+    min-width: 8rem;
 }
 
 .user-info {
@@ -185,27 +191,34 @@ h3 {
     gap: 10px;
 }
 
+/* Datos del usuario con la letra normal (sin el estilo de marcador) */
+.user-info h2,
+.user-info h3 {
+    font-variation-settings: "CASL" 0;
+}
+
+.user-info b {
+    font-weight: 700;
+    color: var(--ink);
+}
+
 @media (max-width: 680px) {
 
-    .grup,
-    .dashboard {
-        padding: 0;
+    .body {
+        padding: 24px 16px 40px;
     }
 
     .container {
         flex-direction: column;
         align-items: stretch;
         width: 100%;
-        padding: 1rem;
-        gap: 1rem;
+        padding: 20px;
+        gap: 16px;
     }
 
-    .container img {
+    .container img,
+    .container .alt-img {
         align-self: center;
-    }
-
-    .basic-info {
-        gap: 0;
     }
 
     .basic-info h2,
@@ -216,17 +229,12 @@ h3 {
     .bts {
         flex-direction: row;
         width: 100%;
-        padding: 0;
     }
 
     input[type="button"],
     .body .btn {
         flex: 1;
         min-width: 0;
-    }
-
-    .tasks {
-        gap: 0;
     }
 
     h1 {
@@ -236,16 +244,21 @@ h3 {
     .user-info {
         flex-direction: column;
         align-items: flex-start;
+        gap: 4px;
     }
 }
 
-@media (max-width: 1300px) {
-    .container {
-        width: 100%;
-    }
-}
-
-.container .alt-img {
+/* Iniciales grandes en la tarjeta de perfil */
+.container .alt-img,
+.container .header-img {
     height: 5rem;
     width: 5rem;
+    min-width: 5rem;
+    max-width: 5rem;
+    max-height: 5rem;
+}
+
+.container .alt-img h2 {
+    font-size: 28px;
+    font-weight: 800;
 }

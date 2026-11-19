@@ -30,6 +30,7 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
                 .fechaInicio(registroPanel.getFechaInicio())
                 .fechaFin(registroPanel.getFechaFin())
                 .fechaCompletado(registroPanel.getFechaCompletado())
+                .responsableId(registroPanel.getResponsableId())
                 .build();
         
         jpaRepository.save(entity);
@@ -43,7 +44,8 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
 
     @Override
     public List<RegistroPanel> buscarTodosPorUsuario(String propietarioId) {
-        return jpaRepository.findByPropietarioId(propietarioId).stream()
+        // Cuentan las tareas de las que el usuario es responsable, más las que creó y no tienen responsable
+        return jpaRepository.findByResponsableIdOrResponsableIdIsNullAndPropietarioId(propietarioId, propietarioId).stream()
                 .map(this::traducirADominio)
                 .collect(Collectors.toList());
     }
@@ -64,6 +66,7 @@ public class RegistroPanelRepositoryAdapter implements RegistroPanelRepositoryPo
                 .fechaInicio(entity.getFechaInicio())
                 .fechaFin(entity.getFechaFin())
                 .fechaCompletado(entity.getFechaCompletado())
+                .responsableId(entity.getResponsableId())
                 .build();
     }
 }
