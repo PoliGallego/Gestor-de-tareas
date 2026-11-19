@@ -8,9 +8,12 @@ export interface PanelDTO {
   fechaInicio?: string;
   fechaFin?: string;
   prioridad: number;
-  propietarioId: string;
+  descripcion: string
   fechaCreacion?: string;
-  responsableId?: string | null;
+  assignee?: {
+    nombre: string;
+    email: string;
+  };
 }
 
 export interface PanelRequest {
@@ -21,6 +24,7 @@ export interface PanelRequest {
   fechaFin?: string;
   prioridad: number;
   tableroId: string;
+  panelId: string | null;
   responsableEmail?: string | null;
 }
 
@@ -58,13 +62,19 @@ export function mapPanelToTask(panel: PanelDTO): Task {
     id: panel.id,
     title: panel.nombre,
     description: `Panel ID: ${panel.id} - Color: ${panel.color || "predeterminado"}`,
-    assigneeId: panel.responsableId ?? "",
     priority: priorityMap[panel.prioridad] || "Media",
     status: statusMap[panel.estado] || "todo",
     dueDate: panel.fechaFin || "",
     tags: panel.color ? [panel.color] : ["panel"],
     color: panel.color ? panel.color : "panel",
     startDate: panel.fechaInicio || "",
+    assignee: panel.assignee ? {
+      name: panel.assignee.nombre,
+      email: panel.assignee.email,
+      role: null,
+      initials: null,
+      color: null
+    } : null
   };
 }
 
@@ -90,71 +100,150 @@ export function mapTaskToPanel(task: Task): PanelDTO {
     fechaInicio: task.startDate,
     fechaFin: task.dueDate,
     id: task.id,
-    propietarioId: task.assigneeId,
-    responsableId: task.assigneeId || null
+    descripcion: task.description,
+    assignee: task.assignee ? {
+      nombre: task.assignee.name,
+      email: task.assignee.email
+    } : undefined
+  };
+}
+
+export function mapTaskToPanelRequest(task: Task, tableroId: string | undefined): PanelRequest {
+  const statusMap = {
+    todo: "PENDIENTE",
+    "in-progress": "EN_PROGRESO",
+    done: "COMPLETADO",
+  } as const;
+
+  return {
+    panelId: task.id,
+    nombre: task.title,
+    color: task.color,
+    estado: statusMap[task.status],
+    prioridad: {
+      Baja: 1,
+      Media: 2,
+      Alta: 3,
+      Urgente: 4,
+    }[task.priority],
+    fechaInicio: task.startDate || undefined,
+    fechaFin: task.dueDate || undefined,
+    tableroId: tableroId ?? "",
+    responsableEmail: task.assignee?.email || null,
   };
 }
 
 export async function getPaneles(tableroId: string): Promise<Task[]> {
-  const response = await fetch("/api/paneles?tableroId=" + encodeURIComponent(tableroId), {
-    method: "GET",
-    headers: getAuthHeaders(),
-    credentials: "include",
+  const query = `
+    query Panels($tableroId: ID!) {
+      getPanels(tableroId: $tableroId) {
+        id
+        nombre
+        color
+        estado
+        fechaInicio
+        fechaFin
+        prioridad
+        descripcion
+        assignee {
+          nombre
+          email
+        }
+      }
+    }`;
+
+  const result = await fetchGraphQL({
+    query,
+    variables: { tableroId },
   });
 
-  if (!response.ok) {
-    throw new Error(`Error al consultar paneles: ${response.status} ${response.statusText}`);
-  }
-
-  const data: PanelDTO[] = await response.json();
+  const data: PanelDTO[] = result.data.getPanels;
   return data.map(mapPanelToTask);
 }
 
 /**
  * Crea un nuevo panel en el backend.
  */
-export async function crearPanel(nuevoPanel: PanelRequest): Promise<Task> {
-  const response = await fetch("/api/paneles", {
-    method: "POST",
-    headers: getAuthHeaders(),
-    body: JSON.stringify(nuevoPanel),
-    credentials: "include",
+export async function crearPanel(nuevoPanel: PanelRequest) {
+  const query = `
+    mutation Panel($nuevoPanel: PanelInput!) {
+      createPanel(panel: $nuevoPanel) {
+        id
+        nombre
+        color
+        estado
+        fechaInicio
+        fechaFin
+        prioridad
+        descripcion
+        assignee {
+          nombre
+          email
+        }
+      }
+    }`;
+
+  fetchGraphQL({
+    query,
+    variables: { nuevoPanel },
   });
-
-  if (!response.ok) {
-    throw new Error(`Error al crear panel: ${response.status}`);
-  }
-
-  const data: PanelDTO = await response.json();
-  return mapPanelToTask(data);
 }
 
-export async function updatePanel(panelId: string, task: Task): Promise<Task> {
-  let panel: PanelDTO = mapTaskToPanel(task);
+export async function updatePanel(task: Task, tableroId: string | undefined) {
+  let panel: PanelRequest = mapTaskToPanelRequest(task, tableroId);
 
-  const response = await fetch("/api/paneles/" + panelId, {
-    method: "PUT",
-    headers: getAuthHeaders(),
-    body: JSON.stringify({...panel, panelId: panelId}),
-    credentials: "include",
+  const query = `
+    mutation Panel($panel: PanelInput!) {
+      updatePanel(panel: $panel) {
+        id
+        nombre
+        color
+        estado
+        fechaInicio
+        fechaFin
+        prioridad
+        descripcion
+        assignee {
+          nombre
+          email
+        }
+      }
+    }`;
+
+  fetchGraphQL({
+    query,
+    variables: { panel },
   });
-
-  if (!response.ok) {
-    throw new Error(`Error al editar panel: ${response.status}`);
-  }
-
-  const data: PanelDTO = await response.json();
-  return mapPanelToTask(data);
 }
 
 export async function deletePanel(panelId: String) {
-  const response = await fetch("/api/paneles/" + panelId, {
-    method: "DELETE",
+  const query = `
+    mutation Panel($panelId: ID!) {
+      deletePanel(panelId: $panelId)
+    }`;
+
+  fetchGraphQL({
+    query,
+    variables: { panelId },
+  });
+}
+
+async function fetchGraphQL(body: {}) {
+  const response = await fetch("http://localhost:8081/graphql", {
+    method: "POST",
     headers: getAuthHeaders(),
     credentials: "include",
+    body: JSON.stringify(body),
   });
 
-  if (response.status !== 204) {
-    throw new Error(`Error al eliminar panel: ${response.status}`);
+  const result = await response.json();
+
+  if (!response.ok || result.errors?.length) {
+    throw new Error(
+      result.errors?.map((error: { message: string }) => error.message).join(", ")
+      ?? `Error HTTP ${response.status}`,
+    );
   }
+
+  return result;
 }

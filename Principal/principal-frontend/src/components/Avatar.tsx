@@ -13,7 +13,7 @@ export default function Avatar({ member, size = 28 }: AvatarProps) {
       style={{
         width: size,
         height: size,
-        backgroundColor: member.color,
+        backgroundColor: member.color?? "",
         fontSize: size * 0.4,
       }}
     >

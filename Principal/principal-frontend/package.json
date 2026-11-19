@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gestor-tareas/react-components": "file:../../ReactLibrary",
+    "graphql-ws": "^6.4.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

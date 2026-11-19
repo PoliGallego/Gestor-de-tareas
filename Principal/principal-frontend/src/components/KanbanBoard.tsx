@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 // 2. Importamos tu servicio y el tipo Task
-import { getPaneles, updatePanel } from "../services/panelesService";
+import { getPaneles, mapPanelToTask, updatePanel, type PanelDTO } from "../services/panelesService";
 import type { TaskStatus, Task, TeamMember } from "../types";
 import Column from "./Column";
 import CreateModal from "./CreateModal";
@@ -13,6 +13,8 @@ import type { Participante, Tablero } from "../services/tablerosService";
 import BoardSelector from "./BoardSelector";
 import CreateBoardModal from "./CreateBoardModal";
 import ParticipantsModal from "./ParticipantsModal";
+import TeamFilter from "./TeamFilter";
+import { createClient } from "graphql-ws";
 
 const columns: { status: TaskStatus; title: string; color: string }[] = [
   { status: "todo", title: "Por hacer", color: "#94a3b8" },
@@ -46,6 +48,7 @@ function toTeamMember(participante: Participante): TeamMember {
 
   return {
     name: participante.nombre,
+    email: participante.email,
     role: participante.esPropietario ? "Propietario" : "Miembro",
     initials,
     color: "#977a7a",
@@ -56,7 +59,7 @@ export default function KanbanBoard() {
   const { error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen,
     isUModalOpen, allTasks, setAllTasks, tableroActual, setTableroActual } = usePageContext();
   const [draggedTask, setDraggedTask] = useState<Task | null>(null);
-  const [selectedMemberEmail] = useState<string | null>(null);
+  const [selectedMemberEmail, setSelectedMemberEmail] = useState<string | null>(null);
   const [tableros, setTableros] = useState<Tablero[]>([]);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [isDeleteBoardOpen, setIsDeleteBoardOpen] = useState(false);
@@ -70,6 +73,66 @@ export default function KanbanBoard() {
     () => new Map(participantes.map((participante) => [participante.email, toTeamMember(participante)])),
     [participantes]
   );
+
+  useEffect(() => {
+    if (!tableroActual) return;
+
+    const client = createClient({
+      url: `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/graphql`,
+    });
+
+    const unsubscribe = client.subscribe<{
+      updatedPanels: {
+        type: "CREADO" | "ACTUALIZADO" | "ELIMINADO";
+        panel: PanelDTO;
+      };
+      errors?: readonly { message: string }[];
+    }>({
+      query: `
+      subscription UpdatedPanels($tableroId: ID!) {
+        updatedPanels(tableroId: $tableroId) {
+          type
+          panel {
+            id nombre color estado fechaInicio fechaFin prioridad descripcion
+            assignee { nombre email }
+          }
+        }
+      }
+    `,
+      variables: { tableroId: tableroActual.id },
+    }, {
+      next: ({ data, errors }) => {
+
+        if (errors?.length) {
+          setError(errors.map(({ message }) => message).join(", "));
+          return;
+        }
+        const event = data?.updatedPanels;
+        
+        if (!event) return;
+
+        const task = mapPanelToTask(event.panel);
+
+        setAllTasks((current) => {
+          if (event.type === "ELIMINADO") {
+            return current.filter((item) => item.id !== task.id);
+          }
+
+          // Upsert: evita duplicados si el cliente ya agregó la tarea localmente.
+          return current.some((item) => item.id === task.id)
+            ? current.map((item) => item.id === task.id ? task : item)
+            : [...current, task];
+        });
+      },
+      error: (err) => setError(`Error en la suscripción: ${String(err)}`),
+      complete: () => {}
+    });
+
+    return () => {
+      unsubscribe();
+      void client.dispose();
+    };
+  }, [tableroActual?.id, setAllTasks, setError]);
 
   // Al cargar la página se consultan los tableros del usuario y se abre el último que se usó,
   // o el primero si no hay uno guardado o ya no se tiene acceso a él
@@ -121,7 +184,7 @@ export default function KanbanBoard() {
   const visibleTasks = useMemo(
     () =>
       selectedMemberEmail
-        ? allTasks.filter((task) => task.assigneeEmail === selectedMemberEmail)
+        ? allTasks.filter((task) => task.assignee?.email === selectedMemberEmail)
         : allTasks,
     [selectedMemberEmail, allTasks]
   );
@@ -185,7 +248,7 @@ export default function KanbanBoard() {
           : task
       )
     );
-    updatePanel(draggedTask.id, { ...draggedTask, status: destinationStatus });
+    updatePanel({ ...draggedTask, status: destinationStatus }, tableroActual?.id);
 
     setDraggedTask(null);
   }
@@ -197,7 +260,15 @@ export default function KanbanBoard() {
         <BoardSelector tableros={tableros} tableroActual={tableroActual} onSelect={setTableroActual}
           onCreate={() => setIsBoardModalOpen(true)} onDelete={() => setIsDeleteBoardOpen(true)}
           onParticipants={() => setIsParticipantsOpen(true)} />
-        {tableroActual?.esPropietario && <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />}
+        {participantes.length > 1 && <div className="board-actions">
+          {tableroActual?.esPropietario && <Button text="Agregar tarea" onClick={() => { setError(null); setIsCModalOpen(true); }} />}
+          <TeamFilter
+            members={participantes.map((participante) => toTeamMember(participante))}
+            selectedEmail={selectedMemberEmail}
+            onSelect={(email) => {
+              setSelectedMemberEmail(email);
+            }} />
+        </div>}
         <p className="board__subtitle">
           {visibleTasks.length} tarea{visibleTasks.length !== 1 && "s"}
           {selectedMemberEmail ? ` asignadas a ${memberByEmail.get(selectedMemberEmail)?.name}` : " en total"}
@@ -222,8 +293,6 @@ export default function KanbanBoard() {
   return (
     <div className="board">
       {header()}
-
-      {/* <TeamFilter members={teamMembers} selectedId={selectedMemberId} onSelect={setSelectedMemberId} /> */}
 
       <div className="board__columns">
         {columns.map((col) => (

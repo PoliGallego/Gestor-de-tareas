@@ -14,6 +14,7 @@ function App() {
   const [allTasks, setAllTasks] = useState<Task[]>([]);
   const [focusTask, setFocusTask] = useState<Task | null>(null);
   const [tableroActual, setTableroActual] = useState<Tablero | null>(null);
+  
 
   return (<PageContext.Provider value={{
     error, setError, isCModalOpen, setIsCModalOpen, isDModalOpen, setIsDModalOpen,

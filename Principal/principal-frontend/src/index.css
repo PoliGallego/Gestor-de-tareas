@@ -99,6 +99,11 @@ h2 {
   font-weight: 400;
 }
 
+.board-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
 .participants {
   display: flex;
   flex-direction: column;
@@ -318,7 +323,8 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 20px 0 28px;
+  margin-top: 20px;
+  width: fit-content;
 }
 
 .team-filter__chip {
@@ -327,8 +333,8 @@ h2 {
   gap: 8px;
   padding: 6px 14px 6px 8px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 1px solid var(--button-bg);
+  background: var(--bg-container);
   color: var(--text);
   font-size: 13px;
   font-weight: 500;
@@ -337,12 +343,13 @@ h2 {
 }
 
 .team-filter__chip:hover {
-  border-color: var(--input-border);
+  border-color: var(--button-bg-hover);
+  background: var(--button-bg-hover);
 }
 
 .team-filter__chip--active {
-  border-color: var(--input-border);
-  background: var(--input-border);
+  border-color: var(--button-bg);
+  background: var(--button-bg);
   color: white;
 }
 

@@ -35,7 +35,7 @@ export default function Column({ title, status, tasks, memberByEmail, accentColo
             <TaskCard
               key={task.id}
               task={task}
-              assignee={memberByEmail.get(task.assigneeEmail)}
+              assignee={memberByEmail.get(task.assignee?.email?? "")}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
             />

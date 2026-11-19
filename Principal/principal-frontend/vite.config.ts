@@ -17,18 +17,24 @@ export default defineConfig(({ mode }) => {
     },
     base: env.VITE_PRIN_URL || '/board',
     build: {
-        minify: false,
-        sourcemap: true,
+      minify: false,
+      sourcemap: true,
     },
     server: {
       port: Number(env.PRIN_PORT) || 3020,
       strictPort: true,
       proxy: {
         '/api': {
-          target: 'http://localhost:' + (env.d || '8081'),
+          target: 'http://localhost:' + (env.PANEL_BACK_PORT || '8081'),
           changeOrigin: true,
           secure: false,
-        }, 
+        },
+        '/graphql': {
+          target: 'http://localhost:' + (env.PANEL_BACK_PORT || '8081'),
+          changeOrigin: true,
+          ws: true,
+          secure: false,
+        },
         '/auth': {
           target: 'http://localhost:' + (env.AUTH_BACK_PORT || "8090"),
           changeOrigin: true,

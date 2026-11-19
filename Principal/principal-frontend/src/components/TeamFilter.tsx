@@ -3,24 +3,24 @@ import Avatar from "./Avatar";
 
 interface TeamFilterProps {
   members: TeamMember[];
-  selectedId: string | null;
-  onSelect: (id: string | null) => void;
+  selectedEmail: string | null;
+  onSelect: (email: string | null) => void;
 }
 
-export default function TeamFilter({ members, selectedId, onSelect }: TeamFilterProps) {
+export default function TeamFilter({ members, selectedEmail, onSelect }: TeamFilterProps) {
   return (
     <div className="team-filter">
       <button
-        className={`team-filter__chip ${selectedId === null ? "team-filter__chip--active" : ""}`}
+        className={`team-filter__chip ${selectedEmail === null ? "team-filter__chip--active" : ""}`}
         onClick={() => onSelect(null)}
       >
-        Entire team
+        Todo el equipo
       </button>
       {members.map((member) => (
         <button
-          key={member.id}
-          className={`team-filter__chip ${selectedId === member.id ? "team-filter__chip--active" : ""}`}
-          onClick={() => onSelect(member.id)}
+          key={member.email}
+          className={`team-filter__chip ${selectedEmail === member.email ? "team-filter__chip--active" : ""}`}
+          onClick={() => onSelect(member.email)}
         >
           <Avatar member={member} size={22} />
           {member.name}

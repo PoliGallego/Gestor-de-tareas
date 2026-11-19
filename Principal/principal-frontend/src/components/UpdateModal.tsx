@@ -13,7 +13,7 @@ const initialTaskForm: Task = {
     startDate: "",
     dueDate: "",
     id: "",
-    assigneeEmail: "",
+    assignee: undefined,
     tags: []
 };
 
@@ -22,7 +22,8 @@ interface UpdateModalProps {
 }
 
 export default function UpdateModal({ participantes }: UpdateModalProps) {
-    const { focusTask, error, setError, setAllTasks, setIsUModalOpen, setFocusTask } = usePageContext();
+    const { focusTask, error, setError, setAllTasks, setIsUModalOpen,
+        setFocusTask, tableroActual } = usePageContext();
     const [isSaving, setIsSaving] = useState(false);
     const [taskForm, setTaskForm] = useState(focusTask ?? initialTaskForm);
     const [isErrorTitle, setErrorTitle] = useState(false);
@@ -50,16 +51,16 @@ export default function UpdateModal({ participantes }: UpdateModalProps) {
     async function handleUpdateTask(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         setError(null);
-        
+
         if (!validate()) {
             setIsSaving(true);
             try {
                 if (!focusTask || !taskForm || taskForm.id.length === 0) {
                     return
                 }
-                const updatedTask = await updatePanel(focusTask?.id, taskForm);
+                updatePanel(taskForm, tableroActual?.id);
 
-                setAllTasks((currentTasks) => currentTasks.map((task) => task.id === updatedTask.id ? { ...task, ...updatedTask } : task));
+                // setAllTasks((currentTasks) => currentTasks.map((task) => task.id === updatedTask.id ? { ...task, ...updatedTask } : task));
                 setIsSaving(false);
                 closeModal();
             } catch (err) {
@@ -116,12 +117,24 @@ export default function UpdateModal({ participantes }: UpdateModalProps) {
 
                 <div className="task-form__grid">
                     <label>
-                  Responsable
-                  <select value={taskForm.assigneeEmail} onChange={(event) => setTaskForm({ ...taskForm, assigneeEmail: event.target.value })}>
-                    <option value="">Sin asignar</option>
-                    {participantes.map((participante) => <option key={participante.email} value={participante.email}>{participante.nombre}</option>)}
-                  </select>
-                </label>
+                        Responsable
+                        <select value={taskForm.assignee?.name} onChange={
+                            (event) => setTaskForm({
+                                ...taskForm,
+                                assignee: {
+                                    name: event.target.value,
+                                    email: participantes.find((part) => {
+                                        return event.target.value.toString() === part.email
+                                    })?.email ?? "",
+                                    role: undefined,
+                                    initials: undefined,
+                                    color: undefined
+                                }
+                            })}>
+                            <option value="">Sin asignar</option>
+                            {participantes.map((participante) => <option key={participante.email} value={participante.email}>{participante.nombre}</option>)}
+                        </select>
+                    </label>
 
                     <label>
                         Prioridad
@@ -149,15 +162,15 @@ export default function UpdateModal({ participantes }: UpdateModalProps) {
 
                     <label>
                         Fecha de inicio
-                        <input type="date" value={taskForm.startDate} onClick={e => {e.currentTarget.showPicker()}}
-                        onChange={(event) => setTaskForm({ ...taskForm, startDate: event.target.value })} />
+                        <input type="date" value={taskForm.startDate} onClick={e => { e.currentTarget.showPicker() }}
+                            onChange={(event) => setTaskForm({ ...taskForm, startDate: event.target.value })} />
                         {isErrorDate && <p className="task-form__error">Toda tarea debe tener una fecha de inicio</p>}
                     </label>
 
                     <label>
                         Fecha límite
-                        <input type="date" value={taskForm.dueDate} onClick={e => {e.currentTarget.showPicker()}}
-                        onChange={(event) => setTaskForm({ ...taskForm, dueDate: event.target.value })} />
+                        <input type="date" value={taskForm.dueDate} onClick={e => { e.currentTarget.showPicker() }}
+                            onChange={(event) => setTaskForm({ ...taskForm, dueDate: event.target.value })} />
                     </label>
                 </div>
 

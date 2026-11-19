@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { crearPanel } from "../services/panelesService";
+import { crearPanel, mapTaskToPanelRequest } from "../services/panelesService";
 import type { Task, TaskStatus } from "../types";
 import { usePageContext } from "../PageContext";
 import type { Participante } from "../services/tablerosService";
@@ -13,8 +13,8 @@ const initialTaskForm: Task = {
     startDate: "",
     dueDate: "",
     id: "",
-    assigneeEmail: "",
-    tags: []
+    tags: [],
+    assignee: undefined
 };
 
 interface CreateModalProps {
@@ -58,37 +58,7 @@ export default function CreateModal({ participantes }: CreateModalProps) {
         setIsSaving(true);
 
         try {
-            const statusMap = {
-                todo: "PENDIENTE",
-                "in-progress": "EN_PROGRESO",
-                done: "COMPLETADO",
-            } as const;
-
-            const savedTask = await crearPanel({
-                nombre: taskForm.title,
-                color: taskForm.color,
-                estado: statusMap[taskForm.status],
-                prioridad: {
-                    Baja: 1,
-                    Media: 2,
-                    Alta: 3,
-                    Urgente: 4,
-                }[taskForm.priority],
-                fechaInicio: taskForm.startDate || undefined,
-                fechaFin: taskForm.dueDate || undefined,
-                tableroId: tableroActual?.id ?? "",
-                responsableEmail: taskForm.assigneeEmail || null,
-            });
-
-            setAllTasks((currentTasks) => [
-                ...currentTasks,
-                {
-                    ...savedTask,
-                    description: taskForm.description,
-                    priority: taskForm.priority,
-                    status: taskForm.status,
-                },
-            ]);
+            crearPanel(mapTaskToPanelRequest(taskForm, tableroActual?.id));
 
             closeModal();
         } catch (err) {
@@ -171,11 +141,19 @@ export default function CreateModal({ participantes }: CreateModalProps) {
                         <label>
                             Responsable
                             <select
-                                value={taskForm.assigneeEmail}
+                                value={taskForm.assignee?.email}
                                 onChange={(event) =>
                                     setTaskForm({
                                         ...taskForm,
-                                        assigneeEmail: event.target.value
+                                        assignee: {
+                                            name: event.target.value,
+                                            email: participantes.find((part) => {
+                                                return event.target.value.toString() === part.email
+                                            })?.email ?? "",
+                                            role: undefined,
+                                            initials: undefined,
+                                            color: undefined
+                                        }
                                     })
                                 }
                             >
@@ -255,7 +233,7 @@ export default function CreateModal({ participantes }: CreateModalProps) {
                                         startDate: event.target.value
                                     })
                                 }
-                                onClick={e => {e.currentTarget.showPicker()}}
+                                onClick={e => { e.currentTarget.showPicker() }}
                             />
                             {isErrorDate && (
                                 <p className="task-form__error">
@@ -275,7 +253,7 @@ export default function CreateModal({ participantes }: CreateModalProps) {
                                         dueDate: event.target.value
                                     })
                                 }
-                                onClick={e => {e.currentTarget.showPicker()}}
+                                onClick={e => { e.currentTarget.showPicker() }}
                             />
                         </label>
                     </div>
